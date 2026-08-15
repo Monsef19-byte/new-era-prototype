@@ -36,6 +36,7 @@ import platform
 import gzip
 import urllib.request
 import urllib.error
+import urllib.parse
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 PROTO = os.path.dirname(BASE)
@@ -231,7 +232,19 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
         self._send_json({"error": "not found"}, 404)
 
+    def _query_param(self, name):
+        qs = self.path.split("?", 1)[1] if "?" in self.path else ""
+        for pair in qs.split("&"):
+            if "=" in pair:
+                k, v = pair.split("=", 1)
+                if k == name:
+                    return urllib.parse.unquote_plus(v)
+        return None
+
     def handle_api_get(self, path):
+        if path == "/api/preview-assets":
+            fname = safe_filename(self._query_param("file") or "")
+            return self._send_file(os.path.join(HOMEPAGE, "assets", fname))
         if path == "/api/content":
             if not self._authed():
                 return self._send_json({"error": "unauthorized"}, 401)
@@ -278,8 +291,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
         if not self._authed():
             return self._send_json({"error": "unauthorized"}, 401)
 
-        if path.startswith("/api/save/"):
-            section = path[len("/api/save/"):]
+        if path == "/api/save":
+            section = self._query_param("section") or ""
             if section not in SAFE_SECTIONS:
                 return self._send_json({"error": "unknown section"}, 400)
             try:
