@@ -12,21 +12,99 @@ import os
 import re
 import json
 import shutil
+import urllib.request
+import urllib.parse
 
-BASE = os.path.dirname(os.path.abspath(__file__))          # .../03 - PROTOTYPE/Admin
+BASE = os.path.dirname(os.path.abspath(__file__))          # .../03 - PROTOTYPE/admin
 PROTO = os.path.dirname(BASE)                                # .../03 - PROTOTYPE
-HOMEPAGE = os.path.join(PROTO, "Homepage")
+HOMEPAGE = os.path.join(PROTO, "homepage")                   # lowercase: matches the actual
+                                                               # git-tracked folder name exactly —
+                                                               # macOS' default case-insensitive
+                                                               # filesystem hid this locally, but
+                                                               # Vercel's Linux build image is
+                                                               # case-sensitive and needs the exact
+                                                               # match.
 MIRROR = os.path.join(PROTO, "Villa Agata")
 CONTENT = os.path.join(BASE, "content")
-OUT_DIRS = [HOMEPAGE, MIRROR]
+
+# Running as part of a Vercel build (VERCEL=1 is set automatically by
+# Vercel's build image). In that environment:
+#   - "Villa Agata" isn't part of the git repo (it's a local-only mirror
+#     folder on the client's Mac), so it doesn't exist — skip it.
+#   - Content is pulled from Vercel Blob (what the online admin panel
+#     saves to) instead of the local admin/content/*.json files, so a
+#     rebuild picks up edits made from newera-promotion.com/admin.
+VERCEL_BUILD = os.environ.get("VERCEL") == "1"
+OUT_DIRS = [HOMEPAGE] if VERCEL_BUILD else [HOMEPAGE, MIRROR]
+
+BLOB_TOKEN = os.environ.get("BLOB_READ_WRITE_TOKEN", "")
+
+
+# ---------------------------------------------------------------- Blob (build-time only)
+def _blob_list(prefix):
+    if not BLOB_TOKEN:
+        return []
+    url = "https://blob.vercel-storage.com/?prefix=" + urllib.parse.quote(prefix) + "&limit=1000"
+    req = urllib.request.Request(url, headers={"authorization": "Bearer " + BLOB_TOKEN})
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read().decode("utf-8")).get("blobs", [])
+    except Exception:
+        return []
+
+
+def _blob_get_json(pathname):
+    for b in _blob_list(pathname):
+        if b.get("pathname") == pathname:
+            try:
+                with urllib.request.urlopen(b["url"], timeout=20) as resp:
+                    return json.loads(resp.read().decode("utf-8"))
+            except Exception:
+                return None
+    return None
+
+
+def sync_blob_assets():
+    """Download everything the online admin has ever uploaded (images under
+    assets/, plus the hero video) into homepage/assets/, overwriting the
+    git-committed baseline where a Blob copy exists. Blob is always the
+    source of truth here: builds start from a fresh git checkout that never
+    has these files, since they're never committed back to the repo."""
+    if not BLOB_TOKEN:
+        return
+    assets_dir = os.path.join(HOMEPAGE, "assets")
+    os.makedirs(assets_dir, exist_ok=True)
+    for b in _blob_list("assets/"):
+        pathname = b.get("pathname", "")
+        fname = pathname[len("assets/"):] if pathname.startswith("assets/") else None
+        if not fname or "/" in fname:
+            continue
+        try:
+            with urllib.request.urlopen(b["url"], timeout=60) as resp:
+                data = resp.read()
+            with open(os.path.join(assets_dir, fname), "wb") as f:
+                f.write(data)
+        except Exception:
+            pass  # best-effort — a single bad asset shouldn't fail the whole build
+
 
 # ---------------------------------------------------------------- content IO
 def load(name):
+    """Local admin/content/<name> is always the baseline (works exactly as
+    before for the local admin panel, and is what a fresh Vercel build falls
+    back to for any section the online admin hasn't touched yet). On Vercel,
+    Blob content — if that section was ever saved from the online admin —
+    takes precedence, so publishing there is reflected on the next build."""
     path = os.path.join(CONTENT, name)
-    if not os.path.exists(path):
-        return None
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+    local = None
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            local = json.load(f)
+    if VERCEL_BUILD:
+        remote = _blob_get_json("content/" + name)
+        if remote is not None:
+            return remote
+    return local
 
 def save(name, data):
     path = os.path.join(CONTENT, name)
@@ -395,6 +473,8 @@ def render_blog(posts, settings):
 # ENTRY POINT
 # ============================================================================
 def publish():
+    if VERCEL_BUILD:
+        sync_blob_assets()
     settings = load('settings.json')
     villas = load('villas.json')
     home = load('home.json')
