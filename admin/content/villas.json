@@ -1,0 +1,744 @@
+[
+  {
+    "slug": "villa-agata",
+    "name": "Agata",
+    "hero_img": "agata-hero.jpg",
+    "loc": "Hydra",
+    "loc_full": "Hydra, Alger",
+    "count": 14,
+    "typologie": "F4 & F5",
+    "progress_pct": null,
+    "description": "Située à Hydra, Villa Agata est une résidence haut standing inspirée de l'architecture néoclassique. Composée de seulement 14 appartements aux finitions premium, elle offre un cadre de vie prestigieux alliant élégance, confort moderne et sécurité, dans l'un des quartiers les plus recherchés d'Alger.",
+    "feats": [
+      [
+        "archi",
+        "Architecture néoclassique"
+      ],
+      [
+        "archi",
+        "Typologie F4 & F5"
+      ],
+      [
+        "archi",
+        "Marbre italien & parquet naturel"
+      ],
+      [
+        "archi",
+        "Climatisation & chauffage centralisés"
+      ],
+      [
+        "archi",
+        "Parking en sous-sol"
+      ],
+      [
+        "archi",
+        "Sécurité 24h/24"
+      ],
+      [
+        "archi",
+        "Ascenseurs"
+      ],
+      [
+        "archi",
+        "Isolation thermique & acoustique"
+      ]
+    ],
+    "gallery": [
+      [
+        "agata-ext-1.jpg",
+        "Entrée"
+      ],
+      [
+        "agata-ext-3.jpg",
+        "Extérieur"
+      ],
+      [
+        "agata-sejour.jpg",
+        "Séjour"
+      ],
+      [
+        "agata-cuisine.jpg",
+        "Cuisine"
+      ],
+      [
+        "agata-chambre.jpg",
+        "Chambre"
+      ],
+      [
+        "agata-chambre2.jpg",
+        "Chambre 2"
+      ],
+      [
+        "agata-sdb.jpg",
+        "Salle de bain"
+      ]
+    ],
+    "plans": [
+      [
+        "agata-plan-f4-g.jpg",
+        "F4 — 107 m² G"
+      ],
+      [
+        "agata-plan-f4-d.jpg",
+        "F4 — 107 m² D"
+      ],
+      [
+        "agata-plan-duplex.jpg",
+        "Duplex — 185 m²"
+      ],
+      [
+        "agata-plan-loft.jpg",
+        "Loft — 153 m²"
+      ]
+    ],
+    "interior": [
+      [
+        "agata-cuisine.jpg",
+        "Cuisine",
+        [
+          "Cuisine entièrement équipée et aménagée",
+          "Finitions haut de gamme (bois laqué, laiton, plan de travail marbré)",
+          "Électroménager encastré de qualité"
+        ]
+      ],
+      [
+        "agata-sejour.jpg",
+        "Séjour",
+        [
+          "Séjour spacieux, lumineux et traversant",
+          "Décoration soignée et intemporelle",
+          "Parquet bois chaleureux et belle hauteur sous plafond"
+        ]
+      ],
+      [
+        "agata-chambre.jpg",
+        "Chambre",
+        [
+          "Chambre confortable avec literie haut de gamme",
+          "Décoration épurée, lumineuse et intemporelle",
+          "Rangements intégrés et espace optimisé"
+        ]
+      ],
+      [
+        "agata-chambre2.jpg",
+        "Chambre secondaire",
+        [
+          "Deuxième chambre lumineuse, décoration soignée",
+          "Grande fenêtre offrant un bel apport de lumière naturelle"
+        ]
+      ],
+      [
+        "agata-sdb.jpg",
+        "Salle de bain",
+        [
+          "Douche à l'italienne, double vasque avec plan en marbre",
+          "Miroir rétroéclairé et finitions dorées",
+          "Ambiance spa, chaleureuse et raffinée"
+        ]
+      ]
+    ],
+    "dispo": {
+      "intro": "4 typologies — cliquez « voir détails » pour le plan de chaque typologie",
+      "typologies": [
+        {
+          "name": "F4",
+          "count": "à confirmer",
+          "status_label": "À confirmer",
+          "confirmed": false,
+          "detail_text": "Deux orientations disponibles (gauche / droite), 107 m² chacune.",
+          "detail_images": [
+            "agata-plan-f4-g.jpg",
+            "agata-plan-f4-d.jpg"
+          ]
+        },
+        {
+          "name": "F5",
+          "count": "à confirmer",
+          "status_label": "À confirmer",
+          "confirmed": false,
+          "detail_text": "⏳ Plan et surface détaillée en attente du client.",
+          "detail_images": []
+        },
+        {
+          "name": "Duplex",
+          "count": "à confirmer",
+          "status_label": "À confirmer",
+          "confirmed": false,
+          "detail_text": "185 m² sur deux niveaux.",
+          "detail_images": [
+            "agata-plan-duplex.jpg"
+          ]
+        },
+        {
+          "name": "Loft",
+          "count": "à confirmer",
+          "status_label": "À confirmer",
+          "confirmed": false,
+          "detail_text": "153 m².",
+          "detail_images": [
+            "agata-plan-loft.jpg"
+          ]
+        }
+      ],
+      "note": "⏳ Nombre d'unités disponibles par typologie (ex. « 2 F4, 1 Duplex ») en attente de confirmation du client — aucun chiffre n'est inventé ici. Les plans ci-dessus sont les plans réels fournis pour chaque typologie."
+    },
+    "typebien_opts": [
+      "F4",
+      "F5",
+      "Duplex",
+      "Loft"
+    ],
+    "card_image": "villa-agata.jpg"
+  },
+  {
+    "slug": "villa-veronica",
+    "name": "Veronica",
+    "hero_img": "villa-veronica.jpg",
+    "loc": "Hydra",
+    "loc_full": "Hydra, Alger",
+    "count": 7,
+    "typologie": "F3, F4, F5 & Penthouse",
+    "progress_pct": 50,
+    "description": "Située au cœur de Hydra, l'un des quartiers les plus prisés d'Alger, cette résidence exclusive allie architecture néoclassique, prestations haut de gamme et cadre de vie privilégié. Composée de seulement 7 appartements, elle offre à ses résidents intimité, confort et sécurité dans un environnement d'exception. Chaque détail a été pensé pour répondre aux plus hautes exigences en matière de qualité, d'élégance et de valeur patrimoniale.",
+    "feats": [
+      [
+        "archi",
+        "Architecture néoclassique élégante"
+      ],
+      [
+        "typo",
+        "Typologies F3, F4, F5 & Penthouse"
+      ],
+      [
+        "marbre",
+        "Marbre italien & parquet naturel"
+      ],
+      [
+        "clim",
+        "Climatisation & chauffage centralisés"
+      ],
+      [
+        "parking",
+        "Parking en sous-sol"
+      ],
+      [
+        "securite",
+        "Sécurité 24h/24 & contrôle d'accès"
+      ],
+      [
+        "ascenseur",
+        "Ascenseurs"
+      ],
+      [
+        "isolation",
+        "Isolation thermique & acoustique performante"
+      ],
+      [
+        "domotique",
+        "Domotique personnalisable"
+      ]
+    ],
+    "gallery": [
+      [
+        "villa-veronica.jpg",
+        "Façade"
+      ],
+      [
+        "veronica-sec-1.jpg",
+        "Terrasse"
+      ],
+      [
+        "veronica-sec-2.jpg",
+        "Extérieur"
+      ],
+      [
+        "veronica-int-sejour.jpg",
+        "Séjour"
+      ],
+      [
+        "veronica-int-cuisine.jpg",
+        "Cuisine"
+      ],
+      [
+        "veronica-int-chambre-parentale.jpg",
+        "Chambre parentale"
+      ],
+      [
+        "veronica-int-sdb.jpg",
+        "Salle de bain"
+      ]
+    ],
+    "plans": [
+      [
+        "veronica-plan-f4-130.jpg",
+        "F4 — 130 m²"
+      ],
+      [
+        "veronica-plan-f5-190.jpg",
+        "F5 — 190 m²"
+      ],
+      [
+        "veronica-plan-f5-157.jpg",
+        "F5 — 157 m²"
+      ],
+      [
+        "veronica-plan-rdc.jpg",
+        "RDC — 116 m²"
+      ]
+    ],
+    "interior": [
+      [
+        "veronica-int-cuisine.jpg",
+        "Cuisine",
+        [
+          "Cuisine entièrement équipée et aménagée",
+          "Finitions haut de gamme (bois laqué, laiton, plan de travail marbré)",
+          "Électroménager encastré de qualité"
+        ]
+      ],
+      [
+        "veronica-int-sejour.jpg",
+        "Séjour",
+        [
+          "Séjour spacieux, lumineux et traversant",
+          "Décoration soignée et intemporelle",
+          "Grandes baies vitrées, parquet bois chaleureux"
+        ]
+      ],
+      [
+        "veronica-int-chambre-parentale.jpg",
+        "Chambre parentale",
+        [
+          "Suite parentale spacieuse avec coin salon intégré",
+          "Literie premium et linge de qualité",
+          "Décoration soignée dans des tons neutres et élégants"
+        ]
+      ],
+      [
+        "veronica-int-sdb.jpg",
+        "Salle de bain",
+        [
+          "Douche à l'italienne et double vasque en marbre",
+          "Miroir rétroéclairé et finitions dorées",
+          "Ambiance spa, chaleureuse et raffinée"
+        ]
+      ]
+    ],
+    "dispo": {
+      "intro": "4 typologies — cliquez « voir détails » pour la fiche technique de chaque typologie",
+      "typologies": [
+        {
+          "name": "F3",
+          "count": "à confirmer",
+          "status_label": "À confirmer",
+          "confirmed": false,
+          "detail_text": "⏳ Plan et surface détaillée en attente du client.",
+          "detail_images": []
+        },
+        {
+          "name": "F4",
+          "count": "à confirmer",
+          "status_label": "À confirmer",
+          "confirmed": false,
+          "detail_text": "130 m² — fiche technique réelle avec surfaces détaillées par pièce.",
+          "detail_images": [
+            "veronica-fiche-f4.jpg"
+          ]
+        },
+        {
+          "name": "F5",
+          "count": "à confirmer",
+          "status_label": "À confirmer",
+          "confirmed": false,
+          "detail_text": "Deux variantes disponibles : 190 m² et 157 m².",
+          "detail_images": [
+            "veronica-plan-f5-190.jpg",
+            "veronica-plan-f5-157.jpg"
+          ]
+        },
+        {
+          "name": "Penthouse",
+          "count": "à confirmer",
+          "status_label": "À confirmer",
+          "confirmed": false,
+          "detail_text": "⏳ Plan et surface détaillée en attente du client.",
+          "detail_images": []
+        }
+      ],
+      "note": "⏳ Nombre d'unités disponibles par typologie (ex. « 2 F3, 1 F4 ») en attente de confirmation du client — aucun chiffre n'est inventé ici."
+    },
+    "typebien_opts": [
+      "F3",
+      "F4",
+      "F5",
+      "Penthouse"
+    ],
+    "card_image": "villa-veronica.jpg"
+  },
+  {
+    "slug": "villa-christina",
+    "name": "Christina",
+    "hero_img": "villa-christina.jpg",
+    "loc": "Hydra",
+    "loc_full": "Hydra, Alger",
+    "count": 22,
+    "typologie": "F2, F3, F4 & Penthouse",
+    "progress_pct": null,
+    "description": "Villa Christina est une résidence haut standing située au cœur de Hydra, l'une des adresses les plus prisées d'Alger. Composée de deux blocs résidentiels et de seulement 22 appartements, elle offre un cadre de vie harmonieux alliant élégance architecturale, confort moderne et prestations premium. Pensée pour répondre aux exigences des familles comme des investisseurs, Villa Christina propose des espaces de vie raffinés dans un environnement sécurisé et valorisant.",
+    "feats": [
+      [
+        "archi",
+        "Architecture néoclassique élégante"
+      ],
+      [
+        "blocs",
+        "Résidence composée de 2 blocs"
+      ],
+      [
+        "typo",
+        "Typologies F2, F3, F4 & Penthouse"
+      ],
+      [
+        "marbre",
+        "Marbre italien & parquet naturel"
+      ],
+      [
+        "clim",
+        "Climatisation & chauffage centralisés"
+      ],
+      [
+        "parking",
+        "Parking en sous-sol"
+      ],
+      [
+        "ascenseur",
+        "Ascenseurs"
+      ],
+      [
+        "securite",
+        "Sécurité 24h/24"
+      ],
+      [
+        "isolation",
+        "Isolation thermique & acoustique performante"
+      ],
+      [
+        "domotique",
+        "Domotique personnalisable"
+      ]
+    ],
+    "gallery": [
+      [
+        "villa-christina.jpg",
+        "Façade"
+      ],
+      [
+        "christina-sec-1.jpg",
+        "Extérieur"
+      ],
+      [
+        "christina-sec-2.jpg",
+        "Entrée"
+      ],
+      [
+        "christina-int-sejour.jpg",
+        "Séjour"
+      ],
+      [
+        "christina-int-cuisine.jpg",
+        "Cuisine"
+      ],
+      [
+        "christina-int-chambre.jpg",
+        "Chambre"
+      ],
+      [
+        "christina-int-terrasse.jpg",
+        "Terrasse"
+      ]
+    ],
+    "plans": [
+      [
+        "christina-plan-1.jpg",
+        "Plan — Niveau 1"
+      ],
+      [
+        "christina-plan-2.jpg",
+        "Plan — Niveau 2"
+      ],
+      [
+        "christina-plan-3.jpg",
+        "Plan — Niveau 3"
+      ]
+    ],
+    "interior": [
+      [
+        "christina-int-cuisine.jpg",
+        "Cuisine",
+        [
+          "Cuisine entièrement équipée et aménagée",
+          "Finitions haut de gamme, plan de travail marbré",
+          "Électroménager encastré de qualité"
+        ]
+      ],
+      [
+        "christina-int-sejour.jpg",
+        "Séjour & salle à manger",
+        [
+          "Séjour spacieux et traversant",
+          "Décoration soignée et intemporelle",
+          "Parquet bois chaleureux"
+        ]
+      ],
+      [
+        "christina-int-chambre.jpg",
+        "Chambre",
+        [
+          "Chambre confortable avec literie haut de gamme",
+          "Décoration épurée et lumineuse",
+          "Rangements intégrés"
+        ]
+      ],
+      [
+        "christina-int-terrasse.jpg",
+        "Terrasse",
+        [
+          "Espace extérieur privé prolongeant le séjour",
+          "Idéale pour les repas et moments de détente",
+          "Sol en pierre naturelle"
+        ]
+      ],
+      [
+        "christina-int-sdb.jpg",
+        "Salle de bain",
+        [
+          "Douche à l'italienne, finitions haut de gamme",
+          "Double vasque et miroir rétroéclairé",
+          "Ambiance spa, chaleureuse et raffinée"
+        ]
+      ]
+    ],
+    "dispo": {
+      "intro": "3 typologies — cliquez « voir détails » pour les plans disponibles",
+      "typologies": [
+        {
+          "name": "F2",
+          "count": "à confirmer",
+          "status_label": "À confirmer",
+          "confirmed": false,
+          "detail_text": "",
+          "detail_images": []
+        },
+        {
+          "name": "F3",
+          "count": "à confirmer",
+          "status_label": "À confirmer",
+          "confirmed": false,
+          "detail_text": "",
+          "detail_images": []
+        },
+        {
+          "name": "F4",
+          "count": "à confirmer",
+          "status_label": "À confirmer",
+          "confirmed": false,
+          "detail_text": "",
+          "detail_images": []
+        }
+      ],
+      "note": "⏳ Nombre d'unités disponibles par typologie (ex. « 2 F3, 1 F4 ») en attente de confirmation du client — aucun chiffre n'est inventé ici."
+    },
+    "typebien_opts": [
+      "F2",
+      "F3",
+      "F4"
+    ],
+    "card_image": "villa-christina.jpg"
+  },
+  {
+    "slug": "villa-catrina",
+    "name": "Catrina",
+    "hero_img": "villa-catrina.jpg",
+    "loc": "Bir Mourad Raïs",
+    "loc_full": "Bir Mourad Raïs, Alger",
+    "count": 30,
+    "typologie": "F3, F4, F5",
+    "progress_pct": null,
+    "description": "Idéalement située à Bir Mourad Raïs, au cœur du quartier des Sources, Villa Catrina incarne l'élégance d'une résidence haut standing. Composée de deux blocs résidentiels et d'une galerie commerciale, elle propose des appartements aux volumes généreux, sublimés par des matériaux nobles et des finitions raffinées. Une adresse privilégiée où prestige, confort et qualité de vie se conjuguent pour offrir un patrimoine durable dans l'un des secteurs les plus recherchés d'Alger.",
+    "feats": [
+      [
+        "archi",
+        "Architecture néoclassique élégante"
+      ],
+      [
+        "blocs",
+        "Résidence composée de 2 blocs"
+      ],
+      [
+        "typo",
+        "Typologies F3, F4, F5"
+      ],
+      [
+        "galerie",
+        "Galerie commerciale"
+      ],
+      [
+        "marbre",
+        "Marbre italien & parquet naturel"
+      ],
+      [
+        "clim",
+        "Climatisation & chauffage centralisés"
+      ],
+      [
+        "parking",
+        "Parking en sous-sol"
+      ],
+      [
+        "ascenseur",
+        "Ascenseurs"
+      ],
+      [
+        "securite",
+        "Sécurité 24h/24"
+      ],
+      [
+        "isolation",
+        "Isolation thermique & acoustique performante"
+      ],
+      [
+        "domotique",
+        "Domotique personnalisable"
+      ]
+    ],
+    "gallery": [
+      [
+        "villa-catrina.jpg",
+        "Façade"
+      ],
+      [
+        "catrina-sec-1.jpg",
+        "Extérieur"
+      ],
+      [
+        "catrina-sec-2.jpg",
+        "Entrée"
+      ],
+      [
+        "catrina-int-sejour.jpg",
+        "Séjour"
+      ],
+      [
+        "catrina-int-cuisine.jpg",
+        "Cuisine"
+      ],
+      [
+        "catrina-int-chambre-parentale.jpg",
+        "Chambre parentale"
+      ],
+      [
+        "catrina-int-terrasse.jpg",
+        "Terrasse"
+      ]
+    ],
+    "plans": [
+      [
+        "catrina-fiche-f4-138.jpg",
+        "Simplex F4 — 138 m²"
+      ],
+      [
+        "catrina-plan-2.jpg",
+        "Plan — Niveau 2"
+      ],
+      [
+        "catrina-plan-3.jpg",
+        "Plan — Niveau 3"
+      ]
+    ],
+    "interior": [
+      [
+        "catrina-int-cuisine.jpg",
+        "Cuisine",
+        [
+          "Cuisine entièrement équipée et aménagée",
+          "Finitions haut de gamme, plan de travail marbré",
+          "Électroménager encastré de qualité"
+        ]
+      ],
+      [
+        "catrina-int-sejour.jpg",
+        "Séjour & salle à manger",
+        [
+          "Séjour spacieux, volumes généreux",
+          "Décoration soignée et intemporelle",
+          "Parquet bois chaleureux"
+        ]
+      ],
+      [
+        "catrina-int-chambre-parentale.jpg",
+        "Chambre parentale",
+        [
+          "Suite parentale spacieuse",
+          "Literie premium et linge de qualité",
+          "Décoration soignée, tons neutres et élégants"
+        ]
+      ],
+      [
+        "catrina-int-terrasse.jpg",
+        "Terrasse",
+        [
+          "Espace extérieur privé prolongeant le séjour",
+          "Idéale pour les repas et moments de détente",
+          "Sol en pierre naturelle"
+        ]
+      ],
+      [
+        "catrina-int-sdb.jpg",
+        "Salle de bain",
+        [
+          "Douche à l'italienne, finitions haut de gamme",
+          "Double vasque, marbre Crema Marfil",
+          "Ambiance spa, chaleureuse et raffinée"
+        ]
+      ]
+    ],
+    "dispo": {
+      "intro": "3 typologies — cliquez « voir détails » pour la fiche technique de chaque typologie",
+      "typologies": [
+        {
+          "name": "F3",
+          "count": "à confirmer",
+          "status_label": "À confirmer",
+          "confirmed": false,
+          "detail_text": "⏳ Plan et surface détaillée en attente du client.",
+          "detail_images": []
+        },
+        {
+          "name": "F4",
+          "count": "à confirmer",
+          "status_label": "À confirmer",
+          "confirmed": false,
+          "detail_text": "Simplex, 138 m² (125 m² habitable + 13 m² terrasse) — fiche technique réelle avec surfaces détaillées par pièce.",
+          "detail_images": [
+            "catrina-fiche-f4-138.jpg"
+          ]
+        },
+        {
+          "name": "F5",
+          "count": "à confirmer",
+          "status_label": "À confirmer",
+          "confirmed": false,
+          "detail_text": "⏳ Plan et surface détaillée en attente du client.",
+          "detail_images": []
+        }
+      ],
+      "note": "⏳ Nombre d'unités disponibles par typologie (ex. « 2 F3, 1 F4 ») en attente de confirmation du client — aucun chiffre n'est inventé ici."
+    },
+    "typebien_opts": [
+      "F3",
+      "F4",
+      "F5"
+    ],
+    "card_image": "villa-catrina.jpg"
+  }
+]

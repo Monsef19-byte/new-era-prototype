@@ -1,0 +1,17 @@
+{
+  "logo": "logo-mono-white.png",
+  "name": "New Era Promotion Immobilière",
+  "tagline": "L'Art de Bâtir l'Excellence",
+  "subtitle": "25 ans d'expérience algéro-allemande au service de résidences de prestige à Alger.",
+  "cards": [
+    {"icon": "site", "label": "Site web", "href": "https://newera-promotion.com", "enabled": true},
+    {"icon": "residences", "label": "Résidences", "href": "https://newera-promotion.com/index.html#residences", "enabled": true},
+    {"icon": "call", "label": "Appeler", "href": "tel:+213000000000", "enabled": true},
+    {"icon": "whatsapp", "label": "WhatsApp", "href": "https://wa.me/213000000000", "enabled": true},
+    {"icon": "instagram", "label": "Instagram", "href": "#", "enabled": true},
+    {"icon": "facebook", "label": "Facebook", "href": "#", "enabled": true},
+    {"icon": "linkedin", "label": "LinkedIn", "href": "#", "enabled": true},
+    {"icon": "tiktok", "label": "TikTok", "href": "#", "enabled": true},
+    {"icon": "email", "label": "Email", "href": "mailto:contact@newera-dz.com", "enabled": true}
+  ]
+}

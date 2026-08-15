@@ -1,0 +1,68 @@
+/* ============================================================
+   rtl.css — RTL (Arabic) overrides. Loaded only on pages with
+   <html lang="ar" dir="rtl">. Never loaded on the French pages,
+   so it cannot affect them.
+   ============================================================ */
+
+html[dir="rtl"] body{
+  direction:rtl;
+  text-align:right;
+  font-family:'Cairo','Helvetica Neue',Helvetica,Arial,sans-serif;
+}
+html[dir="rtl"] .h1,
+html[dir="rtl"] .h2,
+html[dir="rtl"] .h3,
+html[dir="rtl"] .manifesto-claim,
+html[dir="rtl"] .closing p,
+html[dir="rtl"] .landowner b,
+html[dir="rtl"] .mobile-menu-links a{
+  font-family:'El Messiri','Cairo',serif;
+}
+
+/* logo mirrors to the opposite corner */
+html[dir="rtl"] .logo-fixed{left:auto;right:calc(var(--gutter) - 14px);}
+
+/* header: flex row axis already flips with direction:rtl; only fix the
+   auto-margin push and hover underline, which are physical properties */
+html[dir="rtl"] .hdr-right{margin-left:0;margin-right:auto;}
+html[dir="rtl"] .nav-links a::after{left:auto;right:0;}
+
+/* mobile menu slides in from the left instead of the right */
+html[dir="rtl"] .mobile-menu{transform:translateX(-100%);}
+html[dir="rtl"] .mobile-menu.open{transform:translateX(0);}
+html[dir="rtl"] .mobile-menu-close{right:auto;left:22px;}
+
+/* kicker rule + gap direction handled by flex row reversal automatically */
+
+/* floating call/whatsapp cluster mirrors to the left edge */
+html[dir="rtl"] .float-card,
+html[dir="rtl"] .float-cta{right:auto;left:24px;}
+html[dir="rtl"] .float-card .x{text-align:left;}
+
+/* editorial split blocks: grid column order mirrors automatically under
+   direction:rtl — no extra rule needed for .editorial itself */
+html[dir="rtl"] .editorial.overlap .editorial-text{margin:-140px auto 0 0;}
+
+/* hl-num / stat numerals keep LTR shape (digits read the same) but the
+   surrounding label stays RTL — no change required, Arabic-Indic vs.
+   Western digits both flow fine inside a rtl block */
+
+/* form fields (villa / opportunites pages) */
+html[dir="rtl"] input,
+html[dir="rtl"] select,
+html[dir="rtl"] textarea{text-align:right;}
+
+/* footer nav + mini cta bar: flex row mirrors automatically */
+
+/* name/location overlay on residence cards must hug the right edge in RTL,
+   explicit because absolute-positioned overlays sometimes don't pick up
+   the inherited text-align in every engine */
+html[dir="rtl"] .res-overlay-info,
+html[dir="rtl"] .switch-cap,
+html[dir="rtl"] .editorial-text{text-align:right;}
+
+/* progress badge on residence cards mirrors to the opposite corner */
+html[dir="rtl"] .res-progress-circle{right:auto;left:16px;}
+@media (max-width:900px){
+  html[dir="rtl"] .res-progress-circle{left:12px;}
+}

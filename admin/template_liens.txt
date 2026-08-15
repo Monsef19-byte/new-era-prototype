@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>%%NAME%% — Tous nos liens</title>
+<meta name="description" content="%%NAME%% — le site, nos résidences, WhatsApp et tous nos réseaux sociaux, en un seul endroit.">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="%%NAME%%">
+<meta property="og:description" content="%%TAGLINE%% — %%SUBTITLE%%">
+<meta property="og:image" content="https://newera-promotion.com/assets/hero-poster.jpg">
+<meta property="og:url" content="https://newera-promotion.com/liens">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="%%NAME%%">
+<meta name="twitter:description" content="%%TAGLINE%% — tous nos liens en un seul endroit.">
+<meta name="twitter:image" content="https://newera-promotion.com/assets/hero-poster.jpg">
+
+<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+body{background:var(--ink,#14120f);min-height:100vh;}
+.liens-wrap{max-width:460px;margin:0 auto;padding:64px 22px 48px;text-align:center;}
+.liens-logo{width:96px;height:96px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;margin:0 auto 26px;box-shadow:0 14px 34px rgba(0,0,0,.4);overflow:hidden;}
+.liens-logo img{width:58%;height:auto;}
+.liens-name{font-family:'El Messiri',serif;font-size:22px;font-weight:700;color:#fdfbf7;margin-bottom:6px;letter-spacing:.2px;}
+.liens-tagline{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
+.liens-sub{font-size:13px;color:#c4bba9;line-height:1.6;margin-bottom:36px;}
+
+.liens-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
+.liens-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:11px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.14);border-radius:16px;padding:22px 8px 16px;text-decoration:none;transition:background .2s,border-color .2s,transform .2s;}
+.liens-card:hover{background:rgba(255,255,255,.08);border-color:var(--red);transform:translateY(-3px);}
+.liens-ico{flex-shrink:0;width:46px;height:46px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;}
+.liens-ico svg{width:22px;height:22px;}
+.liens-card-label{font-size:11.5px;font-weight:700;color:#fdfbf7;letter-spacing:.2px;}
+
+.liens-foot{margin-top:36px;font-size:10.5px;letter-spacing:.3px;color:#6b6459;}
+@media (max-width:480px){ .liens-wrap{padding:48px 18px 36px;} }
+</style>
+</head>
+<body>
+
+<div class="liens-wrap">
+  <div class="liens-logo"><img src="../assets/%%LOGO_IMG%%" alt="%%NAME%%"></div>
+  <div class="liens-name">%%NAME%%</div>
+  <div class="liens-tagline">%%TAGLINE%%</div>
+  <p class="liens-sub">%%SUBTITLE%%</p>
+
+  <div class="liens-grid">
+%%CARDS_HTML%%
+  </div>
+
+  <div class="liens-foot">© %%NAME%%</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Villa Agata — Hydra, Alger | New Era Promotion Immobilière</title>
+<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<header class="site-header" id="siteHeader">
+  <a class="logo-link" href="index.html"><div class="logo-badge"><span>NEW ERA</span></div></a>
+  <nav class="nav-links">
+    <a href="index.html#top">Accueil</a>
+    <a href="index.html#residences">Nos Résidences</a>
+    <a href="a-propos.html">À Propos</a>
+    <a href="opportunites.html">Opportunités</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+  <div class="hdr-right">
+    <button class="theme-toggle" id="themeToggle" aria-label="Basculer le mode sombre">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    </button>
+    <button class="hdr-cta">Prendre rendez-vous</button>
+    <button class="burger" id="burgerBtn" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Fermer">✕</button>
+  <nav class="mobile-menu-links">
+    <a href="index.html#top">Accueil</a>
+    <a href="index.html#residences">Nos Résidences</a>
+    <a href="a-propos.html">À Propos</a>
+    <a href="opportunites.html">Opportunités</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+  <button class="btn btn-fill">Prendre rendez-vous</button>
+</div>
+
+<!-- HERO — blurred/darkened backdrop + sharp vertical portrait + frosted info card -->
+<section class="vhero-full" id="top">
+  <img class="vhero-bg" src="assets/agata-hero.jpg" alt="" aria-hidden="true" data-parallax="0.12">
+  <div class="vhero-layout">
+    <div class="vhero-portrait reveal">
+      <img src="assets/agata-hero.jpg" alt="Villa Agata, résidence de 14 appartements à Hydra — façade néoclassique">
+    </div>
+    <div class="vhero-content reveal">
+      <div class="kicker">Villa Agata — Hydra</div>
+      <h1><span>Le raffinement néoclassique</span><span class="hl-accent">au cœur de Hydra</span></h1>
+      <div class="v-chips">
+        <span class="v-chip">25 ans d'expérience</span>
+        <span class="v-chip">Partenariat algéro-allemand</span>
+      </div>
+      <div class="vfacts">
+        <div class="stat"><b>Hydra, Alger</b><span>Localisation</span></div>
+        <div class="stat"><b>14 appartements</b><span>Lots</span></div>
+        <div class="stat"><b>F4 & F5</b><span>Typologie</span></div>
+        <div class="stat"><b>Marbre, parquet naturel</b><span>Finitions</span></div>
+      </div>
+      <div class="vactions">
+        <button class="btn btn-fill">Prendre rendez-vous</button>
+        <a class="share-btn" href="https://wa.me/?text=Villa%20Agata%20%E2%80%94%20New%20Era%20Promotion%20Immobili%C3%A8re%2C%20Hydra%2C%20Alger" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Partager
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-cue" aria-hidden="true"></div>
+</section>
+
+<nav class="crumb-bar" aria-label="Fil d'ariane">
+  <a href="index.html">Accueil</a><span>/</span><a href="index.html#residences">Nos Résidences</a><span>/</span><span>Villa Agata</span>
+</nav>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span><b>Villa Agata</b> Hydra, Alger</span><span>14 appartements</span><span>Architecture néoclassique</span><span><b>New Era</b> Promotion Immobilière</span>
+    <span><b>Villa Agata</b> Hydra, Alger</span><span>14 appartements</span><span>Architecture néoclassique</span><span><b>New Era</b> Promotion Immobilière</span>
+  </div>
+</div>
+
+<!-- GALERIE -->
+<section class="sec tight">
+  <div class="sec-head reveal">
+    <div><div class="kicker"><span class="num">01</span></div><h2 class="h2" style="font-size:clamp(24px,3.2vw,36px);">Galerie</h2></div>
+  </div>
+  <div class="cflow reveal" id="galCarousel" data-autoplay="4200">
+    <div class="cflow-stage">
+      <div class="cflow-slide" data-group="gallery" data-index="0"><img src="assets/agata-ext-1.jpg" alt="Villa Agata — entrée de la résidence"><div class="cap">Entrée</div></div>
+      <div class="cflow-slide" data-group="gallery" data-index="1"><img src="assets/agata-ext-3.jpg" alt="Villa Agata — vue extérieure"><div class="cap">Extérieur</div></div>
+      <div class="cflow-slide" data-group="gallery" data-index="2"><img src="assets/agata-sejour.jpg" alt="Villa Agata — séjour"><div class="cap">Séjour</div></div>
+      <div class="cflow-slide" data-group="gallery" data-index="3"><img src="assets/agata-cuisine.jpg" alt="Villa Agata — cuisine"><div class="cap">Cuisine</div></div>
+      <div class="cflow-slide" data-group="gallery" data-index="4"><img src="assets/agata-chambre.jpg" alt="Villa Agata — chambre principale"><div class="cap">Chambre</div></div>
+      <div class="cflow-slide" data-group="gallery" data-index="5"><img src="assets/agata-chambre2.jpg" alt="Villa Agata — deuxième chambre"><div class="cap">Chambre 2</div></div>
+      <div class="cflow-slide" data-group="gallery" data-index="6"><img src="assets/agata-sdb.jpg" alt="Villa Agata — salle de bain"><div class="cap">Salle de bain</div></div>
+    </div>
+    <button class="cflow-arrow cflow-prev" aria-label="Précédent"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button class="cflow-arrow cflow-next" aria-label="Suivant"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+  </div>
+</section>
+
+<!-- DESCRIPTION -->
+<section class="sec tight alt">
+  <div class="sec-head reveal"><div><div class="kicker"><span class="num">02</span></div><h2 class="h2" style="font-size:clamp(24px,3.2vw,36px);">Description</h2></div></div>
+  <div class="description-block reveal">
+    <p class="lede">Située à Hydra, Villa Agata est une résidence haut standing inspirée de l'architecture néoclassique. Composée de seulement 14 appartements aux finitions premium, elle offre un cadre de vie prestigieux alliant élégance, confort moderne et sécurité, dans l'un des quartiers les plus recherchés d'Alger.</p>
+  </div>
+</section>
+
+<!-- CARACTÉRISTIQUES -->
+<section class="sec tight">
+  <div class="sec-head reveal"><div><div class="kicker"><span class="num">03</span></div><h2 class="h2" style="font-size:clamp(24px,3.2vw,36px);">Caractéristiques</h2></div></div>
+  <div class="feat-grid cols-4 reveal">
+    <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10l10-6 10 6"/><path d="M4 10v11M8 10v11M12 10v11M16 10v11M20 10v11"/><path d="M3 21h18"/></svg></div><b>Architecture néoclassique</b></div>
+    <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg></div><b>Typologie F4 & F5</b></div>
+    <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></div><b>Marbre italien & parquet naturel</b></div>
+    <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h8a2 2 0 1 1-2 2"/></svg></div><b>Climatisation & chauffage centralisés</b></div>
+    <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg></div><b>Parking en sous-sol</b></div>
+    <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg></div><b>Sécurité 24h/24</b></div>
+    <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="1"/><path d="M10 7l2-2 2 2M10 17l2 2 2-2"/></svg></div><b>Ascenseurs</b></div>
+    <div class="feat"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0z"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18 15 15 0 0 1 0-18z"/></svg></div><b>Isolation thermique & acoustique</b></div>
+  </div>
+</section>
+
+<!-- PARTIES COMMUNES -->
+<section class="sec tight alt">
+  <div class="sec-head reveal"><div><div class="kicker"><span class="num">04</span></div><h2 class="h2" style="font-size:clamp(24px,3.2vw,36px);">Parties communes</h2></div><p class="lede">Les équipements et services partagés de Villa Agata.</p></div>
+  <div class="detail-carousel reveal" data-carousel>
+    <div class="dc-track">
+      <div class="dc-slide active"><div class="dc-image"><img src="assets/agata-pc-parking.jpg" alt="Villa Agata — parking en sous-sol"></div><div class="dc-info"><div class="dc-eyebrow">01 — Parties communes</div><b>Parking – Sous-sol</b><ul>
+        <li>Parking privé et sécurisé en sous-sol</li>
+        <li>Places de stationnement réservées aux résidents</li>
+        <li>Accès direct aux étages par ascenseur</li>
+      </ul></div></div>
+      <div class="dc-slide"><div class="dc-image"><img src="assets/agata-pc-cameras.jpg" alt="Villa Agata — caméras de surveillance"></div><div class="dc-info"><div class="dc-eyebrow">02 — Parties communes</div><b>Caméras de surveillance</b><ul>
+        <li>Vidéosurveillance active 24h/24 et 7j/7</li>
+        <li>Couverture de toutes les zones communes</li>
+        <li>Enregistrement continu et archivage sécurisé</li>
+      </ul></div></div>
+      <div class="dc-slide"><div class="dc-image"><img src="assets/agata-pc-agent.jpg" alt="Villa Agata — agent de sécurité"></div><div class="dc-info"><div class="dc-eyebrow">03 — Parties communes</div><b>Agent de sécurité</b><ul>
+        <li>Poste de sécurité actif jour et nuit, 7j/7</li>
+        <li>Contrôle des accès et gestion des visiteurs</li>
+        <li>Intervention rapide en cas d'incident</li>
+      </ul></div></div>
+      <div class="dc-slide"><div class="dc-image"><img src="assets/agata-pc-menage.jpg" alt="Villa Agata — femme de ménage"></div><div class="dc-info"><div class="dc-eyebrow">04 — Parties communes</div><b>Femme de ménage</b><ul>
+        <li>Entretien quotidien des parties communes</li>
+        <li>Personnel dédié, discret et qualifié</li>
+        <li>Service inclus dans les charges de copropriété</li>
+      </ul></div></div>
+      <div class="dc-slide"><div class="dc-image"><img src="assets/agata-pc-hall.jpg" alt="Villa Agata — hall d'entrée"></div><div class="dc-info"><div class="dc-eyebrow">05 — Parties communes</div><b>Hall d'entrée</b><ul>
+        <li>Hall d'accueil élégant et lumineux</li>
+        <li>Boîtes aux lettres sécurisées</li>
+        <li>Finitions haut de gamme reflétant le standing de la résidence</li>
+      </ul></div></div>
+      <div class="dc-slide"><div class="dc-image"><img src="assets/agata-pc-digicode.jpg" alt="Villa Agata — digicode"></div><div class="dc-info"><div class="dc-eyebrow">06 — Parties communes</div><b>Digicode</b><ul>
+        <li>Accès sécurisé réservé aux résidents et visiteurs autorisés</li>
+      </ul></div></div>
+      <div class="dc-slide"><div class="dc-image"><img src="assets/agata-pc-ascenseur.jpg" alt="Villa Agata — ascenseur"></div><div class="dc-info"><div class="dc-eyebrow">07 — Parties communes</div><b>Ascenseur</b><ul>
+        <li>Ascenseur moderne, silencieux et sécurisé</li>
+        <li>Accès facile à tous les étages</li>
+      </ul></div></div>
+      <div class="dc-slide"><div class="dc-image"><img src="assets/agata-pc-bache.jpg" alt="Villa Agata — bâche à eau"></div><div class="dc-info"><div class="dc-eyebrow">08 — Parties communes</div><b>Bâche à eau</b><ul>
+        <li>Réserve d'eau garantissant une alimentation continue de la résidence</li>
+      </ul></div></div>
+    </div>
+    <div class="dc-nav">
+      <button class="dc-arrow dc-prev" aria-label="Précédent"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="dc-dots"></div>
+      <button class="dc-arrow dc-next" aria-label="Suivant"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- MATÉRIAUX -->
+<div class="dark-band reveal">
+  <div class="sec-head" style="border:none;">
+    <div><div class="kicker on-dark"><span class="num">05</span></div><h2 class="h2" style="font-size:clamp(24px,3.2vw,36px);">L'Art de Bâtir l'Exception</h2></div>
+    <p class="lede">Pierre de taille, moulures élégantes et fer forgé d'exception façonnent l'identité de New Era.</p>
+  </div>
+  <div class="mat-grid">
+    <div class="mat-tile"><div class="thumb"><img src="assets/materials-stone.jpg" alt="Pierre de taille"></div><div class="cap">Pierre de taille</div></div>
+    <div class="mat-tile"><div class="thumb"><img src="assets/materials-moulure.jpg" alt="Moulures élégantes"></div><div class="cap">Moulures élégantes</div></div>
+    <div class="mat-tile"><div class="thumb"><img src="assets/materials-iron.jpg" alt="Fer forgé"></div><div class="cap">Fer forgé</div></div>
+  </div>
+  <p class="materials-note">Détails extraits des rendus 3D réels du projet — une séance photo matériaux dédiée reste à planifier avec le client.</p>
+  <div style="height:70px;"></div>
+</div>
+
+<!-- PLAN 3D -->
+<section class="sec tight">
+  <div class="sec-head reveal"><div><div class="kicker"><span class="num">06</span></div><h2 class="h2" style="font-size:clamp(24px,3.2vw,36px);">Plan 3D</h2></div><p class="lede">Plans des typologies disponibles à Villa Agata — cliquez un plan pour l'agrandir.</p></div>
+  <div class="cflow cflow-plans reveal" id="planCarousel" data-autoplay="4600">
+    <div class="cflow-stage">
+      <div class="cflow-slide" data-group="plans" data-index="0"><img src="assets/agata-plan-f4-g.jpg" alt="Plan F4 107m² gauche"><div class="cap">F4 — 107 m² G</div></div>
+      <div class="cflow-slide" data-group="plans" data-index="1"><img src="assets/agata-plan-f4-d.jpg" alt="Plan F4 107m² droite"><div class="cap">F4 — 107 m² D</div></div>
+      <div class="cflow-slide" data-group="plans" data-index="2"><img src="assets/agata-plan-duplex.jpg" alt="Plan Duplex 185m²"><div class="cap">Duplex — 185 m²</div></div>
+      <div class="cflow-slide" data-group="plans" data-index="3"><img src="assets/agata-plan-loft.jpg" alt="Plan Loft 153m²"><div class="cap">Loft — 153 m²</div></div>
+    </div>
+    <button class="cflow-arrow cflow-prev" aria-label="Précédent"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button class="cflow-arrow cflow-next" aria-label="Suivant"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+  </div>
+</section>
+
+<!-- DISPONIBILITÉ -->
+<div class="dispo-band reveal">
+  <div class="kicker"><span class="num">07</span></div>
+  <h2 class="h3">Disponibilité</h2>
+  <p class="lede">Consultez le détail des appartements encore disponibles à Villa Agata, par typologie.</p>
+  <button class="btn btn-fill" id="dispoOpen">Voir les disponibilités</button>
+</div>
+
+<!-- INTÉRIEUR -->
+<section class="sec tight">
+  <div class="sec-head reveal"><div><div class="kicker"><span class="num">08</span></div><h2 class="h2" style="font-size:clamp(24px,3.2vw,36px);">Intérieur</h2></div><p class="lede">Un aperçu des espaces de vie de Villa Agata.</p></div>
+  <div class="detail-carousel reveal" data-carousel>
+    <div class="dc-track">
+      <div class="dc-slide active"><div class="dc-image"><img src="assets/agata-cuisine.jpg" alt="Villa Agata — cuisine"></div><div class="dc-info"><div class="dc-eyebrow">01 — Intérieur</div><b>Cuisine</b><ul>
+        <li>Cuisine entièrement équipée et aménagée</li>
+        <li>Finitions haut de gamme (bois laqué, laiton, plan de travail marbré)</li>
+        <li>Électroménager encastré de qualité</li>
+      </ul></div></div>
+      <div class="dc-slide"><div class="dc-image"><img src="assets/agata-sejour.jpg" alt="Villa Agata — séjour"></div><div class="dc-info"><div class="dc-eyebrow">02 — Intérieur</div><b>Séjour</b><ul>
+        <li>Séjour spacieux, lumineux et traversant</li>
+        <li>Décoration soignée et intemporelle</li>
+        <li>Parquet bois chaleureux et belle hauteur sous plafond</li>
+      </ul></div></div>
+      <div class="dc-slide"><div class="dc-image"><img src="assets/agata-chambre.jpg" alt="Villa Agata — chambre"></div><div class="dc-info"><div class="dc-eyebrow">03 — Intérieur</div><b>Chambre</b><ul>
+        <li>Chambre confortable avec literie haut de gamme</li>
+        <li>Décoration épurée, lumineuse et intemporelle</li>
+        <li>Rangements intégrés et espace optimisé</li>
+      </ul></div></div>
+      <div class="dc-slide"><div class="dc-image"><img src="assets/agata-chambre2.jpg" alt="Villa Agata — chambre secondaire"></div><div class="dc-info"><div class="dc-eyebrow">04 — Intérieur</div><b>Chambre secondaire</b><ul>
+        <li>Deuxième chambre lumineuse, décoration soignée</li>
+        <li>Grande fenêtre offrant un bel apport de lumière naturelle</li>
+      </ul></div></div>
+      <div class="dc-slide"><div class="dc-image"><img src="assets/agata-sdb.jpg" alt="Villa Agata — salle de bain"></div><div class="dc-info"><div class="dc-eyebrow">05 — Intérieur</div><b>Salle de bain</b><ul>
+        <li>Douche à l'italienne, double vasque avec plan en marbre</li>
+        <li>Miroir rétroéclairé et finitions dorées</li>
+        <li>Ambiance spa, chaleureuse et raffinée</li>
+      </ul></div></div>
+    </div>
+    <div class="dc-nav">
+      <button class="dc-arrow dc-prev" aria-label="Précédent"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="dc-dots"></div>
+      <button class="dc-arrow dc-next" aria-label="Suivant"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<section class="switch-band reveal">
+  <div class="sec-head" style="padding:0 var(--gutter) 0;border:none;">
+    <div><h2 class="h3">Vous hésitez ?</h2></div>
+    <p class="lede">Comparez Villa Agata avec nos autres résidences à Alger.</p>
+  </div>
+  <div class="switch-grid">
+    <a class="switch-card tilt" href="index.html#residences"><div class="thumb"><img src="assets/villa-veronica.jpg" alt="Villa Veronica"><div class="photo-badge"><span>NEW ERA</span></div></div><div class="switch-cap"><b>Veronica</b><span>Hydra</span></div></a>
+    <a class="switch-card tilt" href="index.html#residences"><div class="thumb"><img src="assets/villa-christina.jpg" alt="Villa Christina"><div class="photo-badge"><span>NEW ERA</span></div></div><div class="switch-cap"><b>Christina</b><span>Hydra</span></div></a>
+    <a class="switch-card tilt" href="index.html#residences"><div class="thumb"><img src="assets/villa-catrina.jpg" alt="Villa Catrina"><div class="photo-badge"><span>NEW ERA</span></div></div><div class="switch-cap"><b>Catrina</b><span>Bir Mourad Raïs</span></div></a>
+  </div>
+</section>
+
+<section class="rdv" id="rdv">
+  <div class="rdv-inner">
+    <div class="kicker on-dark"><span class="num">Contact</span></div>
+    <h2 class="h3">Prendre rendez-vous</h2>
+    <p class="body-sm">Un conseiller New Era vous recontacte pour organiser une visite de Villa Agata.</p>
+    <form class="rdv-grid" onsubmit="return false;">
+      <div class="rdv-field half">
+        <label for="typebien">Type de bien</label>
+        <select id="typebien">
+          <option>F4</option>
+          <option>F5</option>
+          <option>Duplex</option>
+          <option>Loft</option>
+        </select>
+      </div>
+      <div class="rdv-field half">
+        <label for="residence">Résidence souhaitée</label>
+        <select id="residence">
+          <option selected>Villa Agata</option>
+          <option>Villa Veronica</option>
+          <option>Villa Christina</option>
+          <option>Villa Catrina</option>
+        </select>
+      </div>
+      <div class="rdv-field half"><label for="nom">Nom & Prénom</label><input id="nom" type="text" placeholder="Votre nom"></div>
+      <div class="rdv-field half"><label for="tel">Téléphone</label><input id="tel" type="tel" placeholder="0X XX XX XX XX"></div>
+      <div class="rdv-field"><label for="email">Email</label><input id="email" type="email" placeholder="vous@email.com"></div>
+      <button class="btn btn-fill rdv-submit" type="submit">Envoyer ma demande</button>
+    </form>
+  </div>
+</section>
+
+<footer class="sitefooter">
+  <div class="logo-badge"><span>NEW ERA</span></div>
+  <div class="fnav"><a href="index.html">Accueil</a><a href="villa-agata.html">Agata</a><a href="index.html#residences">Veronica</a><a href="index.html#residences">Christina</a><a href="index.html#residences">Catrina</a><a href="a-propos.html">À Propos</a><a href="opportunites.html">Opportunités</a><a href="index.html#contact">Contact</a></div>
+  <div class="fcopy">© New Era Promotion Immobilière</div>
+</footer>
+
+<div class="float-cta" id="floatCta"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+<div class="float-card" id="floatCard">
+  <div class="x" id="floatClose">✕</div>
+  <p>Une question sur Villa Agata ?</p>
+  <button class="float-btn call">Appeler maintenant</button>
+  <button class="float-btn wa">WhatsApp</button>
+</div>
+
+<nav class="mini-cta-bar" aria-label="Actions rapides">
+  <a href="tel:+213000000000"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Appeler</a>
+  <a class="mid" href="https://wa.me/213000000000" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>WhatsApp</a>
+  <a href="#rdv"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>RDV</a>
+</nav>
+
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose" aria-label="Fermer">✕</button>
+  <button class="lb-nav lb-prev" id="lbPrev" aria-label="Précédent"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <img id="lbImg" src="" alt="">
+  <button class="lb-nav lb-next" id="lbNext" aria-label="Suivant"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+  <div class="lightbox-cap" id="lbCap"></div>
+</div>
+
+<!-- DISPONIBILITÉ MODAL — placeholder state, no invented numbers -->
+<div class="dispo-modal" id="dispoModal">
+  <div class="dispo-modal-box">
+    <button class="dispo-modal-close" id="dispoClose" aria-label="Fermer">✕</button>
+    <h3>Disponibilité — Villa Agata</h3>
+    <div class="sub">4 typologies — cliquez « voir détails » pour le plan de chaque typologie</div>
+    <table class="dispo-table">
+      <thead><tr><th>Typologie</th><th>Nb. d'appartements</th><th>Statut</th></tr></thead>
+      <tbody>
+        <tr><td>F4</td><td class="status">à confirmer</td><td><span class="status-pill pending">À confirmer</span></td></tr>
+        <tr><td>F5</td><td class="status">à confirmer</td><td><span class="status-pill pending">À confirmer</span></td></tr>
+        <tr><td>Duplex</td><td class="status">à confirmer</td><td><span class="status-pill pending">À confirmer</span></td></tr>
+        <tr><td>Loft</td><td class="status">à confirmer</td><td><span class="status-pill pending">À confirmer</span></td></tr>
+      </tbody>
+    </table>
+    <details class="dispo-details"><summary>F4 — voir détails</summary><div class="dd-body">Deux orientations disponibles (gauche / droite), 107 m² chacune.<img src="assets/agata-plan-f4-g.jpg" alt="Plan F4 107m² gauche"><img src="assets/agata-plan-f4-d.jpg" alt="Plan F4 107m² droite"></div></details>
+    <details class="dispo-details"><summary>F5 — voir détails</summary><div class="dd-body">⏳ Plan et surface détaillée en attente du client.</div></details>
+    <details class="dispo-details"><summary>Duplex — voir détails</summary><div class="dd-body">185 m² sur deux niveaux.<img src="assets/agata-plan-duplex.jpg" alt="Plan Duplex 185m²"></div></details>
+    <details class="dispo-details"><summary>Loft — voir détails</summary><div class="dd-body">153 m².<img src="assets/agata-plan-loft.jpg" alt="Plan Loft 153m²"></div></details>
+    <div class="dispo-pending" style="margin-top:16px;">⏳ Nombre d'unités disponibles par typologie (ex. « 2 F4, 1 Duplex ») en attente de confirmation du client — aucun chiffre n'est inventé ici. Les plans ci-dessus sont les plans réels fournis pour chaque typologie.</div>
+  </div>
+</div>
+
+<script>
+window.NE_GALLERIES = {
+  gallery: [
+    {src:'assets/agata-ext-1.jpg', cap:'Entrée'},
+    {src:'assets/agata-ext-3.jpg', cap:'Extérieur'},
+    {src:'assets/agata-sejour.jpg', cap:'Séjour'},
+    {src:'assets/agata-cuisine.jpg', cap:'Cuisine'},
+    {src:'assets/agata-chambre.jpg', cap:'Chambre'},
+    {src:'assets/agata-chambre2.jpg', cap:'Chambre 2'},
+    {src:'assets/agata-sdb.jpg', cap:'Salle de bain'}
+  ],
+  plans: [
+    {src:'assets/agata-plan-f4-g.jpg', cap:'F4 — 107 m² G'},
+    {src:'assets/agata-plan-f4-d.jpg', cap:'F4 — 107 m² D'},
+    {src:'assets/agata-plan-duplex.jpg', cap:'Duplex — 185 m²'},
+    {src:'assets/agata-plan-loft.jpg', cap:'Loft — 153 m²'}
+  ]
+};
+</script>
+<script src="assets/main.js"></script>
+</body>
+</html>

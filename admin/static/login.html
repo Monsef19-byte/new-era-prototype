@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion — Panneau New Era</title>
+<style>
+  :root{--red:#b3312c;--ink:#161412;--paper:#faf7f1;--line:#e4ddd0;--text:#231f1c;--muted:#7a7268;}
+  *{box-sizing:border-box;}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;}
+  .box{background:var(--paper);border-radius:10px;padding:44px 38px;width:min(360px,90vw);box-shadow:0 30px 80px rgba(0,0,0,.4);}
+  .logo{width:56px;height:56px;background:var(--red);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:11px;letter-spacing:.5px;margin:0 auto 22px;border-radius:4px;text-align:center;line-height:1.2;}
+  h1{font-size:19px;margin:0 0 4px;text-align:center;color:var(--text);}
+  p.sub{font-size:12.5px;color:var(--muted);text-align:center;margin:0 0 26px;}
+  label{font-size:11.5px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;}
+  input[type=password]{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:6px;font-size:15px;background:#fff;color:var(--text);}
+  input[type=password]:focus{outline:none;border-color:var(--red);}
+  button{width:100%;margin-top:18px;padding:13px;border:none;border-radius:6px;background:var(--red);color:#fff;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.3px;}
+  button:hover{opacity:.92;}
+  .err{color:var(--red);font-size:12.5px;margin-top:12px;text-align:center;display:none;}
+</style>
+</head>
+<body>
+  <form class="box" id="loginForm">
+    <div class="logo">NEW<br>ERA</div>
+    <h1>Panneau d'administration</h1>
+    <p class="sub">Connectez-vous pour modifier le site</p>
+    <label for="pw">Mot de passe</label>
+    <input type="password" id="pw" autofocus autocomplete="current-password">
+    <button type="submit">Se connecter</button>
+    <div class="err" id="err"></div>
+  </form>
+<script>
+document.getElementById('loginForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  var pw = document.getElementById('pw').value;
+  var errEl = document.getElementById('err');
+  errEl.style.display = 'none';
+  try{
+    var res = await fetch('/api/login', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({password: pw})});
+    var data = await res.json();
+    if(data.ok){ window.location.href = '/'; }
+    else { errEl.textContent = data.error || 'Erreur de connexion'; errEl.style.display = 'block'; }
+  }catch(err){ errEl.textContent = 'Impossible de contacter le serveur.'; errEl.style.display = 'block'; }
+});
+</script>
+</body>
+</html>

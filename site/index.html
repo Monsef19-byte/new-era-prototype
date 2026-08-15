@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>New Era Promotion Immobilière — L'Art de Bâtir l'Excellence</title>
+<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<a class="logo-fixed" href="#top" aria-label="New Era — accueil"><div class="logo-badge"><img src="assets/logo-wordmark-white.png" alt="New Era"></div></a>
+
+<header class="site-header" id="siteHeader">
+  <nav class="nav-links">
+    <a href="#top">Accueil</a>
+    <a href="#residences">Nos Résidences</a>
+    <a href="a-propos.html">À Propos</a>
+    <a href="opportunites.html">Opportunités</a>
+
+    <a href="#contact">Contact</a>
+  </nav>
+  <div class="hdr-right">
+    <a class="lang-switch" href="ar/index.html" title="عربي">AR</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Basculer le mode sombre">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    </button>
+    <button class="hdr-cta">Prendre rendez-vous</button>
+    <button class="burger" id="burgerBtn" aria-label="Menu">☰</button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Fermer">✕</button>
+  <nav class="mobile-menu-links">
+    <a href="#top">Accueil</a>
+    <a href="#residences">Nos Résidences</a>
+    <a href="a-propos.html">À Propos</a>
+    <a href="opportunites.html">Opportunités</a>
+    <a href="#contact">Contact</a>
+    <a class="lang-switch" href="ar/index.html">العربية</a>
+  </nav>
+  <button class="btn btn-fill">Prendre rendez-vous</button>
+</div>
+
+<!-- HERO — centered, symmetric, even scrim (brand book: façades symétriques, éviter les ambiances trop sombres/dramatiques) -->
+<section class="hero maison" id="top" style="background-image:url('assets/hero-poster.jpg');">
+  <video id="heroVideo" class="ken-burns" muted loop playsinline poster="assets/hero-poster.jpg"></video>
+  <div class="hero-inner maison">
+    <div class="kicker center">New Era Promotion Immobilière</div>
+    <h1 class="h1">L'Art de Bâtir <span class="hl-accent flow">l'Excellence</span></h1>
+    <p class="lede">25 ans d'expérience algéro-allemande au service de résidences de prestige à Alger.</p>
+    <div class="hero-actions center">
+      <button class="btn btn-fill">Prendre rendez-vous</button>
+      <a class="btn btn-line" style="color:#fff;border-color:rgba(255,255,255,.5);" href="#residences">Nos résidences</a>
+    </div>
+  </div>
+  <div class="scroll-cue" aria-hidden="true"></div>
+</section>
+
+<!-- MANIFESTO — small kicker, one oversized claim, small support text, then stat cards that reveal detail on hover -->
+<div class="manifesto reveal">
+  <div class="kicker manifesto-kicker">New Era Promotion Immobilière</div>
+  <h2 class="manifesto-claim">Nous bâtissons <span class="hl-accent">un patrimoine</span></h2>
+  <p class="manifesto-sub">New Era ne livre pas des immeubles — nous concevons un patrimoine fait pour traverser le temps.</p>
+  <div class="manifesto-stats">
+    <div class="ms-card" tabindex="0">
+      <b>25 ans</b><span>Expérience</span>
+      <div class="ms-detail">Plus de 25 ans d'expérience algéro-allemande dans la promotion immobilière haut de gamme.</div>
+    </div>
+    <div class="ms-card" tabindex="0">
+      <b>4</b><span>Résidences</span>
+      <div class="ms-detail">4 résidences de prestige actuellement en développement à Alger.</div>
+    </div>
+    <div class="ms-card" tabindex="0">
+      <b>100%</b><span>Finitions</span>
+      <div class="ms-detail">100% des finitions respectent les normes de qualité européennes.</div>
+    </div>
+  </div>
+</div>
+
+<section class="sec" id="residences">
+  <div class="sec-head reveal center">
+    <div>
+      <div class="kicker center"><span class="num">Nos résidences</span></div>
+      <h2 class="h2">Des résidences conçues pour<br>votre bien-être</h2>
+    </div>
+    <p class="lede">New Era développe des résidences de prestige alliant confort, élégance et valeur patrimoniale durable, dans des emplacements soigneusement sélectionnés à Alger.</p>
+  </div>
+
+  <div class="res-equal reveal">
+    <a class="res-equal-card" href="villa-agata.html">
+      <div class="thumb">
+        <img src="assets/villa-agata.jpg" alt="Villa Agata">
+        <div class="thumb-scrim"></div>
+        <div class="res-logo"><img src="assets/logo-wordmark-white-badge.png" alt="New Era"></div>
+        <div class="res-progress-circle" style="--pct:0"><div class="res-progress-circle-inner"><span class="pending">à<br>confirmer</span></div></div>
+        <div class="res-overlay-info"><b>Agata</b><span>Hydra · 14 appts</span></div>
+      </div>
+    </a>
+    <a class="res-equal-card" href="villa-veronica.html">
+      <div class="thumb">
+        <img src="assets/villa-veronica.jpg" alt="Villa Veronica">
+        <div class="thumb-scrim"></div>
+        <div class="res-logo"><img src="assets/logo-wordmark-white-badge.png" alt="New Era"></div>
+        <div class="res-progress-circle" style="--pct:50"><div class="res-progress-circle-inner"><span>50%</span></div></div>
+        <div class="res-overlay-info"><b>Veronica</b><span>Hydra · 7 appts</span></div>
+      </div>
+    </a>
+    <a class="res-equal-card" href="villa-christina.html">
+      <div class="thumb">
+        <img src="assets/villa-christina.jpg" alt="Villa Christina">
+        <div class="thumb-scrim"></div>
+        <div class="res-logo"><img src="assets/logo-wordmark-white-badge.png" alt="New Era"></div>
+        <div class="res-progress-circle" style="--pct:0"><div class="res-progress-circle-inner"><span class="pending">à<br>confirmer</span></div></div>
+        <div class="res-overlay-info"><b>Christina</b><span>Hydra · 22 appts</span></div>
+      </div>
+    </a>
+    <a class="res-equal-card" href="villa-catrina.html">
+      <div class="thumb">
+        <img src="assets/villa-catrina.jpg" alt="Villa Catrina">
+        <div class="thumb-scrim"></div>
+        <div class="res-logo"><img src="assets/logo-wordmark-white-badge.png" alt="New Era"></div>
+        <div class="res-progress-circle" style="--pct:0"><div class="res-progress-circle-inner"><span class="pending">à<br>confirmer</span></div></div>
+        <div class="res-overlay-info"><b>Catrina</b><span>Bir Mourad Raïs · 30 appts</span></div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<div class="editorial reveal" id="histoire">
+  <div class="fan-carousel compact" id="histoireCarousel">
+    <div class="fan-item"><img src="assets/villa-agata.jpg" alt="Villa Agata — extérieur"></div>
+    <div class="fan-item"><img src="assets/agata-sejour.jpg" alt="Villa Agata — séjour"></div>
+    <div class="fan-item"><img src="assets/villa-veronica.jpg" alt="Villa Veronica — extérieur"></div>
+    <div class="fan-item"><img src="assets/veronica-int-sejour.jpg" alt="Villa Veronica — séjour"></div>
+    <div class="fan-item"><img src="assets/villa-christina.jpg" alt="Villa Christina — extérieur"></div>
+    <div class="fan-item"><img src="assets/christina-int-cuisine.jpg" alt="Villa Christina — cuisine"></div>
+    <div class="fan-item"><img src="assets/villa-catrina.jpg" alt="Villa Catrina — extérieur"></div>
+    <div class="fan-item"><img src="assets/catrina-int-chambre-parentale.jpg" alt="Villa Catrina — chambre parentale"></div>
+  </div>
+  <div class="editorial-text">
+    <div class="kicker"><span class="num">Notre histoire</span></div>
+    <h3 class="h3 hl-num"><span class="big">25 ans</span><span class="small">d'expertise algéro-allemande</span></h3>
+    <p class="body-sm">New Era Promotion Immobilière est spécialisée dans le développement de projets résidentiels haut de gamme à Alger, fruit d'un partenariat algéro-allemand fort de plus de 25 ans d'expérience. Nos réalisations se distinguent par une architecture néoclassique, des matériaux nobles et des finitions aux normes européennes. Au-delà de la livraison, un service après-vente complet est assuré : maintenance, nettoyage et surveillance.</p>
+  </div>
+</div>
+
+<section class="sec alt">
+  <div class="sec-head reveal center">
+    <div>
+      <div class="kicker center"><span class="num">En images</span></div>
+      <h2 class="h2" style="font-size:clamp(26px,3.6vw,40px);">Galerie</h2>
+    </div>
+    <p class="lede">Un aperçu mélangé de nos résidences — extérieurs, intérieurs et parties communes.</p>
+  </div>
+  <div class="fan-carousel reveal" id="mixGalCarousel">
+    <div class="fan-item"><img src="assets/agata-pc-parking.jpg" alt="Villa Agata — parking"><div class="cap">Agata — Parking</div></div>
+    <div class="fan-item"><img src="assets/veronica-int-sejour.jpg" alt="Villa Veronica — séjour"><div class="cap">Veronica — Séjour</div></div>
+    <div class="fan-item"><img src="assets/villa-christina.jpg" alt="Villa Christina — extérieur"><div class="cap">Christina — Extérieur</div></div>
+    <div class="fan-item"><img src="assets/catrina-int-chambre-parentale.jpg" alt="Villa Catrina — chambre parentale"><div class="cap">Catrina — Chambre parentale</div></div>
+    <div class="fan-item"><img src="assets/agata-sejour.jpg" alt="Villa Agata — séjour"><div class="cap">Agata — Séjour</div></div>
+    <div class="fan-item"><img src="assets/villa-veronica.jpg" alt="Villa Veronica — extérieur"><div class="cap">Veronica — Extérieur</div></div>
+    <div class="fan-item"><img src="assets/christina-int-cuisine.jpg" alt="Villa Christina — cuisine"><div class="cap">Christina — Cuisine</div></div>
+    <div class="fan-item"><img src="assets/catrina-int-terrasse.jpg" alt="Villa Catrina — terrasse"><div class="cap">Catrina — Terrasse</div></div>
+    <div class="fan-item"><img src="assets/agata-cuisine.jpg" alt="Villa Agata — cuisine"><div class="cap">Agata — Cuisine</div></div>
+    <div class="fan-item"><img src="assets/veronica-int-sdb.jpg" alt="Villa Veronica — salle de bain"><div class="cap">Veronica — Salle de bain</div></div>
+    <div class="fan-hint"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-5 3 5 3M16 9l5 3-5 3"/></svg>Glissez ou défilez</div>
+  </div>
+</section>
+
+<div class="dark-band">
+  <div class="sec-head center reveal" style="border:none;">
+    <div>
+      <div class="kicker on-dark center"><span class="num">Savoir-faire</span></div>
+      <h2 class="h2" style="font-size:clamp(26px,3.6vw,40px);">L'Art de Bâtir l'Excellence</h2>
+    </div>
+    <p class="lede">Pierre de taille, moulures élégantes et fer forgé d'exception façonnent l'identité de New Era, symbole d'un art de bâtir intemporel.</p>
+  </div>
+  <div class="gallery-swiper on-dark">
+    <div class="gallery-swiper__nav">
+      <button class="gs-arrow gs-prev" aria-label="Précédent"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <button class="gs-arrow gs-next" aria-label="Suivant"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+    </div>
+    <div class="swiper gs-swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide"><div class="gs-card media-only">
+          <div class="gs-card__image"><img src="assets/materials-stone.jpg" alt="Pierre de taille"></div>
+          <div class="cap">Pierre de taille</div>
+        </div></div>
+        <div class="swiper-slide"><div class="gs-card media-only">
+          <div class="gs-card__image"><img src="assets/materials-moulure.jpg" alt="Moulures élégantes"></div>
+          <div class="cap">Moulures élégantes</div>
+        </div></div>
+        <div class="swiper-slide"><div class="gs-card media-only">
+          <div class="gs-card__image"><img src="assets/materials-iron.jpg" alt="Fer forgé"></div>
+          <div class="cap">Fer forgé</div>
+        </div></div>
+      </div>
+    </div>
+    <div class="gs-pagination"></div>
+  </div>
+  <p class="materials-note">Rendus 3D du projet — matériaux et finitions réels, séance photo chantier à venir.</p>
+</div>
+
+<div class="editorial reveal">
+  <div class="editorial-photo reveal-img"><img src="assets/villa-christina.jpg" alt=""></div>
+  <div class="editorial-text">
+    <div class="kicker"><span class="num">Notre vision</span></div>
+    <h3 class="h3">Un patrimoine à transmettre</h3>
+    <p class="body-sm">Nous croyons qu'une résidence est bien plus qu'un simple lieu de vie. Elle représente un investissement durable, un patrimoine à transmettre et un environnement conçu pour le bien-être de ses occupants.</p>
+  </div>
+</div>
+
+<section class="sec">
+  <div class="sec-head reveal center">
+    <div>
+      <div class="kicker center"><span class="num">Standards</span></div>
+      <h2 class="h2" style="font-size:clamp(26px,3.6vw,40px);">Dans chaque résidence</h2>
+    </div>
+  </div>
+  <div class="spec-cards reveal">
+    <div class="spec-card" tabindex="0"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10l10-6 10 6"/><path d="M4 10v11M8 10v11M12 10v11M16 10v11M20 10v11"/><path d="M3 21h18"/></svg></div><b>Architecture néoclassique</b>
+      <div class="spec-detail">Pierre de taille et moulures élégantes, façades symétriques inspirées du classicisme européen.</div>
+    </div>
+    <div class="spec-card" tabindex="0"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></div><b>Marbre italien & parquet naturel</b>
+      <div class="spec-detail">Sols et finitions en marbre italien sélectionné et parquet en bois naturel dans toutes les pièces de vie.</div>
+    </div>
+    <div class="spec-card" tabindex="0"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h8a2 2 0 1 1-2 2"/></svg></div><b>Climatisation centralisée</b>
+      <div class="spec-detail">Chauffage et climatisation centralisés inclus, confort thermique toute l'année sans installation à charge du résident.</div>
+    </div>
+    <div class="spec-card" tabindex="0"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg></div><b>Parking en sous-sol</b>
+      <div class="spec-detail">Parking privé et sécurisé en sous-sol avec sécurité assurée 24h/24 et 7j/7.</div>
+    </div>
+    <div class="spec-card" tabindex="0"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/></svg></div><b>Isolation renforcée</b>
+      <div class="spec-detail">Isolation thermique et acoustique renforcée pour un confort et une tranquillité optimale.</div>
+    </div>
+    <div class="spec-card" tabindex="0"><div class="spec-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><circle cx="9" cy="6" r="2"/><line x1="4" y1="12" x2="20" y2="12"/><circle cx="15" cy="12" r="2"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="7" cy="18" r="2"/></svg></div><b>Domotique</b>
+      <div class="spec-detail">Domotique personnalisable pour piloter éclairage, volets et sécurité depuis votre smartphone.</div>
+    </div>
+  </div>
+</section>
+
+<section class="sec alt">
+  <div class="sec-head reveal center">
+    <div>
+      <div class="kicker center"><span class="num">À travers Alger</span></div>
+      <h2 class="h2" style="font-size:clamp(26px,3.6vw,40px);">Nos Réalisations</h2>
+    </div>
+    <p class="lede">Un aperçu de nos résidences à travers Alger.</p>
+  </div>
+  <div class="fan-carousel reveal" id="homeCarousel">
+    <div class="fan-item"><img src="assets/villa-agata.jpg" alt="Villa Agata — Hydra"><div class="cap">Agata — Hydra</div></div>
+    <div class="fan-item"><img src="assets/villa-veronica.jpg" alt="Villa Veronica — Hydra"><div class="cap">Veronica — Hydra</div></div>
+    <div class="fan-item"><img src="assets/villa-christina.jpg" alt="Villa Christina — Hydra"><div class="cap">Christina — Hydra</div></div>
+    <div class="fan-item"><img src="assets/villa-catrina.jpg" alt="Villa Catrina — Bir Mourad Raïs"><div class="cap">Catrina — Bir Mourad Raïs</div></div>
+    <div class="fan-hint"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-5 3 5 3M16 9l5 3-5 3"/></svg>Glissez ou défilez</div>
+  </div>
+</section>
+
+<div class="closing reveal">
+  <div class="kicker on-dark center"><span class="num">New Era</span></div>
+  <p>Nous bâtissons aujourd'hui la valeur de demain.</p>
+  <p class="closing-signature">Your Era to start a new life.</p>
+  <button class="btn btn-fill">Prendre rendez-vous</button>
+</div>
+
+<div class="landowner reveal" id="contact">
+  <b>Vendez, échangez, collaborez</b>
+  <span>Vous avez un terrain, une villa ? New Era accompagne les propriétaires et investisseurs dans la valorisation de leur patrimoine — vente, troc ou partenariat.</span><br>
+  <a class="btn btn-line" href="opportunites.html">En savoir plus</a>
+</div>
+
+<footer class="sitefooter">
+  <div class="logo-badge"><img src="assets/logo-wordmark-white.png" alt="New Era"></div>
+  <div class="fnav"><a href="#top">Accueil</a><a href="villa-agata.html">Agata</a><a href="villa-veronica.html">Veronica</a><a href="villa-christina.html">Christina</a><a href="villa-catrina.html">Catrina</a><a href="a-propos.html">À Propos</a><a href="opportunites.html">Opportunités</a><a href="#contact">Contact</a></div>
+  <div class="fcopy">© New Era Promotion Immobilière</div>
+</footer>
+
+<div class="float-cta" id="floatCta"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+<div class="float-card" id="floatCard">
+  <div class="x" id="floatClose">✕</div>
+  <p>Une question sur nos résidences ?</p>
+  <button class="float-btn call">Appeler maintenant</button>
+  <button class="float-btn wa">WhatsApp</button>
+</div>
+
+<nav class="mini-cta-bar" aria-label="Actions rapides">
+  <a href="tel:+213561112233"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Appeler</a>
+  <a class="mid" href="https://wa.me/213561112233" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>WhatsApp</a>
+  <a href="villa-agata.html#rdv" data-rdv-trigger><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>RDV</a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="assets/main.js"></script>
+</body>
+</html>

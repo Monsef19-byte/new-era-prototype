@@ -1,0 +1,16 @@
+{
+  "hero_title": "L'Art de Bâtir",
+  "hero_accent": "l'Excellence",
+  "hero_lede": "25 ans d'expérience algéro-allemande au service de résidences de prestige à Alger.",
+  "manifesto_kicker": "New Era Promotion Immobilière",
+  "manifesto_claim": "Nous bâtissons",
+  "manifesto_claim_accent": "un patrimoine",
+  "manifesto_sub": "New Era ne livre pas des immeubles — nous concevons un patrimoine fait pour traverser le temps.",
+  "stats": [
+    {"value": "25 ans", "label": "Expérience", "detail": "Plus de 25 ans d'expérience algéro-allemande dans la promotion immobilière haut de gamme."},
+    {"value": "4", "label": "Résidences", "detail": "4 résidences de prestige actuellement en développement à Alger."},
+    {"value": "100%", "label": "Finitions", "detail": "100% des finitions respectent les normes de qualité européennes."}
+  ],
+  "featured_villas": ["villa-agata", "villa-veronica", "villa-christina", "villa-catrina"],
+  "extra_sections": []
+}

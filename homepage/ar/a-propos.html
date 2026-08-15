@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>من نحن؟ — نيو إيرا للترقية العقارية</title>
+<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;600;700&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<link rel="stylesheet" href="../assets/rtl.css">
+<style>
+.site-header{background:var(--paper);border-bottom:1px solid var(--line);}
+.nav-links{color:var(--text);}
+.theme-toggle{color:var(--text);border-color:var(--line-strong);}
+.lang-switch{color:var(--text);border-color:var(--line-strong);}
+.burger{color:var(--text);}
+.page-hero{padding:170px var(--gutter) 60px;max-width:900px;}
+@media (max-width:900px){ .page-hero{padding:130px 22px 40px;} }
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<a class="logo-fixed" href="index.html" aria-label="نيو إيرا — الرئيسية"><div class="logo-badge"><img src="../assets/logo-wordmark-white.png" alt="New Era"></div></a>
+
+<header class="site-header" id="siteHeader">
+  <nav class="nav-links">
+    <a href="index.html#top">الرئيسية</a>
+    <a href="index.html#residences">مساكننا</a>
+    <a href="a-propos.html">من نحن</a>
+    <a href="opportunites.html">الفرص العقارية</a>
+    <a href="index.html#contact">اتصل بنا</a>
+  </nav>
+  <div class="hdr-right">
+    <a class="lang-switch" href="../a-propos.html" title="Passer en français">FR</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="تبديل الوضع الداكن">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    </button>
+    <button class="hdr-cta">احجز موعداً</button>
+    <button class="burger" id="burgerBtn" aria-label="القائمة">☰</button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" id="mobileMenuClose" aria-label="إغلاق">✕</button>
+  <nav class="mobile-menu-links">
+    <a href="index.html#top">الرئيسية</a>
+    <a href="index.html#residences">مساكننا</a>
+    <a href="a-propos.html">من نحن</a>
+    <a href="opportunites.html">الفرص العقارية</a>
+    <a href="index.html#contact">اتصل بنا</a>
+    <a class="lang-switch" href="../a-propos.html">Français</a>
+  </nav>
+  <button class="btn btn-fill">احجز موعداً</button>
+</div>
+
+<div class="page-hero reveal">
+  <div class="kicker"><span class="num">من نحن؟</span></div>
+  <h1 class="h1" style="font-size:clamp(34px,5.4vw,68px);margin:18px 0 22px;">فن بناء<span class="hl-accent" style="font-size:clamp(16px,2vw,22px);text-transform:none;letter-spacing:0;font-weight:600;">الاستثناء: أساسنا</span></h1>
+  <p class="lede">تتخذ New Era للترقية العقارية من الجزائر العاصمة مقراً لها، وهي مؤسسة قائمة على شراكة بين رجال أعمال جزائريين وألمان يجمعهم رؤية مشتركة: إنشاء مساكن استثنائية تتلاقى فيها الجودة والأناقة والاستدامة.</p>
+</div>
+
+<nav class="crumb-bar" aria-label="مسار التصفح">
+  <a href="index.html">الرئيسية</a><span>/</span><span>من نحن؟</span>
+</nav>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span><b>New Era</b> للترقية العقارية</span><span>شراكة جزائرية-ألمانية</span><span>25 سنة من الخبرة</span><span>عمارة نيوكلاسيكية</span>
+    <span><b>New Era</b> للترقية العقارية</span><span>شراكة جزائرية-ألمانية</span><span>25 سنة من الخبرة</span><span>عمارة نيوكلاسيكية</span>
+  </div>
+</div>
+
+<!-- التأسيس -->
+<div class="editorial reveal">
+  <div class="editorial-photo"><img src="../assets/villa-agata.jpg" alt="نيو إيرا — إنجاز بحيدرة، الجزائر العاصمة"><div class="photo-badge"><span>NEW ERA</span></div></div>
+  <div class="editorial-text">
+    <div class="kicker"><span class="num">التأسيس</span></div>
+    <h3 class="h3">25 سنة من الخبرة، شراكة جزائرية-ألمانية</h3>
+    <p class="body-sm">يمتلك مؤسسو New Era خبرة تفوق 25 سنة في مجالات العقارات والبناء والاستثمار، وقد طوّروا على مدار مسيرتهم خبرة راسخة مبنية على المتطلبات العالية والحرفية والاهتمام بكل تفصيل.</p>
+  </div>
+</div>
+
+<!-- التوقيع المعماري -->
+<div class="editorial reverse reveal">
+  <div class="editorial-photo"><img src="../assets/materials-stone.jpg" alt="الحجر المنحوت — التوقيع المعماري لـ New Era"></div>
+  <div class="editorial-text">
+    <div class="kicker"><span class="num">التوقيع المعماري</span></div>
+    <h3 class="h3">عمارة نيوكلاسيكية</h3>
+    <p class="body-sm">مستلهَمة من الأناقة الخالدة للعمارة النيوكلاسيكية، تصمم New Era مساكن يُفكَّر في كل عنصر فيها بعناية فائقة، بهدف إنشاء تراث دائم ورفيع. الحجر المنحوت والزخارف الأنيقة والحديد المطروق الاستثنائي والمواد النبيلة تُشكّل هوية إنجازاتنا وتعكس شغفنا بالعمارة المتميزة.</p>
+    <ul style="margin-top:18px;list-style:none;">
+      <li style="font-size:13px;color:var(--text-muted);padding:10px 0;border-bottom:1px solid var(--line);">الحجر المنحوت</li>
+      <li style="font-size:13px;color:var(--text-muted);padding:10px 0;border-bottom:1px solid var(--line);">الزخارف الأنيقة</li>
+      <li style="font-size:13px;color:var(--text-muted);padding:10px 0;border-bottom:1px solid var(--line);">الحديد المطروق</li>
+      <li style="font-size:13px;color:var(--text-muted);padding:10px 0;">المواد النبيلة</li>
+    </ul>
+  </div>
+</div>
+
+<!-- رؤيتنا -->
+<div class="editorial reveal">
+  <div class="editorial-photo"><img src="../assets/villa-christina.jpg" alt="فيلا كريستينا — إرث New Era"><div class="photo-badge"><span>NEW ERA</span></div></div>
+  <div class="editorial-text">
+    <div class="kicker"><span class="num">رؤيتنا</span></div>
+    <h3 class="h3">«المسكن أكثر من مجرد مكان للإقامة»</h3>
+    <p class="body-sm">فهو استثمار دائم وتراث يُورَث وبيئة مصمَّمة لراحة ساكنيها. لذلك نولي عناية خاصة لاختيار المواقع وجودة البناء وتميّز التشطيبات.</p>
+    <ul style="margin-top:18px;list-style:none;">
+      <li style="font-size:13px;color:var(--text-muted);padding:10px 0;border-bottom:1px solid var(--line);">المواقع</li>
+      <li style="font-size:13px;color:var(--text-muted);padding:10px 0;border-bottom:1px solid var(--line);">جودة البناء</li>
+      <li style="font-size:13px;color:var(--text-muted);padding:10px 0;">تميّز التشطيبات</li>
+    </ul>
+  </div>
+</div>
+
+<!-- إرثنا — 4 قيم -->
+<section class="sec alt">
+  <div class="sec-head reveal"><div><div class="kicker"><span class="num">إرثنا</span></div><h2 class="h2" style="font-size:clamp(26px,3.6vw,40px);">أربع قيم مؤسِّسة</h2></div></div>
+  <div class="feat-grid cols-4 reveal">
+    <div class="feat tilt"><div class="feat-n" style="font-size:30px;margin-bottom:16px;">01</div><b style="font-size:16px;margin-bottom:8px;">التميز</b><span>متطلبات دائمة في كل مرحلة من مراحل التصميم والإنجاز.</span></div>
+    <div class="feat tilt"><div class="feat-n" style="font-size:30px;margin-bottom:16px;">02</div><b style="font-size:16px;margin-bottom:8px;">الأصالة</b><span>مواد نبيلة وعمارة مستلهَمة من الأساليب الكلاسيكية العريقة.</span></div>
+    <div class="feat tilt"><div class="feat-n" style="font-size:30px;margin-bottom:16px;">03</div><b style="font-size:16px;margin-bottom:8px;">الديمومة</b><span>مشاريع مصمَّمة لتتجاوز الزمن وتحافظ على قيمتها.</span></div>
+    <div class="feat tilt"><div class="feat-n" style="font-size:30px;margin-bottom:16px;">04</div><b style="font-size:16px;margin-bottom:8px;">الثقة</b><span>علاقة شفافة مبنية على الاحترافية والوفاء بالالتزامات.</span></div>
+  </div>
+</section>
+
+<!-- التزامنا -->
+<div class="closing reveal">
+  <div class="kicker on-dark"><span class="num">التزامنا</span></div>
+  <p>من خلال كل إنجازاتها، تسعى New Era للترقية العقارية إلى تحقيق هدف واضح: تطوير مساكن فاخرة تجمع بين الأناقة المعمارية والراحة العصرية والقيمة التراثية العالية.</p>
+  <p style="font-family:'El Messiri',serif;font-size:16px;color:#c4bba9;font-style:italic;margin:-16px auto 36px;max-width:560px;">«بناء عناوين الاستثناء اليوم لتكون مرجع الغد»</p>
+  <button class="btn btn-fill">احجز موعداً</button>
+</div>
+
+<footer class="sitefooter">
+  <div class="logo-badge"><img src="../assets/logo-wordmark-white.png" alt="New Era"></div>
+  <div class="fnav"><a href="index.html">الرئيسية</a><a href="villa-agata.html">أغاتا</a><a href="villa-veronica.html">فيرونيكا</a><a href="villa-christina.html">كريستينا</a><a href="villa-catrina.html">كاترينا</a><a href="a-propos.html">من نحن</a><a href="opportunites.html">الفرص العقارية</a><a href="index.html#contact">اتصل بنا</a></div>
+  <div class="fcopy">© New Era للترقية العقارية</div>
+</footer>
+
+<div class="float-cta" id="floatCta"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+<div class="float-card" id="floatCard">
+  <div class="x" id="floatClose">✕</div>
+  <p>لديكم سؤال حول New Era؟</p>
+  <button class="float-btn call">اتصل الآن</button>
+  <button class="float-btn wa">واتساب</button>
+</div>
+
+<nav class="mini-cta-bar" aria-label="إجراءات سريعة">
+  <a href="tel:+213561112233"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>اتصال</a>
+  <a class="mid" href="https://wa.me/213561112233" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>واتساب</a>
+  <a href="villa-agata.html#rdv" data-rdv-trigger><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>موعد</a>
+</nav>
+
+<script src="../assets/main.js"></script>
+</body>
+</html>

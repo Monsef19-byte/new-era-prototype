@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panneau d'administration — New Era</title>
+<link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="badge">NEW<br>ERA</div>
+      <div class="name">Panneau<br>d'administration</div>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <button data-view="residences" class="active">🏠 Résidences</button>
+      <button data-view="home">🖼 Page d'accueil</button>
+      <button data-view="apropos">📄 À Propos</button>
+      <button data-view="opportunites">📄 Opportunités</button>
+      <button data-view="blog">📰 Blog</button>
+      <button data-view="liens">🔗 Page Liens (QR code)</button>
+      <button data-view="settings">⚙️ Réglages & contact</button>
+    </nav>
+    <div class="sidebar-foot">
+      <button id="logoutBtn">Se déconnecter</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h2 id="topTitle">Résidences</h2>
+        <div class="sub" id="topSub">Ajoutez, modifiez ou supprimez une résidence.</div>
+      </div>
+      <div class="publish-zone">
+        <span class="publish-status" id="publishStatus">À jour</span>
+        <button class="btn btn-primary" id="publishBtn">Publier les modifications</button>
+      </div>
+    </div>
+    <div class="content" id="content">
+      <div class="empty">Chargement…</div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/admin.js"></script>
+</body>
+</html>
