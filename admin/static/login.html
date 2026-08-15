@@ -39,7 +39,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
   try{
     var res = await fetch('/api/login', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({password: pw})});
     var data = await res.json();
-    if(data.ok){ window.location.href = '/'; }
+    if(data.ok){ window.location.href = '/admin'; }
     else { errEl.textContent = data.error || 'Erreur de connexion'; errEl.style.display = 'block'; }
   }catch(err){ errEl.textContent = 'Impossible de contacter le serveur.'; errEl.style.display = 'block'; }
 });
