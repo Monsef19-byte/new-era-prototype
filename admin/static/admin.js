@@ -57,7 +57,7 @@
     SAVE_TIMERS[section] = setTimeout(function(){ saveSection(section); }, 500);
   }
   function saveSection(section){
-    return fetch("/api/save/" + section, {
+    return fetch("/api/save?section=" + encodeURIComponent(section), {
       method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(STATE[section])
     }).then(function(r){ return r.json(); }).then(function(res){
       if(res.ok){ markDirty(); } else { toast("Erreur d'enregistrement : " + (res.error||""), true); }
@@ -74,7 +74,7 @@
     });
   }
   function assetUrl(fname){
-    return "/preview-assets/" + encodeURIComponent(fname || "");
+    return "/api/preview-assets?file=" + encodeURIComponent(fname || "");
   }
   function uploadVideo(file){
     var fd = new FormData();
