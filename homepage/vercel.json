@@ -2,6 +2,7 @@
   "cleanUrls": false,
   "trailingSlash": false,
   "buildCommand": "bash build.sh",
+  "outputDirectory": ".",
   "rewrites": [
     { "source": "/admin", "destination": "/admin/index.html" },
     { "source": "/login", "destination": "/admin/login.html" }
