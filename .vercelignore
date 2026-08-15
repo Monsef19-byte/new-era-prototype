@@ -1,7 +1,6 @@
-admin/
 presentation/
 __pycache__/
-*.py
+admin/__pycache__/
 *.pyc
 *.command
-*.md
+admin/*.md
