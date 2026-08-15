@@ -3,6 +3,11 @@
   "trailingSlash": false,
   "buildCommand": "bash build.sh",
   "outputDirectory": ".",
+  "functions": {
+    "api/*.py": {
+      "includeFiles": "api/_common.py"
+    }
+  },
   "rewrites": [
     { "source": "/admin", "destination": "/admin/index.html" },
     { "source": "/login", "destination": "/admin/login.html" }
