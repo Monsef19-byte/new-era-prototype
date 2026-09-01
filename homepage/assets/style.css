@@ -126,8 +126,14 @@ button{font-family:inherit;}
 .logo-fixed{position:fixed;top:22px;left:calc(var(--gutter) - 14px);z-index:150;display:block;}
 .logo-fixed .logo-badge{width:clamp(120px,9.5vw,168px);height:clamp(120px,9.5vw,168px);}
 @media (max-width:900px){
-  .logo-fixed{left:50%;transform:translateX(-50%);top:18px;}
-  .logo-fixed .logo-badge{width:84px;height:84px;}
+  /* Was centered (left:50%) here, which overlapped .hdr-right (lang
+     switch/theme/burger, plus .hdr-cta's "Prendre rendez-vous" button
+     between 481-900px) — a centered 84px badge only clears that cluster
+     above ~900px viewport width, i.e. never within this media query.
+     Left-align instead, same positioning family as the >900px default,
+     so nothing stacks under the logo at any mobile/tablet width. */
+  .logo-fixed{left:calc(var(--gutter) - 6px);transform:none;top:16px;}
+  .logo-fixed .logo-badge{width:60px;height:60px;}
 }
 
 /* ---------- HEADER — fixed nav bar, always legible; slides off-screen on scroll-down and back in on scroll-up (the logo is unaffected, it's independently fixed). Left padding reserves clearance for the giant logo overlay so it never sits under the nav links. ---------- */
