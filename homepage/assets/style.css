@@ -1013,19 +1013,36 @@ a.res-card:hover .res-info b{color:var(--red);}
      near-transparent gradient for contrast. A solid-enough scrim is applied
      at all times (not just once .solid kicks in after scrolling) so the
      header stays legible regardless of the background image. */
-  .site-header{padding:calc(14px + env(safe-area-inset-top)) 20px 14px;background:linear-gradient(180deg,rgba(6,5,4,.88) 0%,rgba(6,5,4,.62) 65%,rgba(6,5,4,.28) 100%);flex-wrap:wrap;}
+  .site-header{padding:calc(14px + env(safe-area-inset-top)) 20px 14px;background:linear-gradient(180deg,rgba(6,5,4,.88) 0%,rgba(6,5,4,.62) 65%,rgba(6,5,4,.28) 100%);}
   .site-header.solid{background:rgba(255,254,246,.94);}
   [data-theme="dark"] .site-header.solid{background:rgba(32,29,26,.94);}
-  /* The centered logo (84px badge, top:18px) is client-mandated and stays
-     put — so instead of shrinking/moving it, .hdr-right drops to its own
-     row underneath, clear of the logo's footprint, rather than fighting
-     it for horizontal space beside a fixed-position element. */
-  .hdr-right{gap:14px;flex-basis:100%;justify-content:flex-end;margin-top:94px;}
+  .hdr-right{gap:14px;}
+  /* The centered logo (84px badge) is client-mandated and stays exactly
+     where it was — so instead of moving it, .hdr-right's items move into
+     the empty margins on either side of it (same row, same size, just
+     pulled out of .hdr-right's flow): lang switch to the left, theme
+     toggle + burger stay on the right. */
+  .hdr-right .lang-switch{position:fixed;top:calc(14px + env(safe-area-inset-top));left:20px;z-index:140;}
+  /* .hdr-cta ("Prendre rendez-vous", ~208px with its text) only fits in
+     that same left margin next to the lang switch once the margin itself
+     is wide enough (~660px viewport) — below that it's hidden here and
+     .villa-split's rule further down brings back .mini-cta-bar instead,
+     so villa pages (whose bar is normally dropped in favour of this
+     button, see that rule) still always have one quick-RDV action
+     visible, never neither. */
+  .hdr-cta{display:none;}
+}
+@media (min-width:660px) and (max-width:900px){
+  .hdr-right .hdr-cta{display:inline-flex;position:fixed;top:calc(11px + env(safe-area-inset-top));left:66px;z-index:140;}
+}
+@media (max-width:659px){
+  .villa-split ~ .mini-cta-bar{display:flex;}
+}
+@media (max-width:900px){
   .nav-links{display:none;}
   .sitefooter .logo-badge{width:62px;height:62px;}
   .burger{display:flex;align-items:center;justify-content:center;width:44px;height:44px;font-size:22px;}
   .theme-toggle{width:44px;height:44px;}
-  .hdr-cta{padding:13px 18px;}
   .mobile-menu{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom);}
   .mobile-menu-close{top:calc(22px + env(safe-area-inset-top));width:44px;height:44px;}
   .hero-inner{bottom:74px;}
@@ -1068,7 +1085,6 @@ a.res-card:hover .res-info b{color:var(--red);}
   .vactions .btn{flex:1;justify-content:center;}
 }
 @media (max-width:480px){
-  .hdr-cta{display:none;}
   .site-header{padding:calc(12px + env(safe-area-inset-top)) 16px 12px;}
   .res-grid,.mat-grid{grid-template-columns:1fr;}
   .lightbox{padding:24px;}
