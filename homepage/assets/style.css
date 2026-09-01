@@ -126,14 +126,8 @@ button{font-family:inherit;}
 .logo-fixed{position:fixed;top:22px;left:calc(var(--gutter) - 14px);z-index:150;display:block;}
 .logo-fixed .logo-badge{width:clamp(120px,9.5vw,168px);height:clamp(120px,9.5vw,168px);}
 @media (max-width:900px){
-  /* Was centered (left:50%) here, which overlapped .hdr-right (lang
-     switch/theme/burger, plus .hdr-cta's "Prendre rendez-vous" button
-     between 481-900px) — a centered 84px badge only clears that cluster
-     above ~900px viewport width, i.e. never within this media query.
-     Left-align instead, same positioning family as the >900px default,
-     so nothing stacks under the logo at any mobile/tablet width. */
-  .logo-fixed{left:calc(var(--gutter) - 6px);transform:none;top:16px;}
-  .logo-fixed .logo-badge{width:60px;height:60px;}
+  .logo-fixed{left:50%;transform:translateX(-50%);top:18px;}
+  .logo-fixed .logo-badge{width:84px;height:84px;}
 }
 
 /* ---------- HEADER — fixed nav bar, always legible; slides off-screen on scroll-down and back in on scroll-up (the logo is unaffected, it's independently fixed). Left padding reserves clearance for the giant logo overlay so it never sits under the nav links. ---------- */
@@ -1019,10 +1013,14 @@ a.res-card:hover .res-info b{color:var(--red);}
      near-transparent gradient for contrast. A solid-enough scrim is applied
      at all times (not just once .solid kicks in after scrolling) so the
      header stays legible regardless of the background image. */
-  .site-header{padding:calc(14px + env(safe-area-inset-top)) 20px 14px;background:linear-gradient(180deg,rgba(6,5,4,.88) 0%,rgba(6,5,4,.62) 65%,rgba(6,5,4,.28) 100%);}
+  .site-header{padding:calc(14px + env(safe-area-inset-top)) 20px 14px;background:linear-gradient(180deg,rgba(6,5,4,.88) 0%,rgba(6,5,4,.62) 65%,rgba(6,5,4,.28) 100%);flex-wrap:wrap;}
   .site-header.solid{background:rgba(255,254,246,.94);}
   [data-theme="dark"] .site-header.solid{background:rgba(32,29,26,.94);}
-  .hdr-right{gap:14px;}
+  /* The centered logo (84px badge, top:18px) is client-mandated and stays
+     put — so instead of shrinking/moving it, .hdr-right drops to its own
+     row underneath, clear of the logo's footprint, rather than fighting
+     it for horizontal space beside a fixed-position element. */
+  .hdr-right{gap:14px;flex-basis:100%;justify-content:flex-end;margin-top:94px;}
   .nav-links{display:none;}
   .sitefooter .logo-badge{width:62px;height:62px;}
   .burger{display:flex;align-items:center;justify-content:center;width:44px;height:44px;font-size:22px;}
