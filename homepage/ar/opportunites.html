@@ -75,10 +75,10 @@
 <section class="sec tight">
   <div class="sec-head reveal"><div><div class="kicker"><span class="num">01</span></div><h2 class="h2" style="font-size:clamp(24px,3.2vw,36px);">ما نبحث عنه</h2></div></div>
   <div class="feat-grid cols-4 reveal">
-    <div class="feat tilt"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div><b>أرض</b></div>
-    <div class="feat tilt"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10l10-6 10 6"/><path d="M4 10v11M20 10v11"/><path d="M3 21h18"/><rect x="9" y="13" width="6" height="8"/></svg></div><b>فيلا</b></div>
-    <div class="feat tilt"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l4 4-4 4M21 7H9M7 21l-4-4 4-4M3 17h12"/></svg></div><b>تبادل / مقايضة</b></div>
-    <div class="feat tilt"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/><path d="M17 11a4 4 0 0 0 0-8M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div><b>شراكة</b></div>
+    <div class="feat tilt opp-cta" role="button" tabindex="0" data-typebien="أرض" aria-label="اقترح أرضًا — الانتقال إلى الاستمارة"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div><b>أرض</b></div>
+    <div class="feat tilt opp-cta" role="button" tabindex="0" data-typebien="فيلا" aria-label="اقترح فيلا — الانتقال إلى الاستمارة"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10l10-6 10 6"/><path d="M4 10v11M20 10v11"/><path d="M3 21h18"/><rect x="9" y="13" width="6" height="8"/></svg></div><b>فيلا</b></div>
+    <div class="feat tilt opp-cta" role="button" tabindex="0" data-typedemande="تبادل" aria-label="اقترح تبادلًا — الانتقال إلى الاستمارة"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l4 4-4 4M21 7H9M7 21l-4-4 4-4M3 17h12"/></svg></div><b>تبادل / مقايضة</b></div>
+    <div class="feat tilt opp-cta" role="button" tabindex="0" data-typedemande="شراكة" aria-label="اقترح شراكة — الانتقال إلى الاستمارة"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/><path d="M17 11a4 4 0 0 0 0-8M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div><b>شراكة</b></div>
   </div>
 </section>
 
@@ -103,10 +103,11 @@
     <div class="kicker on-dark"><span class="num">اتصل بنا</span></div>
     <h2 class="h3">اعرضوا عقاركم على New Era</h2>
     <p class="body-sm">املأوا هذا النموذج وسيعاود فريق التطوير العقاري الاتصال بكم بسرعة لدراسة مشروعكم: بيع، تبادل أو شراكة.</p>
-    <form class="rdv-grid" onsubmit="return false;">
+    <form class="rdv-grid" data-lead-type="terrain">
+      <input type="text" name="hp" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="rdv-field half">
         <label for="typedemande">نوع الطلب</label>
-        <select id="typedemande"><option>بيع</option><option>تبادل</option><option>شراكة</option></select>
+        <select id="typedemande"><option>بيع</option><option>شراء</option><option>تبادل</option><option>شراكة</option></select>
       </div>
       <div class="rdv-field half">
         <label for="typebien">نوع العقار</label>

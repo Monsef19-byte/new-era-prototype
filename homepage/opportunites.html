@@ -75,10 +75,10 @@
 <section class="sec tight">
   <div class="sec-head reveal"><div><div class="kicker"><span class="num">01</span></div><h2 class="h2" style="font-size:clamp(24px,3.2vw,36px);">Ce que nous recherchons</h2></div></div>
   <div class="feat-grid cols-4 reveal">
-    <div class="feat tilt"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div><b>Terrain</b></div>
-    <div class="feat tilt"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10l10-6 10 6"/><path d="M4 10v11M20 10v11"/><path d="M3 21h18"/><rect x="9" y="13" width="6" height="8"/></svg></div><b>Villa</b></div>
-    <div class="feat tilt"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l4 4-4 4M21 7H9M7 21l-4-4 4-4M3 17h12"/></svg></div><b>Troc / Échange</b></div>
-    <div class="feat tilt"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/><path d="M17 11a4 4 0 0 0 0-8M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div><b>Partenariat</b></div>
+    <div class="feat tilt opp-cta" role="button" tabindex="0" data-typebien="Terrain" aria-label="Proposer un terrain — aller au formulaire"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg></div><b>Terrain</b></div>
+    <div class="feat tilt opp-cta" role="button" tabindex="0" data-typebien="Villa" aria-label="Proposer une villa — aller au formulaire"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10l10-6 10 6"/><path d="M4 10v11M20 10v11"/><path d="M3 21h18"/><rect x="9" y="13" width="6" height="8"/></svg></div><b>Villa</b></div>
+    <div class="feat tilt opp-cta" role="button" tabindex="0" data-typedemande="Troc" aria-label="Proposer un troc / échange — aller au formulaire"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3l4 4-4 4M21 7H9M7 21l-4-4 4-4M3 17h12"/></svg></div><b>Troc / Échange</b></div>
+    <div class="feat tilt opp-cta" role="button" tabindex="0" data-typedemande="Partenariat" aria-label="Proposer un partenariat — aller au formulaire"><div class="feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/><path d="M17 11a4 4 0 0 0 0-8M23 21v-2a4 4 0 0 0-3-3.87"/></svg></div><b>Partenariat</b></div>
   </div>
 </section>
 
@@ -103,10 +103,11 @@
     <div class="kicker on-dark"><span class="num">Contact</span></div>
     <h2 class="h3">Proposez votre bien à New Era</h2>
     <p class="body-sm">Remplissez ce formulaire et notre équipe Développement Foncier vous recontactera rapidement pour étudier votre projet : vente, troc ou partenariat.</p>
-    <form class="rdv-grid" onsubmit="return false;">
+    <form class="rdv-grid" data-lead-type="terrain">
+      <input type="text" name="hp" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="rdv-field half">
         <label for="typedemande">Type de demande</label>
-        <select id="typedemande"><option>Vente</option><option>Troc</option><option>Partenariat</option></select>
+        <select id="typedemande"><option>Vente</option><option>Achat</option><option>Troc</option><option>Partenariat</option></select>
       </div>
       <div class="rdv-field half">
         <label for="typebien">Type de bien</label>
@@ -137,11 +138,12 @@
 </div>
 
 <nav class="mini-cta-bar" aria-label="Actions rapides">
-  <a href="tel:+213561112233"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Appeler</a>
-  <a class="mid" href="https://wa.me/213561112233" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>WhatsApp</a>
+  <a href="tel:+213798222135"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Appeler</a>
+  <a class="mid" href="https://wa.me/213798222135" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>WhatsApp</a>
   <a href="#rdv"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Proposer</a>
 </nav>
 
 <script src="assets/main.js"></script>
+<script>window.NEWERA_CTA_FLAGS={"float": true, "minibar": true, "rdvModal": true};</script>
 </body>
 </html>

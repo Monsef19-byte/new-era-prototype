@@ -17,7 +17,7 @@ BLOB_TOKEN = os.environ.get("BLOB_READ_WRITE_TOKEN", "")
 SESSION_SECRET = os.environ.get("ADMIN_SESSION_SECRET", "")
 SESSION_TTL = 60 * 60 * 12  # 12h
 
-SAFE_SECTIONS = {"villas", "home", "apropos", "opportunites", "settings", "blog", "liens"}
+SAFE_SECTIONS = {"villas", "home", "apropos", "opportunites", "settings", "blog", "liens", "videos", "gallery"}
 
 SEED_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_seed")
 
@@ -184,5 +184,11 @@ class handler(BaseHTTPRequestHandler):
             data = read_json_body(self)
         except Exception as e:
             return send_json(self, {"error": "invalid json: {}".format(e)}, 400)
+        if section == "settings":
+            # SMTP password is never stored in content (Blob or git) — same
+            # convention as hamadat-promotion.com — only in the SMTP_PASSWORD
+            # Vercel environment variable. Strip it defensively even if an
+            # older client payload still includes it.
+            data.pop("smtp_password", None)
         save_content(section + ".json", data)
         send_json(self, {"ok": True})

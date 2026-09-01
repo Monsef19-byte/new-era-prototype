@@ -2,7 +2,7 @@
 (function(){
   "use strict";
 
-  var STATE = { villas: [], home: {}, apropos: {}, opportunites: {}, settings: {}, blog: [], liens: {} };
+  var STATE = { villas: [], home: {}, apropos: {}, opportunites: {}, settings: {}, blog: [], liens: {}, videos: {}, gallery: {} };
 
   var LIENS_ICON_OPTIONS = [
     ["site", "Site web (globe)"],
@@ -37,6 +37,112 @@
     t.className = "toast show" + (isError ? " error" : "");
     clearTimeout(t._timer);
     t._timer = setTimeout(function(){ t.className = "toast"; }, 3200);
+  }
+
+  // ------------------------------------------------------------ icon picker
+  // Bibliothèque partagée avec le site (admin/static/icons-data.js, généré
+  // au build à partir de admin/icons.py — même registre des deux côtés).
+  function iconSvg(name, size){
+    var paths = window.NEWERA_ICON_PATHS || {};
+    var d = paths[name] || paths["check-circle"] || "";
+    return '<svg width="' + (size||18) + '" height="' + (size||18) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + d + '</svg>';
+  }
+
+  // Champ "sélecteur d'icône" : bouton affichant l'icône + son nom, qui ouvre
+  // une grille de recherche au clic. onSelect(name) est appelé au choix.
+  function iconPickerField(parent, opts){
+    var label = opts.label, value = opts.value, onSelect = opts.onSelect;
+    var wrap = document.createElement("div");
+    wrap.className = "field";
+    if(label){
+      var lab = document.createElement("label");
+      lab.textContent = label;
+      wrap.appendChild(lab);
+    }
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "icon-picker-btn";
+    function paint(name){
+      btn.innerHTML = iconSvg(name, 18) + "<span>" + esc(name || "Choisir une icône") + "</span>";
+    }
+    paint(value);
+    btn.addEventListener("click", function(){
+      openIconPickerModal(value, function(name){
+        value = name;
+        paint(name);
+        onSelect(name);
+      });
+    });
+    wrap.appendChild(btn);
+    parent.appendChild(wrap);
+    return wrap;
+  }
+
+  var _iconPickerOverlay = null;
+  function _iconPickerEscHandler(e){
+    if(e.key === "Escape") closeIconPickerModal();
+  }
+  function closeIconPickerModal(){
+    if(_iconPickerOverlay){
+      _iconPickerOverlay.remove();
+      _iconPickerOverlay = null;
+      document.removeEventListener("keydown", _iconPickerEscHandler);
+    }
+  }
+
+  function openIconPickerModal(currentValue, onPick){
+    closeIconPickerModal();
+    var paths = window.NEWERA_ICON_PATHS || {};
+    var tags = window.NEWERA_ICON_TAGS || {};
+    var names = Object.keys(paths).sort();
+
+    var overlay = document.createElement("div");
+    overlay.className = "modal-overlay";
+    overlay.innerHTML =
+      '<div class="modal-card icon-picker-modal">' +
+        '<div class="modal-header"><h3>Choisir une icône</h3><button type="button" class="modal-close" aria-label="Fermer">✕</button></div>' +
+        '<input type="text" class="icon-picker-search" placeholder="Rechercher (ex : parking, wifi, piscine…)">' +
+        '<div class="icon-picker-grid"></div>' +
+      '</div>';
+    document.body.appendChild(overlay);
+    _iconPickerOverlay = overlay;
+
+    var grid = overlay.querySelector(".icon-picker-grid");
+    var search = overlay.querySelector(".icon-picker-search");
+
+    function renderGrid(filter){
+      var f = (filter || "").trim().toLowerCase();
+      grid.innerHTML = "";
+      var matches = names.filter(function(name){
+        return !f || name.indexOf(f) !== -1 || (tags[name] || "").indexOf(f) !== -1;
+      });
+      matches.forEach(function(name){
+        var cell = document.createElement("button");
+        cell.type = "button";
+        cell.className = "icon-picker-cell" + (name === currentValue ? " selected" : "");
+        cell.innerHTML = iconSvg(name, 22) + "<span>" + esc(name) + "</span>";
+        cell.addEventListener("click", function(){
+          onPick(name);
+          closeIconPickerModal();
+        });
+        grid.appendChild(cell);
+      });
+      if(!matches.length){
+        var empty = document.createElement("div");
+        empty.className = "icon-picker-empty";
+        empty.textContent = "Aucune icône ne correspond à « " + f + " ».";
+        grid.appendChild(empty);
+      }
+    }
+    renderGrid("");
+    search.addEventListener("input", function(){ renderGrid(search.value); });
+    setTimeout(function(){ search.focus(); }, 30);
+
+    overlay.querySelector(".modal-close").addEventListener("click", closeIconPickerModal);
+    overlay.addEventListener("click", function(e){
+      if(e.target === overlay) closeIconPickerModal();
+    });
+    document.addEventListener("keydown", _iconPickerEscHandler);
   }
   function markDirty(){
     DIRTY = true;
@@ -133,8 +239,11 @@
       apropos: ["À Propos", "Le texte d'introduction de la page « À Propos »."],
       opportunites: ["Opportunités", "Le texte d'introduction de la page « Opportunités »."],
       blog: ["Blog", "Activez le blog et gérez les articles."],
+      videos: ["Vidéos", "La section vidéos de la page d'accueil — collez un lien YouTube, la miniature et le lecteur se génèrent automatiquement."],
+      gallery: ["Catalogue / Galerie", "Le carrousel « Catalogue » de la page d'accueil — photos, plans et documents."],
       liens: ["Page Liens (QR code)", "Tout ce qui apparaît sur newera-promotion.com/liens — logo, textes et cartes de liens."],
-      settings: ["Réglages & contact", "Numéros de téléphone, WhatsApp, et mot de passe du panneau."]
+      leads: ["Demandes reçues", "Tous les formulaires envoyés depuis le site, stockés ici avant l'envoi de l'email de notification."],
+      settings: ["Réglages & contact", "Numéros de téléphone, WhatsApp, réglages email et mot de passe du panneau."]
     };
     var t = titles[VIEW] || ["", ""];
     topTitle.textContent = t[0];
@@ -146,7 +255,10 @@
     else if(VIEW === "apropos"){ renderSimpleHero("apropos"); }
     else if(VIEW === "opportunites"){ renderSimpleHero("opportunites"); }
     else if(VIEW === "blog"){ renderBlog(); }
+    else if(VIEW === "videos"){ renderVideos(); }
+    else if(VIEW === "gallery"){ renderGallery(); }
     else if(VIEW === "liens"){ renderLiens(); }
+    else if(VIEW === "leads"){ renderLeads(); }
     else if(VIEW === "settings"){ renderSettings(); }
   }
 
@@ -183,7 +295,7 @@
     }
     var v = {
       slug: slug, name: name, hero_img: "villa-agata.jpg", card_image: "villa-agata.jpg",
-      loc: "Alger", loc_full: "Alger", count: 0, typologie: "", progress_pct: null,
+      loc: "Alger", loc_full: "Alger", google_maps: null, count: 0, typologie: "", progress_pct: null,
       description: "", feats: [], gallery: [], plans: [], interior: [],
       dispo: {intro: "", typologies: [], note: ""}, typebien_opts: []
     };
@@ -258,6 +370,7 @@
             '<input type="number" id="f_pct" min="0" max="100" step="1" placeholder="ex. 45" value="' + (v.progress_pct==null?'':v.progress_pct) + '" style="margin-top:6px;' + (v.progress_pct==null?'display:none':'') + '">', "Choisissez « à confirmer » ou saisissez un pourcentage d'avancement (0 à 100).") +
           field("Localisation courte", '<input type="text" id="f_loc" value="' + esc(v.loc) + '">', "ex. « Hydra »") +
           field("Localisation complète", '<input type="text" id="f_locfull" value="' + esc(v.loc_full) + '">', "ex. « Hydra, Alger »") +
+          field("Lien Google Maps", '<input type="text" id="f_maps" value="' + esc(v.google_maps || "") + '">', "Collez le lien « Partager » de Google Maps. Laissez vide pour ne pas afficher le bouton.") +
           field("Nombre d'appartements", '<input type="number" id="f_count" value="' + esc(v.count) + '">') +
           field("Typologie", '<input type="text" id="f_typo" value="' + esc(v.typologie) + '">', "ex. « F3, F4, F5 »") +
         '</div>' +
@@ -275,6 +388,7 @@
       });
     }
     bindText("f_name","name"); bindText("f_loc","loc"); bindText("f_locfull","loc_full");
+    bindText("f_maps","google_maps");
     bindText("f_count","count",true); bindText("f_typo","typologie"); bindText("f_desc","description");
     var pctModeEl = document.getElementById("f_pct_mode");
     var pctInputEl = document.getElementById("f_pct");
@@ -358,12 +472,19 @@
 
   function renderVillaFeats(body, v){
     function draw(){
-      var html = '<div class="panel"><h3>Caractéristiques</h3><p class="desc">La liste affichée dans la section « Caractéristiques » de la fiche.</p><div class="list-editor">';
+      var html = '<div class="panel"><h3>Caractéristiques</h3><p class="desc">La liste affichée dans la section « Caractéristiques » de la fiche. Cliquez sur l\'icône pour la changer.</p><div class="list-editor">';
       v.feats.forEach(function(f, i){
-        html += '<div class="row"><input type="text" value="' + esc(f[1]) + '" data-i="' + i + '"><button data-i="' + i + '">✕</button></div>';
+        html += '<div class="row"><div class="icon-picker-slot" data-icon-i="' + i + '"></div><input type="text" value="' + esc(f[1]) + '" data-i="' + i + '"><button data-i="' + i + '">✕</button></div>';
       });
       html += '</div><button class="btn btn-sm add" id="addFeat">+ Ajouter une ligne</button></div>';
       body.innerHTML = html;
+      body.querySelectorAll(".icon-picker-slot").forEach(function(slot){
+        var i = Number(slot.getAttribute("data-icon-i"));
+        iconPickerField(slot, {
+          value: v.feats[i][0],
+          onSelect: function(name){ v.feats[i][0] = name; saveSection("villas"); }
+        });
+      });
       body.querySelectorAll(".row input").forEach(function(inp){
         inp.addEventListener("input", function(){ v.feats[Number(inp.getAttribute("data-i"))][1] = inp.value; debounceSave("villas"); });
       });
@@ -428,6 +549,13 @@
       var html = '<div class="panel"><h3>Disponibilité</h3><p class="desc">Le tableau et les détails affichés dans la fenêtre « Voir les disponibilités ».</p>';
       html += field("Texte d'introduction", '<input type="text" id="dispoIntro" value="' + esc(d.intro) + '">');
       d.typologies.forEach(function(t, i){
+        if(!t.detail_images) t.detail_images = [];
+        var imgsHtml = '<div class="img-list" style="margin:8px 0;">';
+        t.detail_images.forEach(function(im, ii){
+          imgsHtml += '<div class="img-item" style="width:90px;"><div class="thumb" style="width:90px;height:66px;background-image:url(\'' + assetUrl(im) + '\')"><button class="rm" data-typo="' + i + '" data-img="' + ii + '">✕</button></div></div>';
+        });
+        imgsHtml += '</div><input type="file" accept="image/*" data-addimg="' + i + '" style="font-size:11px;">';
+
         html += '<div class="dispo-item" data-i="' + i + '">' +
           '<div class="row">' +
             field("Typologie", '<input type="text" data-name="'+i+'" value="' + esc(t.name) + '">') +
@@ -436,6 +564,7 @@
           '<div class="toggle-row" style="padding:4px 0 12px;"><span class="lbl" style="font-size:13px;">Confirmé (sinon « à confirmer »)</span>' +
             '<label class="switch"><input type="checkbox" data-confirmed="'+i+'" ' + (t.confirmed?'checked':'') + '><span class="slider"></span></label></div>' +
           field("Détail (texte optionnel)", '<textarea data-text="'+i+'">' + esc(t.detail_text) + '</textarea>') +
+          field("Images de cette typologie (plans, photos — affichées dans « voir détails »)", imgsHtml) +
           '<button class="btn btn-sm btn-danger" data-rm="' + i + '">Supprimer cette typologie</button>' +
         '</div>';
       });
@@ -459,6 +588,24 @@
       });
       body.querySelectorAll('[data-rm]').forEach(function(btn){
         btn.addEventListener("click", function(){ d.typologies.splice(Number(btn.getAttribute("data-rm")),1); saveSection("villas"); draw(); });
+      });
+      body.querySelectorAll('.img-item .rm').forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var ti = Number(btn.getAttribute("data-typo"));
+          var ii = Number(btn.getAttribute("data-img"));
+          d.typologies[ti].detail_images.splice(ii, 1);
+          saveSection("villas"); draw();
+        });
+      });
+      body.querySelectorAll('[data-addimg]').forEach(function(inp){
+        inp.addEventListener("change", function(){
+          if(!inp.files[0]) return;
+          var ti = Number(inp.getAttribute("data-addimg"));
+          uploadImage(inp.files[0], v.slug + "-dispo-" + ti).then(function(fname){
+            d.typologies[ti].detail_images.push(fname);
+            saveSection("villas"); draw();
+          });
+        });
       });
       document.getElementById("addTypo").addEventListener("click", function(){
         d.typologies.push({name:"", count:"à confirmer", status_label:"À confirmer", confirmed:false, detail_text:"", detail_images:[]});
@@ -606,6 +753,173 @@
     document.getElementById("closeEditor").addEventListener("click", renderBlog);
   }
 
+  // ============================================================== VIDEOS
+  function ne_youtubeId(url){
+    url = (url || "").trim();
+    var patterns = [
+      /(?:youtube\.com\/watch\?[^#]*\bv=)([a-zA-Z0-9_-]{11})/,
+      /(?:youtube\.com\/(?:embed|shorts)\/)([a-zA-Z0-9_-]{11})/,
+      /(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/
+    ];
+    for(var i=0;i<patterns.length;i++){
+      var m = url.match(patterns[i]);
+      if(m) return m[1];
+    }
+    return null;
+  }
+
+  function renderVideos(){
+    var v = STATE.videos;
+    if(!v.items) v.items = [];
+    function draw(){
+      var html = '<div class="panel"><h3>En-tête de la section</h3><div class="grid2">' +
+        field("Kicker (petit texte)", '<input type="text" id="v_kicker" value="' + esc(v.section_kicker || "") + '">') +
+        field("Titre", '<input type="text" id="v_title" value="' + esc(v.section_title || "") + '">') +
+        '</div>' + field("Sous-titre", '<textarea id="v_lede">' + esc(v.section_lede || "") + '</textarea>') + '</div>';
+
+      html += '<div class="panel"><h3>Vidéos</h3><p class="desc">Collez un lien YouTube (youtube.com/watch?v=..., youtu.be/... ou un lien « Partager »). La miniature et le lecteur se génèrent automatiquement — aucune vidéo n\'est affichée tant que le lien n\'est pas valide.</p>';
+      v.items.forEach(function(item, i){
+        var id = ne_youtubeId(item.url);
+        html += '<div class="dispo-item" data-i="' + i + '">' +
+          '<div class="row" style="align-items:center;">' +
+            (id ? '<img src="https://img.youtube.com/vi/' + id + '/mqdefault.jpg" style="width:110px;height:80px;object-fit:cover;border-radius:8px;">'
+                : '<div class="img-picker-empty" style="width:110px;height:80px;">Lien invalide</div>') +
+            '<div style="flex:1;">' +
+              field("Titre", '<input type="text" data-vtitle="' + i + '" value="' + esc(item.title) + '">') +
+              field("Lien YouTube", '<input type="text" data-vurl="' + i + '" value="' + esc(item.url) + '">') +
+            '</div>' +
+          '</div>' +
+          '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+            '<button class="btn btn-sm" data-vup="' + i + '"' + (i===0?' disabled':'') + '>↑ Monter</button>' +
+            '<button class="btn btn-sm" data-vdown="' + i + '"' + (i===v.items.length-1?' disabled':'') + '>↓ Descendre</button>' +
+            '<button class="btn btn-sm btn-danger" data-vrm="' + i + '">Supprimer</button>' +
+          '</div>' +
+        '</div>';
+      });
+      html += '<button class="btn btn-sm" id="addVideo" style="margin-top:10px;">+ Ajouter une vidéo</button></div>';
+
+      contentEl.innerHTML = html;
+
+      document.getElementById("v_kicker").addEventListener("input", function(){ v.section_kicker = this.value; debounceSave("videos"); });
+      document.getElementById("v_title").addEventListener("input", function(){ v.section_title = this.value; debounceSave("videos"); });
+      document.getElementById("v_lede").addEventListener("input", function(){ v.section_lede = this.value; debounceSave("videos"); });
+
+      contentEl.querySelectorAll('[data-vtitle]').forEach(function(inp){
+        inp.addEventListener("input", function(){ v.items[Number(inp.getAttribute("data-vtitle"))].title = inp.value; debounceSave("videos"); });
+      });
+      contentEl.querySelectorAll('[data-vurl]').forEach(function(inp){
+        inp.addEventListener("input", function(){ v.items[Number(inp.getAttribute("data-vurl"))].url = inp.value; debounceSave("videos"); });
+        inp.addEventListener("blur", function(){ saveSection("videos"); draw(); });
+      });
+      contentEl.querySelectorAll('[data-vrm]').forEach(function(btn){
+        btn.addEventListener("click", function(){
+          if(!confirm("Supprimer cette vidéo ?")) return;
+          v.items.splice(Number(btn.getAttribute("data-vrm")), 1); saveSection("videos"); draw();
+        });
+      });
+      contentEl.querySelectorAll('[data-vup]').forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var i = Number(btn.getAttribute("data-vup"));
+          if(i<=0) return;
+          var tmp = v.items[i-1]; v.items[i-1] = v.items[i]; v.items[i] = tmp;
+          saveSection("videos"); draw();
+        });
+      });
+      contentEl.querySelectorAll('[data-vdown]').forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var i = Number(btn.getAttribute("data-vdown"));
+          if(i>=v.items.length-1) return;
+          var tmp = v.items[i+1]; v.items[i+1] = v.items[i]; v.items[i] = tmp;
+          saveSection("videos"); draw();
+        });
+      });
+      document.getElementById("addVideo").addEventListener("click", function(){
+        v.items.push({title:"Nouvelle vidéo", url:""});
+        saveSection("videos"); draw();
+      });
+    }
+    draw();
+  }
+
+  // ============================================================== CATALOGUE / GALERIE
+  function renderGallery(){
+    var g = STATE.gallery;
+    if(!g.items) g.items = [];
+    function draw(){
+      var html = '<div class="panel"><div class="toggle-row"><span class="lbl">Activer le Catalogue / Galerie<div class="d">Quand désactivée, la section disparaît de la page d\'accueil même si des images sont présentes — pratique pour la masquer temporairement sans perdre le contenu.</div></span>' +
+        '<label class="switch"><input type="checkbox" id="galleryToggle" ' + (g.enabled !== false ? 'checked' : '') + '><span class="slider"></span></label></div></div>';
+
+      html += '<div class="panel"><h3>En-tête de la section</h3><div class="grid2">' +
+        field("Kicker (petit texte)", '<input type="text" id="g_kicker" value="' + esc(g.kicker || "") + '">') +
+        field("Titre", '<input type="text" id="g_title" value="' + esc(g.title || "") + '">') +
+        '</div>' + field("Sous-titre", '<textarea id="g_lede">' + esc(g.lede || "") + '</textarea>') + '</div>';
+
+      html += '<div class="panel"><h3>Images du catalogue</h3><p class="desc">Photos, plans ou documents affichés dans le carrousel « Catalogue » de la page d\'accueil.</p>';
+      g.items.forEach(function(item, i){
+        html += '<div class="dispo-item" data-i="' + i + '">' +
+          '<div class="row">' +
+            '<div><div class="thumb" style="width:100%;height:90px;background:var(--paper-alt) center/cover no-repeat;background-image:url(\'' + assetUrl(item.asset) + '\');border-radius:6px;"></div>' +
+              '<input type="file" accept="image/*" data-gimg="' + i + '" style="margin-top:6px;font-size:11px;"></div>' +
+            '<div>' +
+              field("Légende (optionnelle)", '<input type="text" data-gcap="' + i + '" value="' + esc(item.caption || "") + '">') +
+            '</div>' +
+          '</div>' +
+          '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+            '<button class="btn btn-sm" data-gup="' + i + '"' + (i===0?' disabled':'') + '>↑ Monter</button>' +
+            '<button class="btn btn-sm" data-gdown="' + i + '"' + (i===g.items.length-1?' disabled':'') + '>↓ Descendre</button>' +
+            '<button class="btn btn-sm btn-danger" data-grm="' + i + '">Supprimer</button>' +
+          '</div>' +
+        '</div>';
+      });
+      html += '<button class="btn btn-sm" id="addGalleryItem" style="margin-top:10px;">+ Ajouter une image</button></div>';
+
+      contentEl.innerHTML = html;
+
+      document.getElementById("galleryToggle").addEventListener("change", function(){ g.enabled = this.checked; saveSection("gallery"); });
+      document.getElementById("g_kicker").addEventListener("input", function(){ g.kicker = this.value; debounceSave("gallery"); });
+      document.getElementById("g_title").addEventListener("input", function(){ g.title = this.value; debounceSave("gallery"); });
+      document.getElementById("g_lede").addEventListener("input", function(){ g.lede = this.value; debounceSave("gallery"); });
+
+      contentEl.querySelectorAll('[data-gcap]').forEach(function(inp){
+        inp.addEventListener("input", function(){ g.items[Number(inp.getAttribute("data-gcap"))].caption = inp.value; debounceSave("gallery"); });
+      });
+      contentEl.querySelectorAll('[data-gimg]').forEach(function(fi){
+        fi.addEventListener("change", function(){
+          if(!fi.files[0]) return;
+          var i = Number(fi.getAttribute("data-gimg"));
+          uploadImage(fi.files[0], "catalogue").then(function(fname){ g.items[i].asset = fname; saveSection("gallery").then(draw); });
+        });
+      });
+      contentEl.querySelectorAll('[data-grm]').forEach(function(btn){
+        btn.addEventListener("click", function(){
+          if(!confirm("Supprimer cette image ?")) return;
+          g.items.splice(Number(btn.getAttribute("data-grm")), 1); saveSection("gallery"); draw();
+        });
+      });
+      contentEl.querySelectorAll('[data-gup]').forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var i = Number(btn.getAttribute("data-gup"));
+          if(i<=0) return;
+          var tmp = g.items[i-1]; g.items[i-1] = g.items[i]; g.items[i] = tmp;
+          saveSection("gallery"); draw();
+        });
+      });
+      contentEl.querySelectorAll('[data-gdown]').forEach(function(btn){
+        btn.addEventListener("click", function(){
+          var i = Number(btn.getAttribute("data-gdown"));
+          if(i>=g.items.length-1) return;
+          var tmp = g.items[i+1]; g.items[i+1] = g.items[i]; g.items[i] = tmp;
+          saveSection("gallery"); draw();
+        });
+      });
+      document.getElementById("addGalleryItem").addEventListener("click", function(){
+        g.items.push({asset:"", caption:""});
+        saveSection("gallery"); draw();
+      });
+    }
+    draw();
+  }
+
   // ============================================================== PAGE LIENS (QR code)
   function renderLiens(){
     var l = STATE.liens;
@@ -703,6 +1017,33 @@
       field("Email", '<input type="text" id="c_email" value="' + esc(s.email) + '">') +
       '</div></div>';
 
+    html += '<div class="panel"><h3>Boutons d\'action (CTA)</h3><p class="desc">Activez ou désactivez indépendamment chaque bouton d\'appel à l\'action présent sur toutes les pages du site.</p>' +
+      '<div class="toggle-row"><span class="lbl">Bulle flottante Appeler / WhatsApp<div class="d">La bulle ronde en bas de l\'écran qui ouvre une petite carte « Appeler maintenant / WhatsApp ».</div></span>' +
+      '<label class="switch"><input type="checkbox" id="ctaFloatToggle" ' + (s.cta_float_enabled!==false?'checked':'') + '><span class="slider"></span></label></div>' +
+      '<div class="toggle-row"><span class="lbl">Barre d\'actions mobile<div class="d">La barre fixe en bas de l\'écran sur mobile (Appeler / WhatsApp / RDV).</div></span>' +
+      '<label class="switch"><input type="checkbox" id="ctaMinibarToggle" ' + (s.cta_minibar_enabled!==false?'checked':'') + '><span class="slider"></span></label></div>' +
+      '<div class="toggle-row"><span class="lbl">Fenêtre « Prendre rendez-vous »<div class="d">La fenêtre qui s\'ouvre sur chaque bouton « Prendre rendez-vous » du site (Appeler / Email / Formulaire).</div></span>' +
+      '<label class="switch"><input type="checkbox" id="ctaRdvToggle" ' + (s.cta_rdv_modal_enabled!==false?'checked':'') + '><span class="slider"></span></label></div>' +
+      '</div>';
+
+    html += '<div class="panel"><h3>Réglages Email — notifications des demandes</h3>' +
+      '<p class="desc">C\'est ici, et uniquement ici, que se configure l\'email qui reçoit les demandes envoyées depuis le site (RDV résidences, formulaire Opportunités). Aucune intervention technique n\'est nécessaire : remplissez ces champs comme vous le feriez dans n\'importe quelle boîte mail, puis testez l\'envoi avant de publier.</p>' +
+      '<div class="grid2">' +
+      field("Email qui reçoit les demandes", '<input type="text" id="e_recipient" value="' + esc(s.lead_recipient) + '">', "L'adresse qui recevra chaque nouvelle demande, ex. contact@newera-promotion.com") +
+      field("Nom de l'expéditeur", '<input type="text" id="e_sendername" value="' + esc(s.smtp_sender_name) + '">', "Le nom affiché comme expéditeur, ex. « New Era — Site Web »") +
+      field("Adresse email d'envoi (boîte mail)", '<input type="text" id="e_user" value="' + esc(s.smtp_user) + '">', "La boîte mail qui envoie les notifications, ex. contact@newera-promotion.com") +
+      field("Serveur SMTP (host)", '<input type="text" id="e_host" value="' + esc(s.smtp_host) + '">', "Hostinger : smtp.hostinger.com — Gmail : smtp.gmail.com") +
+      field("Port SMTP", '<input type="text" id="e_port" value="' + esc(s.smtp_port) + '">', "465 (SSL) ou 587 (TLS) selon votre fournisseur") +
+      '</div>' +
+      '<button class="btn btn-sm" id="testEmailBtn">Tester l\'envoi</button><div class="hint" id="emailTestMsg" style="margin-top:8px;"></div>' +
+      '</div>';
+
+    html += '<div class="panel"><h3>Mot de passe SMTP</h3><p class="desc">Volontairement absent de ce dashboard : comme les autres identifiants du projet, il n\'est jamais stocké dans le contenu (Blob), uniquement dans la variable d\'environnement Vercel SMTP_PASSWORD.</p>' +
+      '<div class="card-sub" id="smtpPwStatus">' + (s.smtp_password_set
+        ? '<span class="badge badge-teal">Configuré</span> — SMTP_PASSWORD est défini côté serveur.'
+        : '<span class="badge badge-grey">Non configuré</span> — ajoutez la variable d\'environnement SMTP_PASSWORD dans Vercel (Project Settings → Environment Variables), pour un compte Gmail utilisez un « mot de passe d\'application », pas le mot de passe normal.') +
+      '</div></div>';
+
     html += '<div class="panel"><h3>Mot de passe du panneau</h3><div class="grid2">' +
       field("Mot de passe actuel", '<input type="password" id="pw_current">') +
       field("Nouveau mot de passe", '<input type="password" id="pw_new">') +
@@ -711,6 +1052,26 @@
     contentEl.innerHTML = html;
     function bind(id, key){ document.getElementById(id).addEventListener("input", function(){ s[key] = this.value; debounceSave("settings"); }); }
     bind("c_disp","phone_display"); bind("c_tel","phone_tel"); bind("c_wa","whatsapp_number"); bind("c_email","email");
+    bind("e_recipient","lead_recipient"); bind("e_sendername","smtp_sender_name"); bind("e_user","smtp_user");
+    bind("e_host","smtp_host"); bind("e_port","smtp_port");
+
+    document.getElementById("ctaFloatToggle").addEventListener("change", function(){ s.cta_float_enabled = this.checked; saveSection("settings"); });
+    document.getElementById("ctaMinibarToggle").addEventListener("change", function(){ s.cta_minibar_enabled = this.checked; saveSection("settings"); });
+    document.getElementById("ctaRdvToggle").addEventListener("change", function(){ s.cta_rdv_modal_enabled = this.checked; saveSection("settings"); });
+
+    document.getElementById("testEmailBtn").addEventListener("click", function(){
+      var btn = this;
+      var msg = document.getElementById("emailTestMsg");
+      btn.disabled = true; msg.textContent = "Envoi en cours…"; msg.style.color = "";
+      fetch("/api/test-email", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({
+        lead_recipient: s.lead_recipient, smtp_host: s.smtp_host, smtp_port: s.smtp_port,
+        smtp_user: s.smtp_user, smtp_sender_name: s.smtp_sender_name
+      })}).then(function(r){ return r.json(); }).then(function(res){
+        btn.disabled = false;
+        if(res.ok){ msg.textContent = "Email de test envoyé ✓ — vérifiez la boîte de réception."; msg.style.color = "var(--ok)"; }
+        else { msg.textContent = "Échec : " + (res.error || "erreur inconnue"); msg.style.color = "var(--red)"; }
+      }).catch(function(){ btn.disabled = false; msg.textContent = "Échec de la requête."; msg.style.color = "var(--red)"; });
+    });
 
     document.getElementById("changePwBtn").addEventListener("click", function(){
       var cur = document.getElementById("pw_current").value;
@@ -722,6 +1083,55 @@
           else { msg.textContent = res.error || "Erreur"; msg.style.color = "var(--red)"; }
         });
     });
+  }
+
+  // ============================================================== DEMANDES REÇUES (LEADS)
+  var LEADS_CACHE = null;
+  var LEAD_CODE_LABELS = {
+    "NE-RES-AGATA": "Résidence — Agata", "NE-RES-VERONICA": "Résidence — Veronica",
+    "NE-RES-CHRISTINA": "Résidence — Christina", "NE-RES-CATRINA": "Résidence — Catrina",
+    "NE-TER-VENDRE": "Terrain — Vente", "NE-TER-ACHETER": "Terrain — Achat", "NE-TER-TROC": "Terrain — Troc",
+    "NE-AUTRE": "Autre / non classé"
+  };
+  function renderLeads(){
+    contentEl.innerHTML = '<div class="empty">Chargement des demandes…</div>';
+    fetch("/api/leads").then(function(r){
+      if(r.status === 401){ window.location.href = "/login"; throw new Error("unauthorized"); }
+      return r.json();
+    }).then(function(data){
+      LEADS_CACHE = data;
+      paintLeads(data);
+    }).catch(function(){
+      contentEl.innerHTML = '<div class="empty">Impossible de charger les demandes.</div>';
+    });
+  }
+  function paintLeads(data){
+    var statsHtml = '<div class="panel"><h3>Statistiques</h3><div class="grid2">' +
+      field("Total des demandes", '<div style="font-size:22px;font-weight:700;">' + data.total + '</div>') +
+      field("30 derniers jours", '<div style="font-size:22px;font-weight:700;">' + data.last_30_days + '</div>') +
+      '</div><div class="hint" style="margin-top:10px;">' +
+      Object.keys(LEAD_CODE_LABELS).map(function(code){
+        var n = (data.by_code && data.by_code[code]) || 0;
+        return esc(LEAD_CODE_LABELS[code]) + ' : <b>' + n + '</b>';
+      }).join(' &nbsp;·&nbsp; ') +
+      '</div></div>';
+
+    var rows = (data.leads || []).map(function(l){
+      var f = l.fields || {};
+      return '<tr><td>' + esc(l.received_at || '') + '</td>' +
+        '<td>' + esc(l.type_label || '') + ' — ' + esc(l.subtype_label || '') + '</td>' +
+        '<td>' + esc(f['Nom & Prénom'] || '') + '</td>' +
+        '<td>' + esc(f['Téléphone'] || '') + '</td>' +
+        '<td>' + esc(f['Email'] || '') + '</td>' +
+        '<td><code>' + esc(l.code || '') + '</code></td></tr>';
+    }).join('');
+
+    var tableHtml = '<div class="panel"><h3>Toutes les demandes (' + (data.leads || []).length + ' affichées)</h3>' +
+      (rows ? '<table class="leads-table"><thead><tr><th>Reçu le</th><th>Type</th><th>Nom</th><th>Téléphone</th><th>Email</th><th>Code CRM</th></tr></thead><tbody>' + rows + '</tbody></table>'
+            : '<div class="empty">Aucune demande reçue pour le moment.</div>') +
+      '</div>';
+
+    contentEl.innerHTML = statsHtml + tableHtml;
   }
 
   loadContent();

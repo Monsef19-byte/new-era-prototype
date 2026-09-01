@@ -15,6 +15,8 @@ import shutil
 import urllib.request
 import urllib.parse
 
+from icons import ICONS as ICON_LIBRARY
+
 BASE = os.path.dirname(os.path.abspath(__file__))          # .../03 - PROTOTYPE/admin
 PROTO = os.path.dirname(BASE)                                # .../03 - PROTOTYPE
 HOMEPAGE = os.path.join(PROTO, "homepage")                   # lowercase: matches the actual
@@ -153,14 +155,63 @@ ICONS = {
 def esc(s):
     return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
+def gallery_item_html(item, i):
+    asset = item.get("asset")
+    if not asset:
+        return ""
+    cap = esc(item.get("caption", ""))
+    cap_html = '<div class="cap">{}</div>'.format(cap) if cap else ""
+    return '    <div class="fan-item" data-group="catalogue" data-index="{i}"><img src="assets/{img}" alt="{cap}">{cap_html}</div>'.format(
+        i=i, img=asset, cap=cap, cap_html=cap_html
+    )
+
+YOUTUBE_RE = [
+    re.compile(r"(?:youtube\.com/watch\?[^#]*\bv=)([a-zA-Z0-9_-]{11})"),
+    re.compile(r"(?:youtube\.com/(?:embed|shorts)/)([a-zA-Z0-9_-]{11})"),
+    re.compile(r"(?:youtu\.be/)([a-zA-Z0-9_-]{11})"),
+]
+
+def youtube_id(url):
+    url = (url or "").strip()
+    for pattern in YOUTUBE_RE:
+        m = pattern.search(url)
+        if m:
+            return m.group(1)
+    return None
+
+def video_card_html(item):
+    vid = youtube_id(item.get("url"))
+    if not vid:
+        return ""
+    title = esc(item.get("title", ""))
+    return (
+        '    <div class="video-card reveal" data-youtube-id="{vid}" tabindex="0" role="button" aria-label="{title}">\n'
+        '      <div class="video-card__thumb">\n'
+        '        <img src="https://img.youtube.com/vi/{vid}/hqdefault.jpg" alt="{title}" loading="lazy">\n'
+        '        <div class="video-card__play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="9 6 19 12 9 18"/></svg></div>\n'
+        '      </div>\n'
+        '      <div class="video-card__title">{title}</div>\n'
+        '    </div>'
+    ).format(vid=vid, title=title)
+
 def fan_gal_item(img, cap, i):
     return '        <div class="fan-item" data-group="gallery" data-index="{i}"><img src="assets/{img}" alt="{cap}"><div class="cap">{cap}</div></div>'.format(img=img, i=i, cap=esc(cap))
 
 def fan_plan_item(img, cap, i):
     return '        <div class="fan-item" data-group="plans" data-index="{i}"><img src="assets/{img}" alt="{cap}"><div class="cap">{cap}</div></div>'.format(img=img, i=i, cap=esc(cap))
 
+# Sourced from icons.py (ICON_LIBRARY) so every icon offered by the admin's
+# icon picker (icons-data.js) can actually be rendered on the live site —
+# the original 11 "Caractéristiques" icons plus the ~60 ported from
+# hamadat-promotion.com's icon library. See icons.py for details.
+FEAT_ICONS = {name: entry['d'] for name, entry in ICON_LIBRARY.items()}
+FEAT_ICON_DEFAULT = '<circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/>'
+
 def feat_line(icon, label):
-    return '        <li>{}</li>'.format(esc(label))
+    svg_body = FEAT_ICONS.get(icon, FEAT_ICON_DEFAULT)
+    svg = ('<svg class="feat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+           'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{}</svg>').format(svg_body)
+    return '        <li>{svg}<span>{label}</span></li>'.format(svg=svg, label=esc(label))
 
 def gs_interior_card(img, title, bullets):
     lis = ''.join('<li>{}</li>'.format(esc(b)) for b in bullets)
@@ -234,6 +285,34 @@ def render_villa(v, all_villas, settings):
     typebien_options = '\n'.join('          <option>{}</option>'.format(t) for t in v.get('typebien_opts', []))
     dispo_content = render_dispo(v['dispo'], name)
 
+    maps_url = (v.get('google_maps') or '').strip()
+    if maps_url:
+        loc_maps = ('<a class="vs-loc-link" href="{u}" target="_blank" rel="noopener">'
+                     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+                     'stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;'
+                     'vertical-align:-2px;margin-right:4px;"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/>'
+                     '<circle cx="12" cy="10" r="3"/></svg>{t}</a>').format(u=esc(maps_url), t=esc(v['loc_full']))
+        embed_addr = v['loc_full'] if 'algérie' in v['loc_full'].lower() else v['loc_full'] + ', Algérie'
+        map_embed_src = 'https://maps.google.com/maps?q={}&t=&z=15&ie=UTF8&iwloc=&output=embed'.format(
+            urllib.parse.quote(embed_addr))
+        maps_block = (
+            '    <!-- LOCALISATION -->\n'
+            '    <div class="vs-block">\n'
+            '      <div class="kicker"><span class="num">04</span></div>\n'
+            '      <h2 class="h3">Localisation</h2>\n'
+            '      <p class="lede">Villa {name} — {loc_full}. <a class="vs-loc-link" href="{u}" target="_blank" rel="noopener">Voir l\'itinéraire sur Google Maps</a></p>\n'
+            '      <div class="map-embed">\n'
+            '        <iframe src="{src}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Localisation Villa {name}"></iframe>\n'
+            '      </div>\n'
+            '    </div>\n'
+        ).format(name=esc(v['name']), loc_full=esc(v['loc_full']), u=esc(maps_url), src=esc(map_embed_src))
+    else:
+        loc_maps = esc(v['loc_full'])
+        maps_block = ''
+
+    share_text = 'Villa {} — {}. {}'.format(v['name'], v['loc_full'], v.get('description', ''))[:180]
+    share_url = 'https://newera-promotion.com/{}.html'.format(v['slug'])
+
     pct = v.get('progress_pct')
     if pct is None:
         progress_style = '--pct:0'
@@ -243,14 +322,16 @@ def render_villa(v, all_villas, settings):
         progress_inner = '<span>{}%</span>'.format(pct)
 
     html = tpl.format(
-        slug=v['slug'], name=name, loc=v['loc'], loc_full=v['loc_full'], count=v['count'], typologie=v['typologie'],
+        slug=v['slug'], name=name, loc=v['loc'], loc_full=v['loc_full'], loc_maps=loc_maps, count=v['count'], typologie=v['typologie'],
         hero_img=v['hero_img'], description=v['description'],
         feat_items=feat_items, gallery_fan_items=gallery_fan_items, gallery_lb=gallery_lb,
         plan_fan_items=plan_fan_items, plan_lb=plan_lb, interior_cards=interior_cards,
         switch_cards=switch_cards, residence_options=residence_options, typebien_options=typebien_options,
         dispo_content=dispo_content, progress_style=progress_style, progress_inner=progress_inner,
+        maps_block=maps_block, share_text=esc(share_text), share_url=esc(share_url),
     )
     html = apply_contact(html, settings)
+    html = apply_cta_toggles(html, settings)
     html = apply_blog_nav(html, settings)
     write_all(v['slug'] + '.html', html)
 
@@ -260,6 +341,11 @@ def render_villa(v, all_villas, settings):
 def apply_contact(html, settings):
     html = html.replace('tel:+213000000000', 'tel:' + settings['phone_tel'])
     html = html.replace('213000000000', settings['whatsapp_number'])
+    # legacy hardcoded placeholder still present in a few static blocks
+    # (mini-cta-bar, float-card) that predates the settings-driven number —
+    # keep it in sync too so a single settings.json change covers everywhere.
+    html = html.replace('tel:+213561112233', 'tel:' + settings['phone_tel'])
+    html = html.replace('213561112233', settings['whatsapp_number'])
     return html
 
 BLOG_LINK_HTML = '<a href="blog.html">Blog</a>\n    '
@@ -275,6 +361,44 @@ def apply_blog_nav(html, settings):
                              '<a href="opportunites.html">Opportunités</a>\n    <a href="blog.html">Blog</a>\n', 1)
     if not enabled and has_link:
         html = re.sub(r'\s*<a href="blog\.html">Blog</a>\n?', '\n', html)
+    return html
+
+def set_section_hidden(html, section_open_tag, hidden):
+    """Toggle display:none on a <section ...> tag without touching its inner
+    content. index.html is patched IN PLACE on every build (read_current
+    re-reads the live output, there is no pristine template to fall back
+    to) — so a disabled section's markup and content must survive the
+    toggle intact, ready to reappear the moment it's re-enabled. Stripping
+    the section outright would destroy that on the first disabled build."""
+    hidden_tag = section_open_tag[:-1] + ' style="display:none">'
+    if section_open_tag not in html and hidden_tag not in html:
+        return html  # section not present, nothing to toggle
+    html = html.replace(hidden_tag, section_open_tag)  # normalize first (idempotent)
+    if hidden:
+        html = html.replace(section_open_tag, hidden_tag, 1)
+    return html
+
+def apply_cta_toggles(html, settings):
+    """Independently show/hide the floating call/WhatsApp bubble+card and the
+    mobile mini-cta-bar, per dashboard toggle — mirrors Hamadat's per-element
+    CTA toggles. Non-destructive, same reasoning as set_section_hidden above.
+    Also emits a small JS flag object so main.js's own rdv-modal builder
+    (which constructs the modal dynamically, not from static markup) can be
+    gated by the third toggle (cta_rdv_modal_enabled)."""
+    float_off = not settings.get('cta_float_enabled', True)
+    html = set_section_hidden(html, '<div class="float-cta" id="floatCta">', float_off)
+    html = set_section_hidden(html, '<div class="float-card" id="floatCard">', float_off)
+    html = set_section_hidden(html, '<nav class="mini-cta-bar" aria-label="Actions rapides">', not settings.get('cta_minibar_enabled', True))
+
+    flags = {
+        'float': settings.get('cta_float_enabled', True),
+        'minibar': settings.get('cta_minibar_enabled', True),
+        'rdvModal': settings.get('cta_rdv_modal_enabled', True),
+    }
+    html = re.sub(r'\s*<script>window\.NEWERA_CTA_FLAGS=.*?</script>\n?', '\n', html)
+    flags_script = '<script>window.NEWERA_CTA_FLAGS=' + json.dumps(flags) + ';</script>\n'
+    if '</body>' in html:
+        html = html.replace('</body>', flags_script + '</body>', 1)
     return html
 
 def replace_balanced_div(html, open_tag_pattern, new_inner_html):
@@ -307,12 +431,22 @@ def replace_balanced_div(html, open_tag_pattern, new_inner_html):
 # content that isn't modeled in JSON untouched; only swaps the fields the
 # dashboard actually exposes)
 # ============================================================================
-def patch_homepage(home, villas, settings):
+def patch_homepage(home, villas, settings, videos=None, gallery=None):
     html = read_current('index.html')
 
+    # Titre du hero optionnel : si "Titre" et "Accent" sont vides dans le
+    # panneau (Page d'accueil), on n'affiche aucun texte sur l'image
+    # principale — le <h1> reste présent (vide) pour ne pas casser la mise
+    # en page ni le repérage du <p class="lede"> juste après.
+    hero_title = (home.get('hero_title') or '').strip()
+    hero_accent = (home.get('hero_accent') or '').strip()
+    if hero_title or hero_accent:
+        hero_h1 = '<h1 class="h1">{t} <span class="hl-accent flow">{a}</span></h1>'.format(t=esc(hero_title), a=esc(hero_accent))
+    else:
+        hero_h1 = '<h1 class="h1"></h1>'
     html = re.sub(
         r"<h1 class=\"h1\">.*?</h1>",
-        '<h1 class="h1">{t} <span class="hl-accent flow">{a}</span></h1>'.format(t=esc(home['hero_title']), a=esc(home['hero_accent'])),
+        hero_h1,
         html, count=1, flags=re.S)
     html = re.sub(r'(<h1 class="h1">.*?</h1>\s*<p class="lede">).*?(</p>)',
                    r'\g<1>' + esc(home['hero_lede']) + r'\g<2>', html, count=1, flags=re.S)
@@ -335,7 +469,29 @@ def patch_homepage(home, villas, settings):
     res_cards_html = '\n'.join(res_equal_card(v) for v in featured)
     html = replace_balanced_div(html, r'<div class="res-equal reveal">', '\n' + res_cards_html + '\n  ')
 
+    if videos:
+        html = re.sub(r'(<section class="sec" id="videos">.*?<span class="num">).*?(</span>)',
+                       r'\g<1>' + esc(videos.get('section_kicker', '')) + r'\g<2>', html, count=1, flags=re.S)
+        html = re.sub(r'(<section class="sec" id="videos">.*?<h2 class="h2"[^>]*>).*?(</h2>)',
+                       r'\g<1>' + esc(videos.get('section_title', '')) + r'\g<2>', html, count=1, flags=re.S)
+        html = re.sub(r'(<section class="sec" id="videos">.*?<p class="lede">).*?(</p>)',
+                       r'\g<1>' + esc(videos.get('section_lede', '')) + r'\g<2>', html, count=1, flags=re.S)
+        cards_html = '\n'.join(c for c in (video_card_html(it) for it in videos.get('items', [])) if c)
+        html = replace_balanced_div(html, r'<div class="video-carousel__track" data-video-track>', '\n' + cards_html + '\n    ')
+
+    if gallery:
+        html = re.sub(r'(<section class="sec alt" id="catalogue"[^>]*>.*?<span class="num">).*?(</span>)',
+                       r'\g<1>' + esc(gallery.get('kicker', '')) + r'\g<2>', html, count=1, flags=re.S)
+        html = re.sub(r'(<section class="sec alt" id="catalogue"[^>]*>.*?<h2 class="h2"[^>]*>).*?(</h2>)',
+                       r'\g<1>' + esc(gallery.get('title', '')) + r'\g<2>', html, count=1, flags=re.S)
+        html = re.sub(r'(<section class="sec alt" id="catalogue"[^>]*>.*?<p class="lede">).*?(</p>)',
+                       r'\g<1>' + esc(gallery.get('lede', '')) + r'\g<2>', html, count=1, flags=re.S)
+        items_html = '\n'.join(c for c in (gallery_item_html(it, i) for i, it in enumerate(gallery.get('items', []))) if c)
+        html = replace_balanced_div(html, r'<div class="fan-carousel reveal" id="catalogueCarousel">', '\n' + items_html + '\n  ')
+        html = set_section_hidden(html, '<section class="sec alt" id="catalogue">', not gallery.get('enabled', True))
+
     html = apply_contact(html, settings)
+    html = apply_cta_toggles(html, settings)
     html = apply_blog_nav(html, settings)
     write_all('index.html', html)
 
@@ -405,6 +561,7 @@ def patch_simple_hero(filename, data, settings):
                    html, count=1, flags=re.S)
     html = re.sub(r'(<p class="lede">).*?(</p>)', r'\g<1>' + esc(data['hero_lede']) + r'\g<2>', html, count=1, flags=re.S)
     html = apply_contact(html, settings)
+    html = apply_cta_toggles(html, settings)
     html = apply_blog_nav(html, settings)
     write_all(filename, html)
 
@@ -447,6 +604,7 @@ def render_blog(posts, settings):
                 slug=p['slug'], img=p.get('image', 'villa-agata.jpg'), title=esc(p['title']), date=esc(p.get('date', ''))))
     html = BLOG_LIST_TEMPLATE.format(cards='\n'.join(cards))
     html = apply_contact(html, settings)
+    html = apply_cta_toggles(html, settings)
     html = apply_blog_nav(html, settings)
     write_all('blog.html', html)
 
@@ -466,13 +624,34 @@ def render_blog(posts, settings):
         body_html = ''.join('<p class="lede">{}</p>'.format(esc(para)) for para in p.get('body', '').split('\n') if para.strip())
         html = BLOG_POST_TEMPLATE.format(title=esc(p['title']), date=esc(p.get('date', '')), image=p.get('image', 'villa-agata.jpg'), body=body_html)
         html = apply_contact(html, settings)
+        html = apply_cta_toggles(html, settings)
         html = apply_blog_nav(html, settings)
         write_all('blog-{}.html'.format(p['slug']), html)
+
+def write_icons_data():
+    """Regenerate admin/static/icons-data.js from icons.py — the single
+    source of truth for icon SVG paths, shared between the generated HTML
+    (via FEAT_ICONS, above) and the admin dashboard's visual icon picker
+    (browser JS, which can't import a Python module). Mirrors the equivalent
+    step in hamadat-promotion.com/build.js."""
+    paths = {name: entry['d'] for name, entry in ICON_LIBRARY.items()}
+    tags = {name: entry['tags'] for name, entry in ICON_LIBRARY.items()}
+    js = (
+        "// Fichier généré automatiquement par generator.py à partir de icons.py.\n"
+        "// Ne pas éditer à la main — les modifications seraient écrasées au prochain build.\n"
+        "window.NEWERA_ICON_PATHS = " + json.dumps(paths, ensure_ascii=False) + ";\n"
+        "window.NEWERA_ICON_TAGS = " + json.dumps(tags, ensure_ascii=False) + ";\n"
+    )
+    static_dir = os.path.join(BASE, "static")
+    os.makedirs(static_dir, exist_ok=True)
+    with open(os.path.join(static_dir, "icons-data.js"), "w", encoding="utf-8") as f:
+        f.write(js)
 
 # ============================================================================
 # ENTRY POINT
 # ============================================================================
 def publish():
+    write_icons_data()
     if VERCEL_BUILD:
         sync_blob_assets()
     settings = load('settings.json')
@@ -482,11 +661,13 @@ def publish():
     opportunites = load('opportunites.json')
     blog = load('blog.json') or []
     liens = load('liens.json')
+    videos = load('videos.json') or {}
+    gallery = load('gallery.json') or {}
 
     for v in villas:
         render_villa(v, villas, settings)
 
-    patch_homepage(home, villas, settings)
+    patch_homepage(home, villas, settings, videos, gallery)
     patch_simple_hero('a-propos.html', apropos, settings)
     patch_simple_hero('opportunites.html', opportunites, settings)
     render_liens(liens, settings)

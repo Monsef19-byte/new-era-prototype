@@ -48,13 +48,13 @@
 </div>
 
 <!-- HERO -->
-<section class="hero maison" id="top" style="background-image:url('../assets/hero-poster.jpg');">
+<section class="hero" id="top" style="background-image:url('../assets/hero-poster.jpg');">
   <video id="heroVideo" class="ken-burns" muted loop playsinline poster="../assets/hero-poster.jpg"></video>
-  <div class="hero-inner maison">
-    <div class="kicker center">نيو إيرا للترقية العقارية</div>
-    <h1 class="h1">فن بناء <span class="hl-accent flow">الاستثناء</span></h1>
+  <div class="hero-inner">
+    <div class="kicker">نيو إيرا للترقية العقارية</div>
+    <h1 class="h1"></h1>
     <p class="lede">25 عاماً من الخبرة الجزائرية الألمانية في خدمة مساكن راقية بالجزائر العاصمة.</p>
-    <div class="hero-actions center">
+    <div class="hero-actions">
       <button class="btn btn-fill">احجز موعداً</button>
       <a class="btn btn-line" style="color:#fff;border-color:rgba(255,255,255,.5);" href="#residences">مساكننا</a>
     </div>
@@ -245,22 +245,50 @@
   </div>
 </section>
 
-<section class="sec alt">
+<!-- CATALOGUE -->
+<section class="sec alt" id="catalogue">
   <div class="sec-head reveal center">
     <div>
-      <div class="kicker center"><span class="num">عبر الجزائر العاصمة</span></div>
-      <h2 class="h2" style="font-size:clamp(26px,3.6vw,40px);">إنجازاتنا</h2>
+      <div class="kicker center"><span class="num">كتالوج</span></div>
+      <h2 class="h2" style="font-size:clamp(26px,3.6vw,40px);">الكتالوج والمعرض</h2>
     </div>
-    <p class="lede">لمحة عن مساكننا عبر الجزائر العاصمة.</p>
+    <p class="lede">لمحة عن إنجازاتنا ومخططاتنا ووثائقنا.</p>
   </div>
-  <div class="fan-carousel reveal" id="homeCarousel">
-    <div class="fan-item"><img src="../assets/villa-agata.jpg" alt="فيلا أغاتا — حيدرة"><div class="cap">أغاتا — حيدرة</div></div>
-    <div class="fan-item"><img src="../assets/villa-veronica.jpg" alt="فيلا فيرونيكا — حيدرة"><div class="cap">فيرونيكا — حيدرة</div></div>
-    <div class="fan-item"><img src="../assets/villa-christina.jpg" alt="فيلا كريستينا — حيدرة"><div class="cap">كريستينا — حيدرة</div></div>
-    <div class="fan-item"><img src="../assets/villa-catrina.jpg" alt="فيلا كاترينا — بئر مراد رايس"><div class="cap">كاترينا — بئر مراد رايس</div></div>
-    <div class="fan-hint"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-5 3 5 3M16 9l5 3-5 3"/></svg>اسحب أو مرّر</div>
+  <div class="fan-carousel reveal" id="catalogueCarousel">
   </div>
 </section>
+
+<!-- VIDEOS -->
+<section class="sec" id="videos">
+  <div class="sec-head reveal center">
+    <div>
+      <div class="kicker center"><span class="num">فيديوهات</span></div>
+      <h2 class="h2" style="font-size:clamp(26px,3.6vw,40px);">نيو إيرا بالفيديو</h2>
+    </div>
+    <p class="lede">جولات افتراضية ومستجدات إقاماتنا بالفيديو.</p>
+  </div>
+  <div class="video-carousel reveal">
+    <div class="video-carousel__track" data-video-track>
+    <div class="video-card reveal" data-youtube-id="zrdPF6-pz2Q" tabindex="0" role="button" aria-label="New Era Promotion Immobilière">
+      <div class="video-card__thumb">
+        <img src="https://img.youtube.com/vi/zrdPF6-pz2Q/hqdefault.jpg" alt="New Era Promotion Immobilière" loading="lazy">
+        <div class="video-card__play"><svg viewBox="0 0 24 24" fill="currentColor"><polygon points="9 6 19 12 9 18"/></svg></div>
+      </div>
+      <div class="video-card__title">New Era Promotion Immobilière</div>
+    </div>
+    </div>
+    <button type="button" class="gs-arrow video-carousel__arrow video-carousel__arrow--prev" data-video-prev aria-label="السابق"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button type="button" class="gs-arrow video-carousel__arrow video-carousel__arrow--next" data-video-next aria-label="التالي"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+  </div>
+</section>
+
+<!-- VIDEO MODAL -->
+<div class="dispo-modal video-modal" id="videoModal">
+  <div class="dispo-modal-box video-modal-box">
+    <button class="dispo-modal-close" id="videoModalClose" aria-label="Fermer">✕</button>
+    <div class="video-modal-embed" id="videoModalEmbed"></div>
+  </div>
+</div>
 
 <div class="closing reveal">
   <div class="kicker on-dark center"><span class="num">New Era</span></div>
@@ -269,11 +297,35 @@
   <button class="btn btn-fill">احجز موعداً</button>
 </div>
 
-<div class="landowner reveal" id="contact">
-  <b>بيعوا، بادلوا، تعاونوا</b>
-  <span>لديكم أرض أو فيلا؟ لنتحدث عن مشروعكم. تساعد New Era الملاك والمستثمرين في تثمين ممتلكاتهم — سواء رغبتم في البيع أو التبادل بعقار جديد أو بناء مشروع مشترك، يدرس فريقنا ملفكم بسرعة وسرية تامة.</span><br>
-  <a class="btn btn-line" href="../opportunites.html">اعرف المزيد</a>
-</div>
+<section class="rdv" id="contact">
+  <div class="rdv-inner">
+    <div class="kicker on-dark"><span class="num">اتصل بنا</span></div>
+    <h2 class="h3">لديكم سؤال؟ راسلونا</h2>
+    <p class="body-sm">استفسار، زيارة إحدى الإقامات أو مشروع أرض — يتواصل معكم فريقنا بسرعة.</p>
+    <form class="rdv-grid" data-lead-type="auto">
+      <input type="text" name="hp" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="rdv-field">
+        <label for="sujet">الموضوع</label>
+        <select id="sujet">
+          <option data-lead-type="general" selected>استفسار عام</option>
+          <option data-lead-type="residence" data-residence-slug="villa-agata">إقامة — أغاطا</option>
+          <option data-lead-type="residence" data-residence-slug="villa-veronica">إقامة — فيرونيكا</option>
+          <option data-lead-type="residence" data-residence-slug="villa-christina">إقامة — كريستينا</option>
+          <option data-lead-type="residence" data-residence-slug="villa-catrina">إقامة — كاترينا</option>
+          <option data-lead-type="terrain" data-terrain-type="vente">أرض — أبيع</option>
+          <option data-lead-type="terrain" data-terrain-type="achat">أرض — أبحث عن الشراء</option>
+          <option data-lead-type="terrain" data-terrain-type="troc">أرض — تبادل / مقايضة</option>
+        </select>
+      </div>
+      <div class="rdv-field half"><label for="nom">الاسم واللقب</label><input id="nom" type="text" placeholder="اسمكم"></div>
+      <div class="rdv-field half"><label for="tel">الهاتف</label><input id="tel" type="tel" placeholder="0X XX XX XX XX"></div>
+      <div class="rdv-field"><label for="email">البريد الإلكتروني</label><input id="email" type="email" placeholder="you@email.com"></div>
+      <div class="rdv-field"><label for="msg">رسالة (اختياري)</label><textarea id="msg" placeholder="رسالتكم..." style="width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.18);color:#fdfbf7;padding:14px 15px;font-size:13px;font-family:inherit;resize:vertical;min-height:90px;"></textarea></div>
+      <button class="btn btn-fill rdv-submit" type="submit">إرسال طلبي</button>
+    </form>
+    <p class="body-sm" style="margin-top:26px;">لديكم أرض أو فيلا للعرض؟ <a class="btn btn-line" href="../opportunites.html">اعرفوا المزيد عن فرصنا</a></p>
+  </div>
+</section>
 
 <footer class="sitefooter">
   <div class="logo-badge"><img src="../assets/logo-wordmark-white.png" alt="New Era"></div>

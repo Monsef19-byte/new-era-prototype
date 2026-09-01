@@ -15,31 +15,31 @@
         "Architecture néoclassique"
       ],
       [
-        "archi",
+        "typo",
         "Typologie F4 & F5"
       ],
       [
-        "archi",
+        "marbre",
         "Marbre italien & parquet naturel"
       ],
       [
-        "archi",
+        "clim",
         "Climatisation & chauffage centralisés"
       ],
       [
-        "archi",
+        "parking",
         "Parking en sous-sol"
       ],
       [
-        "archi",
+        "securite",
         "Sécurité 24h/24"
       ],
       [
-        "archi",
+        "ascenseur",
         "Ascenseurs"
       ],
       [
-        "archi",
+        "isolation",
         "Isolation thermique & acoustique"
       ]
     ],
@@ -188,7 +188,8 @@
       "Duplex",
       "Loft"
     ],
-    "card_image": "villa-agata.jpg"
+    "card_image": "villa-agata.jpg",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Hydra%2C+Alger%2C+Alg%C3%A9rie"
   },
   {
     "slug": "villa-veronica",
@@ -373,7 +374,8 @@
       "F5",
       "Penthouse"
     ],
-    "card_image": "villa-veronica.jpg"
+    "card_image": "villa-veronica.jpg",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Hydra%2C+Alger%2C+Alg%C3%A9rie"
   },
   {
     "slug": "villa-christina",
@@ -553,7 +555,8 @@
       "F3",
       "F4"
     ],
-    "card_image": "villa-christina.jpg"
+    "card_image": "villa-christina.jpg",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Hydra%2C+Alger%2C+Alg%C3%A9rie"
   },
   {
     "slug": "villa-catrina",
@@ -739,6 +742,7 @@
       "F4",
       "F5"
     ],
-    "card_image": "villa-catrina.jpg"
+    "card_image": "villa-catrina.jpg",
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Bir+Mourad+Ra%C3%AFs%2C+Alger%2C+Alg%C3%A9rie"
   }
 ]

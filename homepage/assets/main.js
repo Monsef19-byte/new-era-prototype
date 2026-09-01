@@ -120,7 +120,7 @@ if(progressBar){
 
 var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* ---- Fan carousel (every gallery site-wide): drag + mouse-wheel stacked cards. Generalized, multi-instance port of the reference "carousel with drag and wheel" interaction — each instance keeps its own progress/active/isDown state in a closure, and wheel/drag listeners are scoped to that instance's own container instead of the document. ---- */
+/* ---- Fan carousel (every gallery site-wide): drag/swipe + arrow-button stacked cards. Mouse-wheel control intentionally removed so page scroll always scrolls the page, never the carousel. Each instance keeps its own progress/active/isDown state in a closure, and drag listeners are scoped to that instance's own container instead of the document. Depth-of-field blur (--dist) and gentle hover zoom are driven from here via CSS custom properties. ---- */
 function initFanCarousel(root){
   var items = Array.prototype.slice.call(root.querySelectorAll('.fan-item'));
   var n = items.length;
@@ -137,6 +137,7 @@ function initFanCarousel(root){
     items.forEach(function(item, i){
       item.style.setProperty('--zIndex', z[i]);
       item.style.setProperty('--active', (i - active) / n);
+      item.style.setProperty('--dist', Math.abs((i - active) / n));
     });
   }
   function animate(){
@@ -160,11 +161,6 @@ function initFanCarousel(root){
     });
   });
 
-  function handleWheel(e){
-    e.preventDefault();
-    progress += e.deltaY * 0.02;
-    animate();
-  }
   function handleDown(e){
     isDown = true;
     dragged = false;
@@ -180,7 +176,6 @@ function initFanCarousel(root){
   }
   function handleUp(){ isDown = false; }
 
-  root.addEventListener('wheel', handleWheel, { passive: false });
   root.addEventListener('mousedown', handleDown);
   window.addEventListener('mousemove', handleMove);
   window.addEventListener('mouseup', handleUp);
@@ -286,6 +281,50 @@ if(dispoModal && dispoOpenBtn){
     if(e.key === 'Escape' && dispoModal.classList.contains('open')) closeDispo();
   });
 }
+
+/* ---- Vidéos : grille de cartes YouTube + modal (lecture au clic) ---- */
+var videoModal = document.getElementById('videoModal');
+var videoEmbed = document.getElementById('videoModalEmbed');
+if(videoModal && videoEmbed){
+  function closeVideoModal(){
+    videoModal.classList.remove('open');
+    document.body.style.overflow = '';
+    videoEmbed.innerHTML = '';
+  }
+  document.querySelectorAll('.video-card[data-youtube-id]').forEach(function(card){
+    function openVideo(){
+      var id = card.getAttribute('data-youtube-id');
+      if(!id) return;
+      videoEmbed.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Lecteur vidéo YouTube"></iframe>';
+      videoModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    card.addEventListener('click', openVideo);
+    card.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openVideo(); } });
+  });
+  var videoCloseBtn = document.getElementById('videoModalClose');
+  if(videoCloseBtn) videoCloseBtn.addEventListener('click', closeVideoModal);
+  videoModal.addEventListener('click', function(e){ if(e.target === videoModal) closeVideoModal(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && videoModal.classList.contains('open')) closeVideoModal();
+  });
+}
+
+/* ---- Vidéos : défilement du carrousel horizontal (flèches) ---- */
+(function(){
+  var track = document.querySelector('[data-video-track]');
+  if(!track) return;
+  function scrollByCard(sign){
+    var isRtl = document.documentElement.getAttribute('dir') === 'rtl';
+    var card = track.querySelector('.video-card');
+    var step = card ? card.getBoundingClientRect().width + 22 : 300;
+    track.scrollBy({ left: (isRtl ? -sign : sign) * step, behavior: 'smooth' });
+  }
+  var prevBtn = document.querySelector('[data-video-prev]');
+  var nextBtn = document.querySelector('[data-video-next]');
+  if(prevBtn) prevBtn.addEventListener('click', function(){ scrollByCard(-1); });
+  if(nextBtn) nextBtn.addEventListener('click', function(){ scrollByCard(1); });
+})();
 
 /* ---- Lightbox: driven by a page-level `window.NE_GALLERIES` map (group -> [{src,cap}]) ---- */
 var lightboxEl = document.getElementById('lightbox');
@@ -493,6 +532,8 @@ if(vsMedia){
 
 /* ---- "Prendre rendez-vous" — every matching button/link sitewide gets a calendar icon and opens a small action modal (call / email / go to the form), no per-page markup needed. Elements marked [data-rdv-trigger] (e.g. the mobile mini-cta-bar's compact "RDV" link) also open the modal, keeping their own icon/label as-is. ---- */
 (function(){
+  var ctaFlags = window.NEWERA_CTA_FLAGS || {};
+  if(ctaFlags.rdvModal === false) return;
   var CAL_ICON = '<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
   var textTriggers = Array.prototype.slice.call(document.querySelectorAll('button, a')).filter(function(el){
     return el.textContent.trim() === 'Prendre rendez-vous';
@@ -518,7 +559,7 @@ if(vsMedia){
       '<h3>Prendre rendez-vous</h3>' +
       '<p>Choisissez la façon la plus simple pour vous d’entrer en contact avec New Era.</p>' +
       '<div class="rdv-modal-actions">' +
-        '<a href="tel:+213561112233"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Nous appeler</a>' +
+        '<a href="tel:+213798222135"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Nous appeler</a>' +
         '<a href="mailto:contact@newera-immobilier.dz"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>Nous écrire un email</a>' +
         '<a href="' + formHref + '" id="rdvModalForm"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Remplir le formulaire</a>' +
       '</div>' +
@@ -604,3 +645,126 @@ if(heroVideo){
     heroVideo.play().catch(function(){});
   }
 }
+
+/* ---- Lead forms (villa RDV forms, Opportunités, homepage & Contact page):
+   every form carrying data-lead-type posts to /api/submit-lead instead of
+   doing nothing (onsubmit="return false;" as before — 100% non-functional).
+   Storage happens server-side before any email is attempted, so a lead is
+   never lost even if the notification email fails. ---- */
+var TERRAIN_TYPE_MAP = {
+  'Vente': 'vente', 'بيع': 'vente',
+  'Achat': 'achat', 'شراء': 'achat',
+  'Troc': 'troc', 'تبادل': 'troc'
+};
+document.querySelectorAll('form[data-lead-type]').forEach(function(form){
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = form.querySelector('[type="submit"]');
+    var msgEl = form.querySelector('.form-msg');
+    if(!msgEl){
+      msgEl = document.createElement('div');
+      msgEl.className = 'form-msg';
+      form.appendChild(msgEl);
+    }
+    var leadType = form.getAttribute('data-lead-type');
+    var payload = {
+      lead_type: leadType,
+      page: location.pathname,
+      hp: (form.querySelector('[name="hp"]') || {}).value || '',
+      extra: {}
+    };
+    form.querySelectorAll('input, select, textarea').forEach(function(el){
+      if(!el.id) return;
+      var v = (el.value || '').trim();
+      if(el.id === 'nom') payload.nom = v;
+      else if(el.id === 'tel') payload.tel = v;
+      else if(el.id === 'email') payload.email = v;
+      else if(v) payload.extra[el.id] = v;
+    });
+    if(leadType === 'auto'){
+      var sujetSel = form.querySelector('#sujet');
+      var opt = sujetSel ? sujetSel.options[sujetSel.selectedIndex] : null;
+      leadType = (opt && opt.getAttribute('data-lead-type')) || 'general';
+      payload.lead_type = leadType;
+      if(opt && opt.getAttribute('data-residence-slug')) payload.residence_slug = opt.getAttribute('data-residence-slug');
+      if(opt && opt.getAttribute('data-terrain-type')) payload.terrain_type = opt.getAttribute('data-terrain-type');
+    } else if(leadType === 'residence'){
+      payload.residence_slug = form.getAttribute('data-residence-slug') || '';
+    } else if(leadType === 'terrain'){
+      var typeSel = form.querySelector('#typedemande');
+      var raw = typeSel ? typeSel.value : '';
+      payload.terrain_type = TERRAIN_TYPE_MAP[raw] || raw.toLowerCase();
+    }
+    if(!payload.nom || !payload.tel){
+      msgEl.textContent = 'Merci de renseigner votre nom et votre téléphone.';
+      msgEl.className = 'form-msg error';
+      return;
+    }
+    if(btn){ btn.disabled = true; }
+    msgEl.textContent = 'Envoi en cours…';
+    msgEl.className = 'form-msg';
+    fetch('/api/submit-lead', {
+      method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload)
+    }).then(function(r){ return r.json(); }).then(function(res){
+      if(btn){ btn.disabled = false; }
+      if(res.ok){
+        msgEl.textContent = 'Merci ! Votre demande a bien été envoyée, notre équipe vous recontacte rapidement.';
+        msgEl.className = 'form-msg success';
+        form.reset();
+      } else {
+        msgEl.textContent = res.error || 'Une erreur est survenue, merci de réessayer.';
+        msgEl.className = 'form-msg error';
+      }
+    }).catch(function(){
+      if(btn){ btn.disabled = false; }
+      msgEl.textContent = 'Une erreur est survenue, merci de réessayer.';
+      msgEl.className = 'form-msg error';
+    });
+  });
+});
+
+/* ---- Opportunités "Ce que nous recherchons" cards: direct CTA into the
+   proposal form below, with the matching type pre-selected so the visitor
+   doesn't have to re-pick it. ---- */
+document.querySelectorAll('.opp-cta').forEach(function(card){
+  function activate(){
+    var typebien = card.getAttribute('data-typebien');
+    var typedemande = card.getAttribute('data-typedemande');
+    var selBien = document.getElementById('typebien');
+    var selDemande = document.getElementById('typedemande');
+    if(typebien && selBien){
+      selBien.value = typebien;
+      selBien.dispatchEvent(new Event('change'));
+    }
+    if(typedemande && selDemande){
+      selDemande.value = typedemande;
+      selDemande.dispatchEvent(new Event('change'));
+    }
+    var target = document.getElementById('rdv');
+    if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    var nom = document.getElementById('nom');
+    if(nom) window.setTimeout(function(){ nom.focus({ preventScroll: true }); }, 500);
+  }
+  card.addEventListener('click', activate);
+  card.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(); }
+  });
+});
+
+/* ---- Rich share (villa pages): native share sheet when available (carries
+   title + description + direct link to any app the user picks), falling
+   back to a WhatsApp message that also includes the description + link
+   rather than just the residence name. ---- */
+document.querySelectorAll('.share-btn[data-share-url]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var title = btn.getAttribute('data-share-title') || document.title;
+    var text = btn.getAttribute('data-share-text') || title;
+    var url = btn.getAttribute('data-share-url') || location.href;
+    if(navigator.share){
+      navigator.share({ title: title, text: text, url: url }).catch(function(){});
+      return;
+    }
+    var waText = text + '\n' + url;
+    window.open('https://wa.me/?text=' + encodeURIComponent(waText), '_blank', 'noopener');
+  });
+});

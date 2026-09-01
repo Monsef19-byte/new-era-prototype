@@ -4,5 +4,13 @@
   "whatsapp_number": "213000000000",
   "email": "contact@newera-dz.com",
   "enable_blog": false,
-  "site_title": "New Era Promotion Immobilière"
+  "site_title": "New Era Promotion Immobilière",
+  "lead_recipient": "monsefonlypro@gmail.com",
+  "smtp_host": "smtp.gmail.com",
+  "smtp_port": 587,
+  "smtp_user": "monsefonlypro@gmail.com",
+  "smtp_sender_name": "New Era — Site Web",
+  "cta_float_enabled": true,
+  "cta_minibar_enabled": true,
+  "cta_rdv_modal_enabled": true
 }

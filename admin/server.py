@@ -144,7 +144,7 @@ def set_password(pw):
     h = hashlib.sha256((salt + pw).encode("utf-8")).hexdigest()
     save_json(AUTH_FILE, {"salt": salt, "hash": h})
 
-SAFE_SECTIONS = {"villas", "home", "apropos", "opportunites", "settings", "blog", "liens"}
+SAFE_SECTIONS = {"villas", "home", "apropos", "opportunites", "settings", "blog", "liens", "videos", "gallery"}
 
 def slugify(s):
     s = (s or "").lower().strip()
@@ -258,7 +258,20 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 "liens": load_json(os.path.join(CONTENT, "liens.json"), {
                     "logo": "logo-mono-white.png", "name": "", "tagline": "", "subtitle": "", "cards": []
                 }),
+                "videos": load_json(os.path.join(CONTENT, "videos.json"), {
+                    "section_kicker": "Vidéos", "section_title": "New Era en vidéo",
+                    "section_lede": "Visites virtuelles et actualités de nos résidences.", "items": []
+                }),
+                "gallery": load_json(os.path.join(CONTENT, "gallery.json"), {
+                    "kicker": "Catalogue", "title": "Catalogue & Galerie",
+                    "lede": "Un aperçu de nos réalisations, plans et documents.", "items": []
+                }),
             }
+            # SMTP password never travels to the client — only in the
+            # SMTP_PASSWORD env var (same convention as hamadat-promotion.com).
+            if isinstance(data.get("settings"), dict):
+                data["settings"].pop("smtp_password", None)
+                data["settings"]["smtp_password_set"] = bool(os.environ.get("SMTP_PASSWORD"))
             return self._send_json(data)
         self._send_json({"error": "not found"}, 404)
 
@@ -299,6 +312,11 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 data = self._read_json_body()
             except Exception as e:
                 return self._send_json({"error": "invalid json: {}".format(e)}, 400)
+            if section == "settings":
+                # SMTP password is never stored in content — only in the
+                # SMTP_PASSWORD environment variable (same convention as
+                # hamadat-promotion.com). Strip it defensively.
+                data.pop("smtp_password", None)
             save_json(os.path.join(CONTENT, section + ".json"), data)
             return self._send_json({"ok": True})
 

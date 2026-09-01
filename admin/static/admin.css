@@ -46,12 +46,17 @@ input,textarea,select{font-family:inherit;}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 .field{margin-bottom:16px;}
 .field label{display:block;font-size:11.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
-.field input[type=text],.field input[type=number],.field input[type=email],.field input[type=tel],.field textarea,.field select{
+.field input[type=text],.field input[type=number],.field input[type=email],.field input[type=tel],.field input[type=password],.field textarea,.field select{
   width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:6px;font-size:14px;background:var(--paper);color:var(--text);
 }
 .field textarea{min-height:90px;resize:vertical;}
 .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--red);background:#fff;}
 .field .hint{font-size:11px;color:var(--muted);margin-top:5px;}
+
+.leads-table{width:100%;border-collapse:collapse;font-size:13px;}
+.leads-table th{text-align:left;padding:10px 12px;border-bottom:2px solid var(--line);font-size:11px;text-transform:uppercase;letter-spacing:.3px;color:var(--muted);}
+.leads-table td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top;}
+.leads-table code{background:var(--paper);padding:2px 6px;border-radius:4px;font-size:11.5px;}
 
 .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;}
 .toggle-row .lbl{font-size:14px;font-weight:600;}
@@ -62,6 +67,31 @@ input,textarea,select{font-family:inherit;}
 .switch .slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3);}
 .switch input:checked + .slider{background:var(--ok);}
 .switch input:checked + .slider::before{transform:translateX(20px);}
+
+.card-sub{font-size:12.5px;color:var(--muted);line-height:1.5;}
+.badge-teal,.badge-grey{display:inline-block;padding:3px 9px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.2px;}
+.badge-teal{background:#e3f1e8;color:var(--ok);}
+.badge-grey{background:var(--paper-alt);color:var(--muted);}
+
+/* ---------- icon picker ---------- */
+.icon-picker-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--text);font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap;}
+.icon-picker-btn:hover{border-color:var(--red);}
+.icon-picker-btn svg{flex:none;}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(22,20,18,.55);display:flex;align-items:center;justify-content:center;z-index:1000;padding:24px;}
+.modal-card{background:#fff;border-radius:14px;width:100%;max-width:520px;max-height:80vh;display:flex;flex-direction:column;padding:20px 22px 22px;box-shadow:0 24px 60px rgba(0,0,0,.3);}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.modal-header h3{margin:0;font-size:16px;}
+.modal-close{background:transparent;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px 8px;border-radius:6px;}
+.modal-close:hover{background:var(--paper);color:var(--text);}
+
+.icon-picker-search{padding:9px 12px;border:1px solid var(--line);border-radius:7px;font-size:13.5px;font-family:inherit;margin-bottom:14px;width:100%;}
+.icon-picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:10px;overflow-y:auto;padding-right:4px;}
+.icon-picker-cell{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;font-size:10.5px;color:var(--muted);text-align:center;font-family:inherit;}
+.icon-picker-cell:hover{border-color:var(--red);color:var(--text);}
+.icon-picker-cell.selected{border-color:var(--red);background:rgba(179,49,44,.07);color:var(--red-dark);}
+.icon-picker-cell span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;}
+.icon-picker-empty{grid-column:1/-1;text-align:center;color:var(--muted);font-size:12.5px;padding:20px 0;}
 
 /* ---------- villa list / cards ---------- */
 .villa-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}

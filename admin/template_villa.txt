@@ -65,7 +65,7 @@
 
     <div class="kicker">L'art de vivre en toute exclusivité</div>
     <h1 class="vs-h1 vs-name">Villa {name}</h1>
-    <div class="vs-loc">{loc_full}</div>
+    <div class="vs-loc">{loc_maps}</div>
     <div class="vs-facts-slide">
       <div class="v-chips">
         <span class="v-chip">25 ans d'expérience</span>
@@ -79,10 +79,10 @@
       </div>
       <div class="vactions">
         <button class="btn btn-fill">Prendre rendez-vous</button>
-        <a class="share-btn" href="https://wa.me/?text=Villa%20{name}%20%E2%80%94%20New%20Era%20Promotion%20Immobili%C3%A8re" target="_blank" rel="noopener">
+        <button class="share-btn" type="button" data-share-title="Villa {name}" data-share-text="{share_text}" data-share-url="{share_url}">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           Partager
-        </a>
+        </button>
       </div>
     </div>
 
@@ -112,9 +112,10 @@
       </ul>
     </div>
 
+{maps_block}
     <!-- MATÉRIAUX -->
     <div class="vs-block dark">
-      <div class="kicker on-dark"><span class="num">04</span></div>
+      <div class="kicker on-dark"><span class="num">05</span></div>
       <h2 class="h3">L'Art de Bâtir l'Excellence</h2>
       <p class="lede">Pierre de taille, moulures élégantes et fer forgé d'exception façonnent l'identité de New Era.</p>
       <div class="gallery-swiper on-dark">
@@ -145,7 +146,7 @@
 
     <!-- PLAN 3D -->
     <div class="vs-block">
-      <div class="kicker"><span class="num">05</span></div>
+      <div class="kicker"><span class="num">06</span></div>
       <h2 class="h3">Plan 3D</h2>
       <p class="lede">Plans des typologies disponibles à Villa {name} — cliquez un plan pour l'agrandir.</p>
       <div class="fan-carousel plans" id="planFan">
@@ -156,7 +157,7 @@
 
     <!-- DISPONIBILITÉ -->
     <div class="vs-block">
-      <div class="kicker"><span class="num">06</span></div>
+      <div class="kicker"><span class="num">07</span></div>
       <h2 class="h3">Disponibilité</h2>
       <p class="lede">Consultez le détail des appartements encore disponibles à Villa {name}, par typologie.</p>
       <button class="btn btn-fill" id="dispoOpen">Voir les disponibilités</button>
@@ -164,7 +165,7 @@
 
     <!-- INTÉRIEUR -->
     <div class="vs-block">
-      <div class="kicker"><span class="num">07</span></div>
+      <div class="kicker"><span class="num">08</span></div>
       <h2 class="h3">Intérieur</h2>
       <p class="lede">Un aperçu des espaces de vie de Villa {name}.</p>
       <div class="gallery-swiper">
@@ -198,7 +199,8 @@
     <div class="kicker on-dark"><span class="num">Contact</span></div>
     <h2 class="h3">Prendre rendez-vous</h2>
     <p class="body-sm">Un conseiller New Era vous recontacte pour organiser une visite de Villa {name}.</p>
-    <form class="rdv-grid" onsubmit="return false;">
+    <form class="rdv-grid" data-lead-type="residence" data-residence-slug="{slug}">
+      <input type="text" name="hp" class="hp-field" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="rdv-field half">
         <label for="typebien">Type de bien</label>
         <select id="typebien">

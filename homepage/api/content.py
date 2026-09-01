@@ -17,7 +17,7 @@ BLOB_TOKEN = os.environ.get("BLOB_READ_WRITE_TOKEN", "")
 SESSION_SECRET = os.environ.get("ADMIN_SESSION_SECRET", "")
 SESSION_TTL = 60 * 60 * 12  # 12h
 
-SAFE_SECTIONS = {"villas", "home", "apropos", "opportunites", "settings", "blog", "liens"}
+SAFE_SECTIONS = {"villas", "home", "apropos", "opportunites", "settings", "blog", "liens", "videos", "gallery"}
 
 SEED_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_seed")
 
@@ -187,5 +187,20 @@ class handler(BaseHTTPRequestHandler):
             "liens": load_content("liens.json", {
                 "logo": "logo-mono-white.png", "name": "", "tagline": "", "subtitle": "", "cards": []
             }),
+            "videos": load_content("videos.json", {
+                "section_kicker": "Vidéos", "section_title": "New Era en vidéo",
+                "section_lede": "Visites virtuelles et actualités de nos résidences.", "items": []
+            }),
+            "gallery": load_content("gallery.json", {
+                "kicker": "Catalogue", "title": "Catalogue & Galerie",
+                "lede": "Un aperçu de nos réalisations, plans et documents.", "items": []
+            }),
         }
+        # SMTP password never travels to the client — only in the SMTP_PASSWORD
+        # env var (same convention as hamadat-promotion.com). Strip any legacy
+        # value still sitting in stored content and expose only whether the
+        # env var is configured, so the dashboard can show a status badge.
+        if isinstance(data.get("settings"), dict):
+            data["settings"].pop("smtp_password", None)
+            data["settings"]["smtp_password_set"] = bool(os.environ.get("SMTP_PASSWORD"))
         send_json(self, data)
