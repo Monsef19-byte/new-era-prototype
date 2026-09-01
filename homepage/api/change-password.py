@@ -131,6 +131,12 @@ def save_content(name, data):
 
 # ---------------------------------------------------------------- auth (password)
 def check_password(pw):
+    # ADMIN_PASSWORD env var, when set, always works as a recovery path —
+    # independent of whatever's in Blob storage, so a lost/out-of-sync
+    # stored hash never permanently locks the dashboard out.
+    override = os.environ.get("ADMIN_PASSWORD")
+    if override and pw == override:
+        return True
     auth = load_content("admin_auth.json")
     if not auth:
         return False
