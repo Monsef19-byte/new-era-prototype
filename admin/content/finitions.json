@@ -1,0 +1,29 @@
+{
+  "title": "L'art de bâtir l'excellence",
+  "title_ar": "فن بناء الاستثناء",
+  "lede": "Pierre de taille, moulures élégantes et fer forgé d'exception façonnent l'identité de New Era.",
+  "lede_ar": "حجر منحوت، زخارف أنيقة وحديد مطروق استثنائي تُشكّل هوية New Era.",
+  "items": [
+    {
+      "image": "materials-stone.jpg",
+      "title": "Pierre de taille",
+      "title_ar": "الحجر المنحوت",
+      "description": "Façades habillées de pierre naturelle taillée : un matériau noble et durable, qui signe l'architecture néoclassique de nos résidences.",
+      "description_ar": "واجهات مكسوّة بالحجر الطبيعي المنحوت: مادة نبيلة ومتينة تميّز الطابع النيوكلاسيكي لإقاماتنا."
+    },
+    {
+      "image": "materials-moulure.jpg",
+      "title": "Moulures élégantes",
+      "title_ar": "الزخارف الأنيقة",
+      "description": "Corniches et moulures travaillées avec précision soulignent les volumes et apportent une élégance intemporelle aux façades comme aux intérieurs.",
+      "description_ar": "أفاريز وزخارف منفّذة بدقة تُبرز الأحجام وتضفي أناقة خالدة على الواجهات والمساحات الداخلية."
+    },
+    {
+      "image": "materials-iron.jpg",
+      "title": "Fer forgé",
+      "title_ar": "الحديد المطروق",
+      "description": "Garde-corps et ferronneries en fer forgé d'exception, alliant sécurité, robustesse et raffinement artisanal.",
+      "description_ar": "درابزين وأعمال حديدية من الحديد المطروق الاستثنائي تجمع بين الأمان والمتانة والحِرفية الراقية."
+    }
+  ]
+}

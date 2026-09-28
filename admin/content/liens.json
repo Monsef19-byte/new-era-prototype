@@ -1,7 +1,7 @@
 {
   "logo": "logo-mono-white.png",
   "name": "New Era Promotion Immobilière",
-  "tagline": "L'Art de Bâtir l'Excellence",
+  "tagline": "L'art de bâtir l'excellence",
   "subtitle": "25 ans d'expérience algéro-allemande au service de résidences de prestige à Alger.",
   "cards": [
     {"icon": "site", "label": "Site web", "href": "https://newera-promotion.com", "enabled": true},

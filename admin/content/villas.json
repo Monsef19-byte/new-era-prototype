@@ -32,7 +32,7 @@
       ],
       [
         "securite",
-        "Sécurité 24h/24"
+        "Sécurité 24 h/24"
       ],
       [
         "ascenseur",
@@ -138,7 +138,7 @@
       ]
     ],
     "dispo": {
-      "intro": "4 typologies — cliquez « voir détails » pour le plan de chaque typologie",
+      "intro": "4 typologies — cliquez sur « voir détails » pour le plan de chaque typologie",
       "typologies": [
         {
           "name": "F4",
@@ -156,7 +156,7 @@
           "count": "à confirmer",
           "status_label": "À confirmer",
           "confirmed": false,
-          "detail_text": "⏳ Plan et surface détaillée en attente du client.",
+          "detail_text": "Plan détaillé disponible sur demande.",
           "detail_images": []
         },
         {
@@ -180,7 +180,7 @@
           ]
         }
       ],
-      "note": "⏳ Nombre d'unités disponibles par typologie (ex. « 2 F4, 1 Duplex ») en attente de confirmation du client — aucun chiffre n'est inventé ici. Les plans ci-dessus sont les plans réels fournis pour chaque typologie."
+      "note": "Pour connaître les disponibilités à jour, contactez notre équipe."
     },
     "typebien_opts": [
       "F4",
@@ -200,7 +200,7 @@
     "count": 7,
     "typologie": "F3, F4, F5 & Penthouse",
     "progress_pct": 50,
-    "description": "Située au cœur de Hydra, l'un des quartiers les plus prisés d'Alger, cette résidence exclusive allie architecture néoclassique, prestations haut de gamme et cadre de vie privilégié. Composée de seulement 7 appartements, elle offre à ses résidents intimité, confort et sécurité dans un environnement d'exception. Chaque détail a été pensé pour répondre aux plus hautes exigences en matière de qualité, d'élégance et de valeur patrimoniale.",
+    "description": "Située au cœur d'Hydra, l'un des quartiers les plus prisés d'Alger, cette résidence exclusive allie architecture néoclassique, prestations haut de gamme et cadre de vie privilégié. Composée de seulement 7 appartements, elle offre à ses résidents intimité, confort et sécurité dans un environnement d'exception. Chaque détail a été pensé pour répondre aux plus hautes exigences en matière de qualité, d'élégance et de valeur patrimoniale.",
     "feats": [
       [
         "archi",
@@ -224,7 +224,7 @@
       ],
       [
         "securite",
-        "Sécurité 24h/24 & contrôle d'accès"
+        "Sécurité 24 h/24 & contrôle d'accès"
       ],
       [
         "ascenseur",
@@ -326,14 +326,14 @@
       ]
     ],
     "dispo": {
-      "intro": "4 typologies — cliquez « voir détails » pour la fiche technique de chaque typologie",
+      "intro": "4 typologies — cliquez sur « voir détails » pour la fiche technique de chaque typologie",
       "typologies": [
         {
           "name": "F3",
           "count": "à confirmer",
           "status_label": "À confirmer",
           "confirmed": false,
-          "detail_text": "⏳ Plan et surface détaillée en attente du client.",
+          "detail_text": "Plan détaillé disponible sur demande.",
           "detail_images": []
         },
         {
@@ -341,7 +341,7 @@
           "count": "à confirmer",
           "status_label": "À confirmer",
           "confirmed": false,
-          "detail_text": "130 m² — fiche technique réelle avec surfaces détaillées par pièce.",
+          "detail_text": "130 m² — fiche technique avec surfaces détaillées par pièce.",
           "detail_images": [
             "veronica-fiche-f4.jpg"
           ]
@@ -362,11 +362,11 @@
           "count": "à confirmer",
           "status_label": "À confirmer",
           "confirmed": false,
-          "detail_text": "⏳ Plan et surface détaillée en attente du client.",
+          "detail_text": "Plan détaillé disponible sur demande.",
           "detail_images": []
         }
       ],
-      "note": "⏳ Nombre d'unités disponibles par typologie (ex. « 2 F3, 1 F4 ») en attente de confirmation du client — aucun chiffre n'est inventé ici."
+      "note": "Pour connaître les disponibilités à jour, contactez notre équipe."
     },
     "typebien_opts": [
       "F3",
@@ -386,7 +386,7 @@
     "count": 22,
     "typologie": "F2, F3, F4 & Penthouse",
     "progress_pct": null,
-    "description": "Villa Christina est une résidence haut standing située au cœur de Hydra, l'une des adresses les plus prisées d'Alger. Composée de deux blocs résidentiels et de seulement 22 appartements, elle offre un cadre de vie harmonieux alliant élégance architecturale, confort moderne et prestations premium. Pensée pour répondre aux exigences des familles comme des investisseurs, Villa Christina propose des espaces de vie raffinés dans un environnement sécurisé et valorisant.",
+    "description": "Villa Christina est une résidence haut standing située au cœur d'Hydra, l'une des adresses les plus prisées d'Alger. Composée de deux blocs résidentiels et de seulement 22 appartements, elle offre un cadre de vie harmonieux alliant élégance architecturale, confort moderne et prestations premium. Pensée pour répondre aux exigences des familles comme des investisseurs, Villa Christina propose des espaces de vie raffinés dans un environnement sécurisé et valorisant.",
     "feats": [
       [
         "archi",
@@ -418,7 +418,7 @@
       ],
       [
         "securite",
-        "Sécurité 24h/24"
+        "Sécurité 24 h/24"
       ],
       [
         "isolation",
@@ -521,7 +521,7 @@
       ]
     ],
     "dispo": {
-      "intro": "3 typologies — cliquez « voir détails » pour les plans disponibles",
+      "intro": "3 typologies — cliquez sur « voir détails » pour les plans disponibles",
       "typologies": [
         {
           "name": "F2",
@@ -548,7 +548,7 @@
           "detail_images": []
         }
       ],
-      "note": "⏳ Nombre d'unités disponibles par typologie (ex. « 2 F3, 1 F4 ») en attente de confirmation du client — aucun chiffre n'est inventé ici."
+      "note": "Pour connaître les disponibilités à jour, contactez notre équipe."
     },
     "typebien_opts": [
       "F2",
@@ -603,7 +603,7 @@
       ],
       [
         "securite",
-        "Sécurité 24h/24"
+        "Sécurité 24 h/24"
       ],
       [
         "isolation",
@@ -706,14 +706,14 @@
       ]
     ],
     "dispo": {
-      "intro": "3 typologies — cliquez « voir détails » pour la fiche technique de chaque typologie",
+      "intro": "3 typologies — cliquez sur « voir détails » pour la fiche technique de chaque typologie",
       "typologies": [
         {
           "name": "F3",
           "count": "à confirmer",
           "status_label": "À confirmer",
           "confirmed": false,
-          "detail_text": "⏳ Plan et surface détaillée en attente du client.",
+          "detail_text": "Plan détaillé disponible sur demande.",
           "detail_images": []
         },
         {
@@ -721,7 +721,7 @@
           "count": "à confirmer",
           "status_label": "À confirmer",
           "confirmed": false,
-          "detail_text": "Simplex, 138 m² (125 m² habitable + 13 m² terrasse) — fiche technique réelle avec surfaces détaillées par pièce.",
+          "detail_text": "Simplex, 138 m² (125 m² habitable + 13 m² terrasse) — fiche technique avec surfaces détaillées par pièce.",
           "detail_images": [
             "catrina-fiche-f4-138.jpg"
           ]
@@ -731,11 +731,11 @@
           "count": "à confirmer",
           "status_label": "À confirmer",
           "confirmed": false,
-          "detail_text": "⏳ Plan et surface détaillée en attente du client.",
+          "detail_text": "Plan détaillé disponible sur demande.",
           "detail_images": []
         }
       ],
-      "note": "⏳ Nombre d'unités disponibles par typologie (ex. « 2 F3, 1 F4 ») en attente de confirmation du client — aucun chiffre n'est inventé ici."
+      "note": "Pour connaître les disponibilités à jour, contactez notre équipe."
     },
     "typebien_opts": [
       "F3",

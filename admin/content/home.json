@@ -5,7 +5,7 @@
   "manifesto_kicker": "New Era Promotion Immobilière",
   "manifesto_claim": "Nous bâtissons",
   "manifesto_claim_accent": "un patrimoine",
-  "manifesto_sub": "New Era ne livre pas des immeubles — nous concevons un patrimoine fait pour traverser le temps.",
+  "manifesto_sub": "Chez New Era, nous ne livrons pas des immeubles : nous concevons un patrimoine fait pour traverser le temps.",
   "stats": [
     {
       "value": "25 ans",
@@ -18,9 +18,9 @@
       "detail": "4 résidences de prestige actuellement en développement à Alger."
     },
     {
-      "value": "100%",
+      "value": "100 %",
       "label": "Finitions",
-      "detail": "100% des finitions respectent les normes de qualité européennes."
+      "detail": "100 % des finitions respectent les normes de qualité européennes."
     }
   ],
   "featured_villas": [

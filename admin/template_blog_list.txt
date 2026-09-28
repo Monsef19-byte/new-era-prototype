@@ -26,8 +26,8 @@
 <header class="site-header" id="siteHeader">
   <nav class="nav-links">
     <a href="index.html#top">Accueil</a>
-    <a href="index.html#residences">Nos Résidences</a>
-    <a href="a-propos.html">À Propos</a>
+    <a href="index.html#residences">Nos résidences</a>
+    <a href="a-propos.html">À propos</a>
     <a href="opportunites.html">Opportunités</a>
     <a href="blog.html">Blog</a>
     <a href="index.html#contact">Contact</a>
@@ -46,8 +46,8 @@
   <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Fermer">✕</button>
   <nav class="mobile-menu-links">
     <a href="index.html#top">Accueil</a>
-    <a href="index.html#residences">Nos Résidences</a>
-    <a href="a-propos.html">À Propos</a>
+    <a href="index.html#residences">Nos résidences</a>
+    <a href="a-propos.html">À propos</a>
     <a href="opportunites.html">Opportunités</a>
     <a href="blog.html">Blog</a>
     <a href="index.html#contact">Contact</a>
@@ -69,7 +69,7 @@
 
 <footer class="sitefooter">
   <div class="logo-badge"><img src="assets/logo-wordmark-white.png" alt="New Era"></div>
-  <div class="fnav"><a href="index.html">Accueil</a><a href="villa-agata.html">Agata</a><a href="villa-veronica.html">Veronica</a><a href="villa-christina.html">Christina</a><a href="villa-catrina.html">Catrina</a><a href="a-propos.html">À Propos</a><a href="opportunites.html">Opportunités</a><a href="index.html#contact">Contact</a></div>
+  <div class="fnav"><a href="index.html">Accueil</a><a href="villa-agata.html">Agata</a><a href="villa-veronica.html">Veronica</a><a href="villa-christina.html">Christina</a><a href="villa-catrina.html">Catrina</a><a href="a-propos.html">À propos</a><a href="opportunites.html">Opportunités</a><a href="index.html#contact">Contact</a></div>
   <div class="fcopy">© New Era Promotion Immobilière</div>
 </footer>
 

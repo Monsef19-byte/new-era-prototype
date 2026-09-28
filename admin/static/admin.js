@@ -2,7 +2,7 @@
 (function(){
   "use strict";
 
-  var STATE = { villas: [], home: {}, apropos: {}, opportunites: {}, settings: {}, blog: [], liens: {}, videos: {}, gallery: {} };
+  var STATE = { villas: [], home: {}, apropos: {}, opportunites: {}, settings: {}, blog: [], liens: {}, videos: {}, gallery: {}, finitions: {} };
 
   var LIENS_ICON_OPTIONS = [
     ["site", "Site web (globe)"],
@@ -241,6 +241,7 @@
       blog: ["Blog", "Activez le blog et gérez les articles."],
       videos: ["Vidéos", "La section vidéos de la page d'accueil — collez un lien YouTube, la miniature et le lecteur se génèrent automatiquement."],
       gallery: ["Catalogue / Galerie", "Le carrousel « Catalogue » de la page d'accueil — photos, plans et documents."],
+      finitions: ["Finitions", "Le carrousel « Finitions » des fiches résidence (FR et AR) — chaque finition : photo, titre et description affichée au survol / au toucher."],
       liens: ["Page Liens (QR code)", "Tout ce qui apparaît sur newera-promotion.com/liens — logo, textes et cartes de liens."],
       leads: ["Demandes reçues", "Tous les formulaires envoyés depuis le site, stockés ici avant l'envoi de l'email de notification."],
       settings: ["Réglages & contact", "Numéros de téléphone, WhatsApp, réglages email et mot de passe du panneau."]
@@ -257,6 +258,7 @@
     else if(VIEW === "blog"){ renderBlog(); }
     else if(VIEW === "videos"){ renderVideos(); }
     else if(VIEW === "gallery"){ renderGallery(); }
+    else if(VIEW === "finitions"){ renderFinitions(); }
     else if(VIEW === "liens"){ renderLiens(); }
     else if(VIEW === "leads"){ renderLeads(); }
     else if(VIEW === "settings"){ renderSettings(); }
@@ -370,7 +372,9 @@
             '<input type="number" id="f_pct" min="0" max="100" step="1" placeholder="ex. 45" value="' + (v.progress_pct==null?'':v.progress_pct) + '" style="margin-top:6px;' + (v.progress_pct==null?'display:none':'') + '">', "Choisissez « à confirmer » ou saisissez un pourcentage d'avancement (0 à 100).") +
           field("Localisation courte", '<input type="text" id="f_loc" value="' + esc(v.loc) + '">', "ex. « Hydra »") +
           field("Localisation complète", '<input type="text" id="f_locfull" value="' + esc(v.loc_full) + '">', "ex. « Hydra, Alger »") +
-          field("Lien Google Maps", '<input type="text" id="f_maps" value="' + esc(v.google_maps || "") + '">', "Collez le lien « Partager » de Google Maps. Laissez vide pour ne pas afficher le bouton.") +
+          field("Coordonnées GPS exactes (recommandé)", '<input type="text" id="f_gps" placeholder="ex. 36.7431, 3.0412" value="' + esc(v.gps || "") + '">', "Le plus précis : dans Google Maps, clic droit sur l'entrée de la résidence → cliquez les coordonnées pour les copier, puis collez-les ici. Utilisées pour le lien de la ville et la carte.") +
+          field("Lien Google Maps", '<input type="text" id="f_maps" value="' + esc(v.google_maps || "") + '">', "Optionnel si les coordonnées GPS sont remplies. Sinon, collez le lien « Partager » de la fiche Google Maps de la résidence (pas une recherche de quartier).") +
+          '<div class="field" style="grid-column:1/-1;"><div class="maps-status" id="mapsStatus"></div></div>' +
           field("Nombre d'appartements", '<input type="number" id="f_count" value="' + esc(v.count) + '">') +
           field("Typologie", '<input type="text" id="f_typo" value="' + esc(v.typologie) + '">', "ex. « F3, F4, F5 »") +
         '</div>' +
@@ -388,7 +392,24 @@
       });
     }
     bindText("f_name","name"); bindText("f_loc","loc"); bindText("f_locfull","loc_full");
-    bindText("f_maps","google_maps");
+    bindText("f_maps","google_maps"); bindText("f_gps","gps");
+    // Indicateur : la ville mène-t-elle à la localisation EXACTE ?
+    function mapsStatus(){
+      var el = document.getElementById("mapsStatus"); if(!el) return;
+      var gps = /^\s*-?\d{1,2}(\.\d+)?\s*[,;\s]\s*-?\d{1,3}(\.\d+)?\s*$/.test(v.gps || "");
+      var url = (v.google_maps || "").trim();
+      var urlHasPoint = /@-?\d+\.\d+,-?\d+\.\d+|[?&](q|query|ll|destination)=-?\d+\.\d+(%2C|,)|!3d-?\d+\.\d+|maps\.app\.goo\.gl|goo\.gl\/maps|\/place\//.test(url);
+      var link = gps ? "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent((v.gps||"").replace(/\s+/g,"").replace(";",",")) : url;
+      if(gps || urlHasPoint){
+        el.className = "maps-status ok";
+        el.innerHTML = "✓ Le nom de la ville mène à la localisation exacte. <a href=\"" + esc(link) + "\" target=\"_blank\" rel=\"noopener\">Vérifier sur Google Maps ↗</a>";
+      } else {
+        el.className = "maps-status warn";
+        el.innerHTML = "⚠ Localisation générique (recherche de quartier) : renseignez les coordonnées GPS ou le lien « Partager » de la résidence pour pointer l'adresse exacte." + (url ? " <a href=\"" + esc(url) + "\" target=\"_blank\" rel=\"noopener\">Voir le lien actuel ↗</a>" : "");
+      }
+    }
+    mapsStatus();
+    ["f_maps","f_gps"].forEach(function(id){ document.getElementById(id).addEventListener("input", mapsStatus); });
     bindText("f_count","count",true); bindText("f_typo","typologie"); bindText("f_desc","description");
     var pctModeEl = document.getElementById("f_pct_mode");
     var pctInputEl = document.getElementById("f_pct");
@@ -615,6 +636,70 @@
     draw();
   }
 
+  // ============================================================== FINITIONS
+  function renderFinitions(){
+    var F = STATE.finitions || (STATE.finitions = {});
+    if(!F.items) F.items = [];
+    function draw(){
+      var html = '<div class="panel"><h3>En-tête de la section</h3><div class="grid2">' +
+        field("Titre (FR)", '<input type="text" id="fin_title" value="' + esc(F.title || "") + '">') +
+        field("Titre (AR)", '<input type="text" dir="rtl" id="fin_title_ar" value="' + esc(F.title_ar || "") + '">') +
+        field("Texte d'introduction (FR)", '<textarea id="fin_lede">' + esc(F.lede || "") + '</textarea>') +
+        field("Texte d'introduction (AR)", '<textarea dir="rtl" id="fin_lede_ar">' + esc(F.lede_ar || "") + '</textarea>') +
+        '</div></div>';
+      html += '<div class="panel"><h3>Finitions</h3><p class="desc">Une carte par finition. La description apparaît quand le visiteur survole la photo (ordinateur) ou la touche (mobile). Commune à toutes les résidences.</p>';
+      F.items.forEach(function(it, i){
+        html += '<div class="dispo-item fin-item" data-i="' + i + '">' +
+          '<div class="row" style="align-items:flex-start;">' +
+            '<div style="width:130px;flex:none;"><div class="thumb" style="width:130px;height:160px;background:var(--paper-alt) center/cover no-repeat;background-image:url(\'' + assetUrl(it.image) + '\');border-radius:6px;"></div>' +
+              '<input type="file" accept="image/*" data-finimg="' + i + '" style="margin-top:6px;font-size:11px;width:130px;"></div>' +
+            '<div style="flex:1;"><div class="grid2">' +
+              field("Titre (FR)", '<input type="text" data-fin="title" data-i="' + i + '" value="' + esc(it.title || "") + '">') +
+              field("Titre (AR)", '<input type="text" dir="rtl" data-fin="title_ar" data-i="' + i + '" value="' + esc(it.title_ar || "") + '">') +
+              field("Description (FR)", '<textarea data-fin="description" data-i="' + i + '">' + esc(it.description || "") + '</textarea>') +
+              field("Description (AR)", '<textarea dir="rtl" data-fin="description_ar" data-i="' + i + '">' + esc(it.description_ar || "") + '</textarea>') +
+            '</div></div>' +
+          '</div>' +
+          '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+            '<button class="btn btn-sm" data-finup="' + i + '"' + (i===0?' disabled':'') + '>↑ Monter</button>' +
+            '<button class="btn btn-sm" data-findown="' + i + '"' + (i===F.items.length-1?' disabled':'') + '>↓ Descendre</button>' +
+            '<button class="btn btn-sm btn-danger" data-finrm="' + i + '">Supprimer</button>' +
+          '</div>' +
+        '</div>';
+      });
+      if(!F.items.length) html += '<div class="empty">Aucune finition pour le moment.</div>';
+      html += '<button class="btn btn-sm" id="addFinition" style="margin-top:10px;">+ Ajouter une finition</button></div>';
+      contentEl.innerHTML = html;
+
+      [["fin_title","title"],["fin_title_ar","title_ar"],["fin_lede","lede"],["fin_lede_ar","lede_ar"]].forEach(function(p){
+        document.getElementById(p[0]).addEventListener("input", function(){ F[p[1]] = this.value; debounceSave("finitions"); });
+      });
+      contentEl.querySelectorAll('[data-fin]').forEach(function(inp){
+        inp.addEventListener("input", function(){ F.items[Number(inp.getAttribute("data-i"))][inp.getAttribute("data-fin")] = inp.value; debounceSave("finitions"); });
+      });
+      contentEl.querySelectorAll('[data-finimg]').forEach(function(fi){
+        fi.addEventListener("change", function(){
+          if(!fi.files[0]) return;
+          var i = Number(fi.getAttribute("data-finimg"));
+          uploadImage(fi.files[0], "finition").then(function(fname){ F.items[i].image = fname; saveSection("finitions").then(draw); });
+        });
+      });
+      function move(i, d){ var t = F.items[i]; F.items[i] = F.items[i+d]; F.items[i+d] = t; saveSection("finitions"); draw(); }
+      contentEl.querySelectorAll('[data-finup]').forEach(function(b){ b.addEventListener("click", function(){ move(Number(b.getAttribute("data-finup")), -1); }); });
+      contentEl.querySelectorAll('[data-findown]').forEach(function(b){ b.addEventListener("click", function(){ move(Number(b.getAttribute("data-findown")), 1); }); });
+      contentEl.querySelectorAll('[data-finrm]').forEach(function(b){
+        b.addEventListener("click", function(){
+          if(!confirm("Supprimer cette finition ?")) return;
+          F.items.splice(Number(b.getAttribute("data-finrm")), 1); saveSection("finitions"); draw();
+        });
+      });
+      document.getElementById("addFinition").addEventListener("click", function(){
+        F.items.push({image: "", title: "", title_ar: "", description: "", description_ar: ""}); saveSection("finitions"); draw();
+      });
+    }
+    draw();
+  }
+
   // ============================================================== ACCUEIL
   function renderHome(){
     var h = STATE.home;
@@ -786,6 +871,7 @@
                 : '<div class="img-picker-empty" style="width:110px;height:80px;">Lien invalide</div>') +
             '<div style="flex:1;">' +
               field("Titre", '<input type="text" data-vtitle="' + i + '" value="' + esc(item.title) + '">') +
+              field("Titre (arabe, page AR)", '<input type="text" dir="rtl" data-vtitlear="' + i + '" value="' + esc(item.title_ar || "") + '">') +
               field("Lien YouTube", '<input type="text" data-vurl="' + i + '" value="' + esc(item.url) + '">') +
             '</div>' +
           '</div>' +
@@ -807,9 +893,25 @@
       contentEl.querySelectorAll('[data-vtitle]').forEach(function(inp){
         inp.addEventListener("input", function(){ v.items[Number(inp.getAttribute("data-vtitle"))].title = inp.value; debounceSave("videos"); });
       });
+      contentEl.querySelectorAll('[data-vtitlear]').forEach(function(inp){
+        inp.addEventListener("input", function(){ v.items[Number(inp.getAttribute("data-vtitlear"))].title_ar = inp.value; debounceSave("videos"); });
+      });
       contentEl.querySelectorAll('[data-vurl]').forEach(function(inp){
         inp.addEventListener("input", function(){ v.items[Number(inp.getAttribute("data-vurl"))].url = inp.value; debounceSave("videos"); });
-        inp.addEventListener("blur", function(){ saveSection("videos"); draw(); });
+        // Met à jour la miniature SANS tout redessiner : un redessin complet au
+        // « blur » détruisait le champ sur lequel l'utilisateur venait de
+        // cliquer (ex. le titre) — sa saisie partait dans le vide.
+        inp.addEventListener("blur", function(){
+          saveSection("videos");
+          var row = inp.closest(".dispo-item");
+          var old = row && row.querySelector(".row > img, .row > .img-picker-empty");
+          if(!old) return;
+          var id = ne_youtubeId(inp.value);
+          var tmp = document.createElement("div");
+          tmp.innerHTML = id ? '<img src="https://img.youtube.com/vi/' + id + '/mqdefault.jpg" style="width:110px;height:80px;object-fit:cover;border-radius:8px;">'
+                             : '<div class="img-picker-empty" style="width:110px;height:80px;">Lien invalide</div>';
+          old.replaceWith(tmp.firstChild);
+        });
       });
       contentEl.querySelectorAll('[data-vrm]').forEach(function(btn){
         btn.addEventListener("click", function(){
@@ -1014,6 +1116,7 @@
       field("Téléphone (affiché)", '<input type="text" id="c_disp" value="' + esc(s.phone_display) + '">', "ex. « 0561 23 45 67 »") +
       field("Téléphone (format international, pour les liens)", '<input type="text" id="c_tel" value="' + esc(s.phone_tel) + '">', "ex. « +213561234567 »") +
       field("Numéro WhatsApp", '<input type="text" id="c_wa" value="' + esc(s.whatsapp_number) + '">', "ex. « 213561234567 » (sans le +)") +
+      '<div class="field" style="grid-column:1/-1;"><div class="maps-status" id="phoneStatus"></div></div>' +
       field("Email", '<input type="text" id="c_email" value="' + esc(s.email) + '">') +
       '</div></div>';
 
@@ -1052,6 +1155,20 @@
     contentEl.innerHTML = html;
     function bind(id, key){ document.getElementById(id).addEventListener("input", function(){ s[key] = this.value; debounceSave("settings"); }); }
     bind("c_disp","phone_display"); bind("c_tel","phone_tel"); bind("c_wa","whatsapp_number"); bind("c_email","email");
+    function phoneStatus(){
+      var el = document.getElementById("phoneStatus");
+      var telOk = /^\+?\d{9,15}$/.test((s.phone_tel||"").replace(/\s/g,"")) && !/^\+?2130+$/.test((s.phone_tel||"").replace(/\s/g,""));
+      var waOk = /^\d{9,15}$/.test((s.whatsapp_number||"").replace(/\s/g,"")) && !/^2130+$/.test(s.whatsapp_number||"");
+      if(telOk && waOk){
+        el.className = "maps-status ok";
+        el.innerHTML = "✓ Les boutons « Appeler » (bulle, barre mobile, rendez-vous) appellent le <b>" + esc(s.phone_tel) + "</b> — pages FR et AR, après publication.";
+      } else {
+        el.className = "maps-status warn";
+        el.textContent = "⚠ Numéro incomplet ou factice : les boutons Appeler / WhatsApp ne fonctionneront pas correctement.";
+      }
+    }
+    phoneStatus();
+    ["c_tel","c_wa"].forEach(function(id){ document.getElementById(id).addEventListener("input", phoneStatus); });
     bind("e_recipient","lead_recipient"); bind("e_sendername","smtp_sender_name"); bind("e_user","smtp_user");
     bind("e_host","smtp_host"); bind("e_port","smtp_port");
 

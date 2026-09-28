@@ -17,8 +17,8 @@
 <header class="site-header" id="siteHeader">
   <nav class="nav-links">
     <a href="index.html#top">Accueil</a>
-    <a href="index.html#residences">Nos Résidences</a>
-    <a href="a-propos.html">À Propos</a>
+    <a href="index.html#residences">Nos résidences</a>
+    <a href="a-propos.html">À propos</a>
     <a href="opportunites.html">Opportunités</a>
     <a href="index.html#contact">Contact</a>
   </nav>
@@ -37,8 +37,8 @@
   <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Fermer">✕</button>
   <nav class="mobile-menu-links">
     <a href="index.html#top">Accueil</a>
-    <a href="index.html#residences">Nos Résidences</a>
-    <a href="a-propos.html">À Propos</a>
+    <a href="index.html#residences">Nos résidences</a>
+    <a href="a-propos.html">À propos</a>
     <a href="opportunites.html">Opportunités</a>
     <a href="index.html#contact">Contact</a>
     <a class="lang-switch" href="ar/{slug}.html">العربية</a>
@@ -60,7 +60,7 @@
 
   <div class="villa-split-content">
     <nav class="crumb-bar plain" aria-label="Fil d'ariane">
-      <a href="index.html">Accueil</a><span>/</span><a href="index.html#residences">Nos Résidences</a><span>/</span><span>Villa {name}</span>
+      <a href="index.html">Accueil</a><span>/</span><a href="index.html#residences">Nos résidences</a><span>/</span><span>Villa {name}</span>
     </nav>
 
     <div class="kicker">L'art de vivre en toute exclusivité</div>
@@ -72,7 +72,7 @@
         <span class="v-chip">Partenariat algéro-allemand</span>
       </div>
       <div class="vfacts vs-facts">
-        <div class="stat"><b>{loc_full}</b><span>Localisation</span></div>
+        <div class="stat"><b>{loc_stat}</b><span>Localisation</span></div>
         <div class="stat"><b>{count} appartements</b><span>Lots</span></div>
         <div class="stat"><b>{typologie}</b><span>Typologie</span></div>
         <div class="stat"><b>Marbre, parquet naturel</b><span>Finitions</span></div>
@@ -114,41 +114,13 @@
 
 {maps_block}
     <!-- MATÉRIAUX -->
-    <div class="vs-block dark">
-      <div class="kicker on-dark"><span class="num">05</span></div>
-      <h2 class="h3">L'Art de Bâtir l'Excellence</h2>
-      <p class="lede">Pierre de taille, moulures élégantes et fer forgé d'exception façonnent l'identité de New Era.</p>
-      <div class="gallery-swiper on-dark">
-        <div class="gallery-swiper__nav">
-          <button class="gs-arrow gs-prev" aria-label="Précédent"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-          <button class="gs-arrow gs-next" aria-label="Suivant"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
-        </div>
-        <div class="swiper gs-swiper">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide"><div class="gs-card media-only">
-              <div class="gs-card__image"><img src="assets/materials-stone.jpg" alt="Pierre de taille"></div>
-              <div class="cap">Pierre de taille</div>
-            </div></div>
-            <div class="swiper-slide"><div class="gs-card media-only">
-              <div class="gs-card__image"><img src="assets/materials-moulure.jpg" alt="Moulures élégantes"></div>
-              <div class="cap">Moulures élégantes</div>
-            </div></div>
-            <div class="swiper-slide"><div class="gs-card media-only">
-              <div class="gs-card__image"><img src="assets/materials-iron.jpg" alt="Fer forgé"></div>
-              <div class="cap">Fer forgé</div>
-            </div></div>
-          </div>
-        </div>
-        <div class="gs-pagination"></div>
-      </div>
-      <p class="materials-note">Détails extraits des rendus 3D réels du projet — une séance photo matériaux dédiée reste à planifier avec le client.</p>
-    </div>
+{finitions_block}
 
     <!-- PLAN 3D -->
     <div class="vs-block">
       <div class="kicker"><span class="num">06</span></div>
       <h2 class="h3">Plan 3D</h2>
-      <p class="lede">Plans des typologies disponibles à Villa {name} — cliquez un plan pour l'agrandir.</p>
+      <p class="lede">Plans des typologies disponibles à Villa {name} — cliquez sur un plan pour l'agrandir.</p>
       <div class="fan-carousel plans" id="planFan">
 {plan_fan_items}
         <div class="fan-hint"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-5 3 5 3M16 9l5 3-5 3"/></svg>Glissez ou défilez</div>
@@ -213,9 +185,9 @@
 {residence_options}
         </select>
       </div>
-      <div class="rdv-field half"><label for="nom">Nom & Prénom</label><input id="nom" type="text" placeholder="Votre nom"></div>
+      <div class="rdv-field half"><label for="nom">Nom et prénom</label><input id="nom" type="text" placeholder="Votre nom"></div>
       <div class="rdv-field half"><label for="tel">Téléphone</label><input id="tel" type="tel" placeholder="0X XX XX XX XX"></div>
-      <div class="rdv-field"><label for="email">Email</label><input id="email" type="email" placeholder="vous@email.com"></div>
+      <div class="rdv-field"><label for="email">E-mail</label><input id="email" type="email" placeholder="vous@email.com"></div>
       <button class="btn btn-fill rdv-submit" type="submit">Envoyer ma demande</button>
     </form>
   </div>
@@ -223,7 +195,7 @@
 
 <footer class="sitefooter">
   <div class="logo-badge"><img src="assets/logo-wordmark-white.png" alt="New Era"></div>
-  <div class="fnav"><a href="index.html">Accueil</a><a href="villa-agata.html">Agata</a><a href="villa-veronica.html">Veronica</a><a href="villa-christina.html">Christina</a><a href="villa-catrina.html">Catrina</a><a href="a-propos.html">À Propos</a><a href="opportunites.html">Opportunités</a><a href="index.html#contact">Contact</a></div>
+  <div class="fnav"><a href="index.html">Accueil</a><a href="villa-agata.html">Agata</a><a href="villa-veronica.html">Veronica</a><a href="villa-christina.html">Christina</a><a href="villa-catrina.html">Catrina</a><a href="a-propos.html">À propos</a><a href="opportunites.html">Opportunités</a><a href="index.html#contact">Contact</a></div>
   <div class="fcopy">© New Era Promotion Immobilière</div>
 </footer>
 

@@ -17,7 +17,7 @@ BLOB_TOKEN = os.environ.get("BLOB_READ_WRITE_TOKEN", "")
 SESSION_SECRET = os.environ.get("ADMIN_SESSION_SECRET", "")
 SESSION_TTL = 60 * 60 * 12  # 12h
 
-SAFE_SECTIONS = {"villas", "home", "apropos", "opportunites", "settings", "blog", "liens", "videos", "gallery"}
+SAFE_SECTIONS = {"villas", "home", "apropos", "opportunites", "settings", "blog", "liens", "videos", "gallery", "finitions"}
 
 SEED_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_seed")
 

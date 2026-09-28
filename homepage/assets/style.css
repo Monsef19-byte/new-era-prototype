@@ -1092,3 +1092,35 @@ a.res-card:hover .res-info b{color:var(--red);}
   .lb-prev{left:8px;}
   .lb-next{right:8px;}
 }
+
+/* =========================================================
+   Finalisation (brief client)
+   ========================================================= */
+/* ---- Finitions : description au survol (ordinateur) / au toucher (mobile) ---- */
+.fin-card{cursor:pointer;outline:none;}
+.fin-card .fin-desc{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;padding:22px 20px;
+  background:linear-gradient(0deg,rgba(20,20,20,.94) 0%,rgba(20,20,20,.86) 55%,rgba(20,20,20,.55) 100%);color:#fdfbf7;
+  opacity:0;transform:translateY(10px);transition:opacity .35s var(--ease),transform .35s var(--ease);pointer-events:none;}
+.fin-card .fin-desc b{font-family:'El Messiri',serif;font-size:17px;font-weight:700;color:#fff;}
+.fin-card .fin-desc p{font-size:13px;line-height:1.65;color:#e4ddd0;margin:0;}
+.fin-card .fin-desc b::after{content:'';display:block;width:28px;height:2px;background:var(--red);margin-top:8px;}
+@media (hover:hover){ .fin-card:hover .fin-desc{opacity:1;transform:none;} }
+.fin-card:focus-visible .fin-desc,.fin-card.is-open .fin-desc{opacity:1;transform:none;}
+.fin-card:focus-visible{box-shadow:0 0 0 2px var(--red);}
+.fin-card .fin-hint{position:absolute;top:12px;right:12px;z-index:3;width:30px;height:30px;border-radius:50%;background:var(--red);color:#fff;
+  display:none;align-items:center;justify-content:center;font-size:19px;font-weight:600;line-height:1;transition:transform .3s var(--ease);}
+html[dir="rtl"] .fin-card .fin-hint{right:auto;left:12px;}
+@media (hover:none){ .fin-card .fin-hint{display:flex;} }
+.fin-card.is-open .fin-hint{transform:rotate(45deg);}
+.fin-help{font-size:11px;color:#8b8272;padding:18px var(--gutter) 0;letter-spacing:.2px;}
+
+/* ---- Bouton Call : liens (plus de <button> sans action) ---- */
+a.float-btn{text-decoration:none;}
+a.float-btn.call{display:flex;align-items:center;justify-content:center;gap:8px;}
+
+/* ---- Localisation cliquable ---- */
+.vfacts .stat b .vs-loc-link{color:inherit;text-decoration:underline;text-decoration-color:rgba(237,34,36,.45);text-underline-offset:3px;}
+.vfacts .stat b .vs-loc-link:hover{color:var(--red);}
+
+/* ---- Vidéos : flèches masquées quand tout tient à l'écran ---- */
+.video-carousel.no-scroll .video-carousel__arrow{display:none;}

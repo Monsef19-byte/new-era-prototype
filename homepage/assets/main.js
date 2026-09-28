@@ -40,6 +40,7 @@ var floatCta = document.getElementById('floatCta');
 var floatCard = document.getElementById('floatCard');
 if(floatCta && floatCard){
   floatCta.addEventListener('click', function(){ floatCard.classList.toggle('show'); });
+  floatCta.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); floatCard.classList.toggle('show'); } });
   var floatClose = document.getElementById('floatClose');
   if(floatClose) floatClose.addEventListener('click', function(){ floatCard.classList.remove('show'); });
 }
@@ -324,6 +325,40 @@ if(videoModal && videoEmbed){
   var nextBtn = document.querySelector('[data-video-next]');
   if(prevBtn) prevBtn.addEventListener('click', function(){ scrollByCard(-1); });
   if(nextBtn) nextBtn.addEventListener('click', function(){ scrollByCard(1); });
+  // Flèches inutiles (et trompeuses) quand toutes les vidéos tiennent à l'écran
+  var wrap = track.closest('.video-carousel') || track.parentNode;
+  function syncArrows(){ wrap.classList.toggle('no-scroll', track.scrollWidth <= track.clientWidth + 4); }
+  syncArrows();
+  window.addEventListener('resize', syncArrows);
+  window.addEventListener('load', syncArrows);
+})();
+
+/* ---- Finitions : description au survol (CSS) ou au toucher / clavier ----
+   Sur écran tactile il n'y a pas de survol : un toucher ouvre la
+   description de la finition (et referme les autres), un second la
+   referme. Entrée / Espace font de même au clavier. */
+(function(){
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.fin-card'));
+  if(!cards.length) return;
+  function setOpen(card, open){
+    card.classList.toggle('is-open', open);
+    card.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+  cards.forEach(function(card){
+    if(!card.querySelector('.fin-desc')) return;
+    function toggle(){
+      var open = !card.classList.contains('is-open');
+      cards.forEach(function(c){ if(c !== card) setOpen(c, false); });
+      setOpen(card, open);
+    }
+    card.addEventListener('click', toggle);
+    card.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+    });
+  });
+  document.addEventListener('click', function(e){
+    if(!e.target.closest('.fin-card')) cards.forEach(function(c){ setOpen(c, false); });
+  });
 })();
 
 /* ---- Lightbox: driven by a page-level `window.NE_GALLERIES` map (group -> [{src,cap}]) ---- */

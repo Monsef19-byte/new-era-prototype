@@ -149,3 +149,11 @@ input,textarea,select{font-family:inherit;}
   .main{margin-left:0;}
   .grid2{grid-template-columns:1fr;}
 }
+
+/* ---- Finalisation : statuts localisation / téléphone ---- */
+.maps-status{font-size:12.5px;line-height:1.5;padding:9px 12px;border-radius:6px;}
+.maps-status:empty{display:none;}
+.maps-status.ok{background:rgba(22,130,90,.09);color:#146c4b;}
+.maps-status.warn{background:rgba(180,83,9,.09);color:#9a4a07;}
+.maps-status a{color:inherit;font-weight:600;}
+.fin-item textarea{min-height:92px;}

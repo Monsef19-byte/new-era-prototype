@@ -179,11 +179,11 @@ def youtube_id(url):
             return m.group(1)
     return None
 
-def video_card_html(item):
+def video_card_html(item, lang='fr'):
     vid = youtube_id(item.get("url"))
     if not vid:
         return ""
-    title = esc(item.get("title", ""))
+    title = esc((item.get("title_ar") or item.get("title", "")) if lang == 'ar' else item.get("title", ""))
     return (
         '    <div class="video-card reveal" data-youtube-id="{vid}" tabindex="0" role="button" aria-label="{title}">\n'
         '      <div class="video-card__thumb">\n'
@@ -265,12 +265,199 @@ def render_dispo(dispo, name):
         '    <div class="dispo-pending" style="margin-top:16px;">{note}</div>'
     ).format(name=esc(name), intro=esc(dispo.get('intro', '')), rows='\n'.join(rows), details='\n'.join(details), note=dispo.get('note', ''))
 
+# ---------------------------------------------------------------- localisation exacte
+# Brief client : le nom de la ville doit mener à la localisation EXACTE de la
+# résidence (pas à une recherche générique « Hydra, Alger »). Priorité :
+#   1. coordonnées GPS saisies dans le dashboard (« 36.7466, 3.0421 ») ;
+#   2. lien Google Maps collé dans le dashboard ;
+#   3. à défaut seulement, recherche par adresse (repli, signalé au dashboard).
+GPS_RE = re.compile(r"^\s*(-?\d{1,2}(?:\.\d+)?)\s*[,;\s]\s*(-?\d{1,3}(?:\.\d+)?)\s*$")
+URL_COORD_RES = [
+    re.compile(r"@(-?\d{1,2}\.\d+),(-?\d{1,3}\.\d+)"),
+    re.compile(r"[?&](?:q|query|ll|destination)=(-?\d{1,2}\.\d+)(?:%2C|,)\s*(-?\d{1,3}\.\d+)"),
+    re.compile(r"!3d(-?\d{1,2}\.\d+)!4d(-?\d{1,3}\.\d+)"),
+]
+
+def villa_coords(v):
+    m = GPS_RE.match(str(v.get('gps') or ''))
+    if m:
+        return m.group(1), m.group(2)
+    url = str(v.get('google_maps') or '')
+    for r in URL_COORD_RES:
+        m = r.search(url)
+        if m:
+            return m.group(1), m.group(2)
+    return None
+
+def villa_address(v):
+    loc = v.get('loc_full') or v.get('loc') or ''
+    return loc if 'algérie' in loc.lower() else loc + ', Algérie'
+
+def villa_maps_link(v):
+    c = villa_coords(v)
+    if c and GPS_RE.match(str(v.get('gps') or '')):
+        return 'https://www.google.com/maps/search/?api=1&query={},{}'.format(c[0], c[1])
+    url = (v.get('google_maps') or '').strip()
+    if url:
+        return url
+    return 'https://www.google.com/maps/search/?api=1&query=' + urllib.parse.quote_plus(villa_address(v))
+
+def villa_map_embed(v):
+    c = villa_coords(v)
+    q = '{},{}'.format(c[0], c[1]) if c else villa_address(v)
+    return 'https://maps.google.com/maps?q={}&t=&z={}&ie=UTF8&iwloc=&output=embed'.format(
+        urllib.parse.quote(q), 17 if c else 15)
+
+PIN_SVG = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
+           'stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;'
+           'vertical-align:-2px;margin-inline-end:4px;" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/>'
+           '<circle cx="12" cy="10" r="3"/></svg>')
+
+def loc_link_html(v, text, pin=True):
+    return '<a class="vs-loc-link" href="{u}" target="_blank" rel="noopener" data-maps-link>{pin}{t}</a>'.format(
+        u=esc(villa_maps_link(v)), pin=PIN_SVG if pin else '', t=text)
+
+# ---------------------------------------------------------------- finitions
+# Section « Finitions » des fiches résidence : carrousel de finitions, chaque
+# finition = image + titre + description (FR/AR), description affichée au
+# survol (ordinateur) ou au toucher (mobile). Contenu : content/finitions.json
+# (onglet « Finitions » du dashboard), commun à toutes les résidences.
+FINITIONS_START = '<!-- FINITIONS:START -->'
+FINITIONS_END = '<!-- FINITIONS:END -->'
+
+def _fin_text(fin, key, ar):
+    return (fin.get(key + '_ar') or fin.get(key) or '') if ar else (fin.get(key) or '')
+
+def render_finitions_carousel(fin, lang='fr', asset_prefix='assets/', indent='      '):
+    """Carrousel de cartes finition + aide « survol / toucher » (commun aux
+    fiches résidence et à la section Savoir-faire de l'accueil)."""
+    fin = fin or {}
+    ar = lang == 'ar'
+    cards = []
+    for it in fin.get('items', []):
+        if not it.get('image'):
+            continue
+        title = _fin_text(it, 'title', ar)
+        desc = _fin_text(it, 'description', ar)
+        cards.append(
+            '{i}      <div class="swiper-slide"><div class="gs-card media-only fin-card" tabindex="0" role="button" aria-expanded="false"{lbl}>\n'
+            '{i}        <div class="gs-card__image"><img src="{pre}{img}" alt="{title}" loading="lazy"></div>\n'
+            '{i}        <div class="cap">{title}</div>\n'
+            '{desc_html}'
+            '{i}      </div></div>'.format(
+                i=indent, pre=asset_prefix, img=esc(it['image']), title=esc(title),
+                lbl=' aria-label="{}"'.format(esc(title)) if title else '',
+                desc_html=('{i}        <div class="fin-desc"><b>{t}</b><p>{d}</p></div>\n'
+                           '{i}        <span class="fin-hint" aria-hidden="true">+</span>\n').format(i=indent, t=esc(title), d=esc(desc)) if desc else ''))
+    prev_lbl, next_lbl = ('السابق', 'التالي') if ar else ('Précédent', 'Suivant')
+    hint = ('مرّروا المؤشر على إحدى التشطيبات — أو المسوها على الهاتف — لاكتشاف وصفها.' if ar
+            else 'Survolez une finition — ou touchez-la sur mobile — pour découvrir sa description.')
+    has_desc = any(_fin_text(it, 'description', ar) for it in fin.get('items', []))
+    arrow = '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{}"/></svg>'
+    return (
+        '{i}<div class="gallery-swiper on-dark fin-swiper">\n'
+        '{i}  <div class="gallery-swiper__nav">\n'
+        '{i}    <button class="gs-arrow gs-prev" aria-label="{prev}">{ap}</button>\n'
+        '{i}    <button class="gs-arrow gs-next" aria-label="{next}">{an}</button>\n'
+        '{i}  </div>\n'
+        '{i}  <div class="swiper gs-swiper">\n'
+        '{i}    <div class="swiper-wrapper">\n{cards}\n{i}    </div>\n'
+        '{i}  </div>\n'
+        '{i}  <div class="gs-pagination"></div>\n'
+        '{i}</div>\n'
+        '{hint}'
+    ).format(i=indent, prev=prev_lbl, next=next_lbl, ap=arrow.format('M15 18l-6-6 6-6'), an=arrow.format('M9 18l6-6-6-6'),
+             cards='\n'.join(cards), hint='{}<p class="fin-help">{}</p>\n'.format(indent, hint) if has_desc else '')
+
+def render_finitions_block(fin, lang='fr', num='05', asset_prefix='assets/'):
+    fin = fin or {}
+    ar = lang == 'ar'
+    lede = _fin_text(fin, 'lede', ar)
+    return (
+        FINITIONS_START + '\n'
+        '    <div class="vs-block dark" id="finitions">\n'
+        '      <div class="kicker on-dark"><span class="num">{num}</span></div>\n'
+        '      <h2 class="h3">{title}</h2>\n'
+        '{lede}'
+        '{carousel}'
+        '    </div>\n' + FINITIONS_END
+    ).format(num=esc(num), title=esc(_fin_text(fin, 'title', ar)),
+             lede='      <p class="lede">{}</p>\n'.format(esc(lede)) if lede else '',
+             carousel=render_finitions_carousel(fin, lang, asset_prefix, '      '))
+
+FINCARDS_START = '<!-- FINITIONS-CARDS:START -->'
+FINCARDS_END = '<!-- FINITIONS-CARDS:END -->'
+
+def replace_home_finitions(html, fin, lang, asset_prefix):
+    """Section « Savoir-faire » de l'accueil : même carrousel de finitions
+    (en-tête de section conservé). Idempotent via marqueurs."""
+    if not fin or not fin.get('items'):
+        return html
+    if FINCARDS_START in html and FINCARDS_END in html:
+        a = html.index(FINCARDS_START)
+        b = html.index(FINCARDS_END) + len(FINCARDS_END)
+    else:
+        anchor = html.find('materials-stone')
+        if anchor == -1:
+            return html
+        a = html.rfind('<div class="gallery-swiper on-dark', 0, anchor)
+        if a == -1:
+            return html
+        b = _balanced_div_end(html, a)
+        if b == -1:
+            return html
+        note = re.match(r'\s*<p class="materials-note">.*?</p>', html[b:], flags=re.S)
+        if note:
+            b += note.end()
+        a = html.rfind('\n', 0, a) + 1
+    return html[:a] + FINCARDS_START + '\n' + render_finitions_carousel(fin, lang, asset_prefix, '  ') + FINCARDS_END + html[b:]
+
+def _balanced_div_end(html, start):
+    """Index just after the </div> closing the <div ...> that starts at `start`."""
+    depth, i = 0, start
+    while True:
+        nxt_open = html.find('<div', i)
+        nxt_close = html.find('</div>', i)
+        if nxt_close == -1:
+            return -1
+        if nxt_open != -1 and nxt_open < nxt_close:
+            depth += 1
+            i = nxt_open + 4
+        else:
+            depth -= 1
+            i = nxt_close + 6
+            if depth == 0:
+                return i
+
+def replace_finitions(html, fin, lang, asset_prefix):
+    """Idempotent : entre les marqueurs si déjà présents, sinon remplace
+    l'ancien bloc « matériaux » (vs-block dark contenant materials-stone)."""
+    if FINITIONS_START in html and FINITIONS_END in html:
+        a = html.index(FINITIONS_START)
+        b = html.index(FINITIONS_END) + len(FINITIONS_END)
+        old = html[a:b]
+    else:
+        anchor = html.find('materials-stone')
+        if anchor == -1:
+            return html
+        a = html.rfind('<div class="vs-block dark">', 0, anchor)
+        if a == -1:
+            return html
+        b = _balanced_div_end(html, a)
+        if b == -1:
+            return html
+        a = html.rfind('\n', 0, a) + 1  # keep indentation clean
+        old = html[a:b]
+    m = re.search(r'<span class="num">([^<]*)</span>', old)
+    num = m.group(1) if m else '05'
+    return html[:a] + render_finitions_block(fin, lang, num, asset_prefix) + html[b:]
+
 def load_template():
     path = os.path.join(BASE, "template_villa.txt")
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
 
-def render_villa(v, all_villas, settings):
+def render_villa(v, all_villas, settings, finitions=None):
     tpl = load_template()
     name = v['name']
     gallery_fan_items = '\n'.join(fan_gal_item(img, cap, i) for i, (img, cap) in enumerate(v['gallery']))
@@ -285,30 +472,21 @@ def render_villa(v, all_villas, settings):
     typebien_options = '\n'.join('          <option>{}</option>'.format(t) for t in v.get('typebien_opts', []))
     dispo_content = render_dispo(v['dispo'], name)
 
-    maps_url = (v.get('google_maps') or '').strip()
-    if maps_url:
-        loc_maps = ('<a class="vs-loc-link" href="{u}" target="_blank" rel="noopener">'
-                     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" '
-                     'stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;'
-                     'vertical-align:-2px;margin-right:4px;"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/>'
-                     '<circle cx="12" cy="10" r="3"/></svg>{t}</a>').format(u=esc(maps_url), t=esc(v['loc_full']))
-        embed_addr = v['loc_full'] if 'algérie' in v['loc_full'].lower() else v['loc_full'] + ', Algérie'
-        map_embed_src = 'https://maps.google.com/maps?q={}&t=&z=15&ie=UTF8&iwloc=&output=embed'.format(
-            urllib.parse.quote(embed_addr))
-        maps_block = (
-            '    <!-- LOCALISATION -->\n'
-            '    <div class="vs-block">\n'
-            '      <div class="kicker"><span class="num">04</span></div>\n'
-            '      <h2 class="h3">Localisation</h2>\n'
-            '      <p class="lede">Villa {name} — {loc_full}. <a class="vs-loc-link" href="{u}" target="_blank" rel="noopener">Voir l\'itinéraire sur Google Maps</a></p>\n'
-            '      <div class="map-embed">\n'
-            '        <iframe src="{src}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Localisation Villa {name}"></iframe>\n'
-            '      </div>\n'
-            '    </div>\n'
-        ).format(name=esc(v['name']), loc_full=esc(v['loc_full']), u=esc(maps_url), src=esc(map_embed_src))
-    else:
-        loc_maps = esc(v['loc_full'])
-        maps_block = ''
+    # Ville toujours cliquable → localisation exacte (voir villa_maps_link).
+    loc_maps = loc_link_html(v, esc(v['loc_full']))
+    loc_stat = loc_link_html(v, esc(v['loc_full']), pin=False)
+    maps_url = villa_maps_link(v)
+    maps_block = (
+        '    <!-- LOCALISATION -->\n'
+        '    <div class="vs-block">\n'
+        '      <div class="kicker"><span class="num">04</span></div>\n'
+        '      <h2 class="h3">Localisation</h2>\n'
+        '      <p class="lede">Villa {name} — {loc_full}. <a class="vs-loc-link" href="{u}" target="_blank" rel="noopener">Voir l\'itinéraire sur Google Maps</a></p>\n'
+        '      <div class="map-embed">\n'
+        '        <iframe src="{src}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Localisation Villa {name}"></iframe>\n'
+        '      </div>\n'
+        '    </div>\n'
+    ).format(name=esc(v['name']), loc_full=esc(v['loc_full']), u=esc(maps_url), src=esc(villa_map_embed(v)))
 
     share_text = 'Villa {} — {}. {}'.format(v['name'], v['loc_full'], v.get('description', ''))[:180]
     share_url = 'https://newera-promotion.com/{}.html'.format(v['slug'])
@@ -322,7 +500,8 @@ def render_villa(v, all_villas, settings):
         progress_inner = '<span>{}%</span>'.format(pct)
 
     html = tpl.format(
-        slug=v['slug'], name=name, loc=v['loc'], loc_full=v['loc_full'], loc_maps=loc_maps, count=v['count'], typologie=v['typologie'],
+        slug=v['slug'], name=name, loc=v['loc'], loc_full=v['loc_full'], loc_maps=loc_maps, loc_stat=loc_stat, count=v['count'], typologie=v['typologie'],
+        finitions_block=render_finitions_block(finitions, 'fr', '05', 'assets/'),
         hero_img=v['hero_img'], description=v['description'],
         feat_items=feat_items, gallery_fan_items=gallery_fan_items, gallery_lb=gallery_lb,
         plan_fan_items=plan_fan_items, plan_lb=plan_lb, interior_cards=interior_cards,
@@ -331,6 +510,7 @@ def render_villa(v, all_villas, settings):
         maps_block=maps_block, share_text=esc(share_text), share_url=esc(share_url),
     )
     html = apply_contact(html, settings)
+    html = apply_float_cta(html, settings, 'fr')
     html = apply_cta_toggles(html, settings)
     html = apply_blog_nav(html, settings)
     write_all(v['slug'] + '.html', html)
@@ -339,13 +519,39 @@ def render_villa(v, all_villas, settings):
 # GLOBAL CONTACT / BLOG-NAV SUBSTITUTION (applied to every generated/patched page)
 # ============================================================================
 def apply_contact(html, settings):
-    html = html.replace('tel:+213000000000', 'tel:' + settings['phone_tel'])
-    html = html.replace('213000000000', settings['whatsapp_number'])
-    # legacy hardcoded placeholder still present in a few static blocks
-    # (mini-cta-bar, float-card) that predates the settings-driven number —
-    # keep it in sync too so a single settings.json change covers everywhere.
-    html = html.replace('tel:+213561112233', 'tel:' + settings['phone_tel'])
-    html = html.replace('213561112233', settings['whatsapp_number'])
+    """Remplace TOUS les numéros d'appel / WhatsApp du HTML par ceux des
+    Réglages — pas seulement d'anciens numéros factices connus. Les pages
+    patchées en place (accueil, À propos, Opportunités) et les pages AR
+    gardaient sinon indéfiniment le premier numéro réel publié : un
+    changement de numéro dans le dashboard n'y était jamais répercuté."""
+    tel = (settings.get('phone_tel') or '').strip()
+    wa = re.sub(r'\D', '', settings.get('whatsapp_number') or '') or re.sub(r'\D', '', tel)
+    if tel:
+        html = re.sub(r'tel:\+?\d{8,15}', 'tel:' + tel, html)
+    if wa:
+        html = re.sub(r'wa\.me/\d{8,15}', 'wa.me/' + wa, html)
+    return html
+
+PHONE_SVG = ('<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+             '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>')
+
+def apply_float_cta(html, settings, lang='fr'):
+    """Bouton « Call » (brief client, même principe que Hamadat) : la bulle
+    flottante affiche une icône TÉLÉPHONE (et non plus une bulle de
+    discussion), et « Appeler maintenant » / WhatsApp sont de vrais liens
+    tel:/wa.me vers le numéro des Réglages — auparavant c'étaient des
+    <button> sans action : cliquer « Appeler maintenant » ne faisait rien.
+    Idempotent (réappliqué à chaque build sur les pages patchées en place)."""
+    tel = (settings.get('phone_tel') or '').strip()
+    wa = re.sub(r'\D', '', settings.get('whatsapp_number') or '') or re.sub(r'\D', '', tel)
+    label = 'اتصل بنا' if lang == 'ar' else 'Appeler'
+    html = re.sub(r'(<div class="float-cta" id="floatCta"[^>]*>)\s*<svg.*?</svg>\s*(</div>)',
+                  lambda m: m.group(1)[:-1].replace(' role="button"', '').replace(' tabindex="0"', '').replace(' aria-label="' + label + '"', '')
+                  + ' role="button" tabindex="0" aria-label="' + label + '">' + PHONE_SVG + m.group(2), html, count=1, flags=re.S)
+    html = re.sub(r'<(?:button|a) class="float-btn call"[^>]*>(.*?)</(?:button|a)>',
+                  lambda m: '<a class="float-btn call" href="tel:{}">{}</a>'.format(esc(tel), m.group(1)), html)
+    html = re.sub(r'<(?:button|a) class="float-btn wa"[^>]*>(.*?)</(?:button|a)>',
+                  lambda m: '<a class="float-btn wa" href="https://wa.me/{}" target="_blank" rel="noopener">{}</a>'.format(esc(wa), m.group(1)), html)
     return html
 
 BLOG_LINK_HTML = '<a href="blog.html">Blog</a>\n    '
@@ -378,6 +584,17 @@ def set_section_hidden(html, section_open_tag, hidden):
         html = html.replace(section_open_tag, hidden_tag, 1)
     return html
 
+def toggle_tag_hidden(html, tag_regex, hidden):
+    """Comme set_section_hidden, mais repère la balise par regex — elle peut
+    porter des attributs variables (aria-label FR/AR, role, tabindex…)."""
+    m = re.search(tag_regex, html)
+    if not m:
+        return html
+    tag = m.group(0).replace(' style="display:none"', '')
+    if hidden:
+        tag = tag[:-1] + ' style="display:none">'
+    return html[:m.start()] + tag + html[m.end():]
+
 def apply_cta_toggles(html, settings):
     """Independently show/hide the floating call/WhatsApp bubble+card and the
     mobile mini-cta-bar, per dashboard toggle — mirrors Hamadat's per-element
@@ -386,9 +603,9 @@ def apply_cta_toggles(html, settings):
     (which constructs the modal dynamically, not from static markup) can be
     gated by the third toggle (cta_rdv_modal_enabled)."""
     float_off = not settings.get('cta_float_enabled', True)
-    html = set_section_hidden(html, '<div class="float-cta" id="floatCta">', float_off)
-    html = set_section_hidden(html, '<div class="float-card" id="floatCard">', float_off)
-    html = set_section_hidden(html, '<nav class="mini-cta-bar" aria-label="Actions rapides">', not settings.get('cta_minibar_enabled', True))
+    html = toggle_tag_hidden(html, r'<div class="float-cta" id="floatCta"[^>]*>', float_off)
+    html = toggle_tag_hidden(html, r'<div class="float-card" id="floatCard"[^>]*>', float_off)
+    html = toggle_tag_hidden(html, r'<nav class="mini-cta-bar"[^>]*>', not settings.get('cta_minibar_enabled', True))
 
     flags = {
         'float': settings.get('cta_float_enabled', True),
@@ -431,7 +648,7 @@ def replace_balanced_div(html, open_tag_pattern, new_inner_html):
 # content that isn't modeled in JSON untouched; only swaps the fields the
 # dashboard actually exposes)
 # ============================================================================
-def patch_homepage(home, villas, settings, videos=None, gallery=None):
+def patch_homepage(home, villas, settings, videos=None, gallery=None, finitions=None):
     html = read_current('index.html')
 
     # Titre du hero optionnel : si "Titre" et "Accent" sont vides dans le
@@ -490,7 +707,9 @@ def patch_homepage(home, villas, settings, videos=None, gallery=None):
         html = replace_balanced_div(html, r'<div class="fan-carousel reveal" id="catalogueCarousel">', '\n' + items_html + '\n  ')
         html = set_section_hidden(html, '<section class="sec alt" id="catalogue">', not gallery.get('enabled', True))
 
+    html = replace_home_finitions(html, finitions, 'fr', 'assets/')
     html = apply_contact(html, settings)
+    html = apply_float_cta(html, settings, 'fr')
     html = apply_cta_toggles(html, settings)
     html = apply_blog_nav(html, settings)
     write_all('index.html', html)
@@ -561,6 +780,7 @@ def patch_simple_hero(filename, data, settings):
                    html, count=1, flags=re.S)
     html = re.sub(r'(<p class="lede">).*?(</p>)', r'\g<1>' + esc(data['hero_lede']) + r'\g<2>', html, count=1, flags=re.S)
     html = apply_contact(html, settings)
+    html = apply_float_cta(html, settings, 'fr')
     html = apply_cta_toggles(html, settings)
     html = apply_blog_nav(html, settings)
     write_all(filename, html)
@@ -604,6 +824,7 @@ def render_blog(posts, settings):
                 slug=p['slug'], img=p.get('image', 'villa-agata.jpg'), title=esc(p['title']), date=esc(p.get('date', ''))))
     html = BLOG_LIST_TEMPLATE.format(cards='\n'.join(cards))
     html = apply_contact(html, settings)
+    html = apply_float_cta(html, settings, 'fr')
     html = apply_cta_toggles(html, settings)
     html = apply_blog_nav(html, settings)
     write_all('blog.html', html)
@@ -624,9 +845,52 @@ def render_blog(posts, settings):
         body_html = ''.join('<p class="lede">{}</p>'.format(esc(para)) for para in p.get('body', '').split('\n') if para.strip())
         html = BLOG_POST_TEMPLATE.format(title=esc(p['title']), date=esc(p.get('date', '')), image=p.get('image', 'villa-agata.jpg'), body=body_html)
         html = apply_contact(html, settings)
+        html = apply_float_cta(html, settings, 'fr')
         html = apply_cta_toggles(html, settings)
         html = apply_blog_nav(html, settings)
         write_all('blog-{}.html'.format(p['slug']), html)
+
+# ============================================================================
+# PAGES ARABES (homepage/ar/) — écrites à la main, jamais régénérées en entier.
+# On y applique à chaque build, de façon ciblée et non destructive, tout ce
+# que le dashboard pilote et qui doit rester identique au site FR :
+# numéro d'appel/WhatsApp, bouton Call, interrupteurs CTA, lien de
+# localisation exacte des résidences, section Finitions, cartes vidéo.
+# ============================================================================
+def patch_ar_pages(villas, settings, finitions, videos):
+    ar_dir = os.path.join(HOMEPAGE, 'ar')
+    if not os.path.isdir(ar_dir):
+        return 0
+    by_slug = {v['slug']: v for v in villas}
+    count = 0
+    for fn in sorted(os.listdir(ar_dir)):
+        if not fn.endswith('.html'):
+            continue
+        path = os.path.join(ar_dir, fn)
+        with open(path, 'r', encoding='utf-8') as f:
+            html = f.read()
+        html = apply_contact(html, settings)
+        html = apply_float_cta(html, settings, 'ar')
+        html = apply_cta_toggles(html, settings)
+        slug = fn[:-5]
+        if slug in by_slug:
+            v = by_slug[slug]
+            def wrap(m, pin):
+                inner = re.sub(r'<[^>]+>', '', m.group(2)).strip()
+                return m.group(1) + loc_link_html(v, esc(inner), pin=pin) + m.group(3)
+            html = re.sub(r'(<div class="vs-loc">)(.*?)(</div>)', lambda m: wrap(m, True), html, count=1, flags=re.S)
+            html = re.sub(r'(<div class="stat"><b>)(.*?)(</b><span>الموقع</span></div>)', lambda m: wrap(m, False), html, count=1, flags=re.S)
+            if finitions:
+                html = replace_finitions(html, finitions, 'ar', '../assets/')
+        if fn == 'index.html':
+            html = replace_home_finitions(html, finitions, 'ar', '../assets/')
+        if fn == 'index.html' and videos:
+            cards_html = '\n'.join(c for c in (video_card_html(it, 'ar') for it in videos.get('items', [])) if c)
+            html = replace_balanced_div(html, r'<div class="video-carousel__track" data-video-track>', '\n' + cards_html + '\n    ')
+        with open(path, 'w', encoding='utf-8') as f:
+            f.write(html)
+        count += 1
+    return count
 
 def write_icons_data():
     """Regenerate admin/static/icons-data.js from icons.py — the single
@@ -663,15 +927,17 @@ def publish():
     liens = load('liens.json')
     videos = load('videos.json') or {}
     gallery = load('gallery.json') or {}
+    finitions = load('finitions.json') or {}
 
     for v in villas:
-        render_villa(v, villas, settings)
+        render_villa(v, villas, settings, finitions)
 
-    patch_homepage(home, villas, settings, videos, gallery)
+    patch_homepage(home, villas, settings, videos, gallery, finitions)
     patch_simple_hero('a-propos.html', apropos, settings)
     patch_simple_hero('opportunites.html', opportunites, settings)
     render_liens(liens, settings)
     render_blog(blog, settings)
+    patch_ar_pages(villas, settings, finitions, videos)
 
     # keep main.js's own hardcoded contact number (used by the RDV modal) in sync too
     mjs_path = os.path.join(HOMEPAGE, 'assets', 'main.js')
