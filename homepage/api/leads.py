@@ -16,6 +16,12 @@ import urllib.error
 from http.server import BaseHTTPRequestHandler
 
 BLOB_TOKEN = os.environ.get("BLOB_READ_WRITE_TOKEN", "")
+# Espace de noms Blob : la production lit et écrit à la racine (content/…,
+# assets/…, leads/…) ; tout autre environnement Vercel (preview) sous
+# « preview/ », pour qu'un dashboard de preview ne touche jamais au contenu
+# de production. BLOB_NAMESPACE permet de forcer une valeur.
+BLOB_NS = os.environ["BLOB_NAMESPACE"] if "BLOB_NAMESPACE" in os.environ else (
+    "" if os.environ.get("VERCEL_ENV", "production") == "production" else "preview/")
 SESSION_SECRET = os.environ.get("ADMIN_SESSION_SECRET", "")
 
 
@@ -52,13 +58,22 @@ def _blob_headers(extra=None):
 def blob_list(prefix):
     if not BLOB_TOKEN:
         return []
-    url = "https://blob.vercel-storage.com/?prefix=" + urllib.parse.quote(prefix) + "&limit=1000"
+    url = "https://blob.vercel-storage.com/?prefix=" + urllib.parse.quote(BLOB_NS + prefix) + "&limit=1000"
     req = urllib.request.Request(url, headers=_blob_headers())
     try:
         with urllib.request.urlopen(req, timeout=15) as resp:
-            return json.loads(resp.read().decode("utf-8")).get("blobs", [])
+            blobs = json.loads(resp.read().decode("utf-8")).get("blobs", [])
     except Exception:
         return []
+    out = []
+    for b in blobs:
+        p = b.get("pathname", "")
+        if BLOB_NS and not p.startswith(BLOB_NS):
+            continue
+        b = dict(b)
+        b["pathname"] = p[len(BLOB_NS):]
+        out.append(b)
+    return out
 
 
 def blob_get_bytes_url(url):
