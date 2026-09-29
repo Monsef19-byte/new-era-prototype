@@ -222,24 +222,39 @@ def gs_interior_card(img, title, bullets):
             '              </div>\n'
             '            </div></div>').format(img=img, title=esc(title), lis=lis)
 
-def switch_card(href, img, name, loc):
-    return ('    <a class="switch-card tilt" href="{href}"><div class="thumb"><img src="assets/{img}" alt="Villa {name}">'
+def switch_card(href, img, name, loc, lang='fr'):
+    return ('    <a class="switch-card tilt" href="{href}"><div class="thumb"><img src="assets/{img}" alt="{pre} {name}">'
             '</div><div class="switch-cap"><b>{name}</b><span>{loc}</span></div></a>'
-            ).format(href=href, img=img, name=esc(name), loc=esc(loc))
+            ).format(href=href, img=img, name=esc(name), loc=esc(loc), pre='فيلا' if lang == 'ar' else 'Villa')
+
+PROGRESS_SQ_START = '<!-- AVANCEMENT:START -->'
+PROGRESS_SQ_END = '<!-- AVANCEMENT:END -->'
+
+def progress_square_html(v, lang='fr'):
+    """Avancement du projet : petit carré rouge STATIQUE, à la suite du
+    badge « Partenariat algéro-allemand » et de la même hauteur — uniquement
+    sur la fiche résidence (plus rien sur les cartes de l'accueil, plus de
+    cercle ni de remplissage animé)."""
+    pct = v.get('progress_pct')
+    ar = lang == 'ar'
+    label = 'نسبة التقدّم' if ar else 'Avancement'
+    if pct is None:
+        val = 'قيد التأكيد' if ar else 'À confirmer'
+        cls = ' is-pending'
+    else:
+        val = '{}%'.format(int(pct))
+        cls = ''
+    return (PROGRESS_SQ_START + '<span class="v-chip v-chip--progress{c}" role="img" aria-label="{l} : {v}" title="{l}">{v}</span>'
+            + PROGRESS_SQ_END).format(c=cls, l=esc(label), v=esc(val))
 
 def res_equal_card(v):
-    pct = v.get('progress_pct')
-    if pct is None:
-        prog = '<div class="res-progress-circle" style="--pct:0"><div class="res-progress-circle-inner"><span class="pending">à<br>confirmer</span></div></div>'
-    else:
-        prog = '<div class="res-progress-circle" style="--pct:{p}"><div class="res-progress-circle-inner"><span>{p}%</span></div></div>'.format(p=pct)
+    prog = ''
     return (
         '    <a class="res-equal-card" href="{slug}.html">\n'
         '      <div class="thumb">\n'
         '        <img src="assets/{img}" alt="Villa {name}">\n'
         '        <div class="thumb-scrim"></div>\n'
         '        <div class="res-logo"><img src="assets/logo-wordmark-white-badge.png" alt="New Era"></div>\n'
-        '        {prog}\n'
         '        <div class="res-overlay-info"><b>{name}</b><span>{loc} · {count} appts</span></div>\n'
         '      </div>\n'
         '    </a>'
@@ -452,68 +467,164 @@ def replace_finitions(html, fin, lang, asset_prefix):
     num = m.group(1) if m else '05'
     return html[:a] + render_finitions_block(fin, lang, num, asset_prefix) + html[b:]
 
+# Ordre des sections de la fiche : Disponibilité juste après
+# Caractéristiques (avant Localisation), puis numérotation 01, 02… recalculée
+# dans l'ordre réel des blocs — idempotent, FR comme AR.
+NUM_KICKER_RE = re.compile(r'(<div class="kicker(?: on-dark)?"><span class="num">)\d{2}(</span></div>)')
+
+def renumber_blocks(html):
+    counter = [0]
+    def sub(m):
+        counter[0] += 1
+        return '{}{:02d}{}'.format(m.group(1), counter[0], m.group(2))
+    return NUM_KICKER_RE.sub(sub, html)
+
+def move_dispo_after_feats(html):
+    start = html.find('    <!-- DISPONIBILITÉ -->\n')
+    feats = html.find('    <!-- CARACTÉRISTIQUES -->')
+    if start == -1 or feats == -1:
+        return html
+    div_start = html.find('<div', start)
+    end = _balanced_div_end(html, div_start)
+    if end == -1:
+        return html
+    end = html.find('\n', end) + 1
+    while html[end:end + 1] == '\n':
+        end += 1
+    block = html[start:end]
+    rest = html[:start] + html[end:]
+    fs = rest.find('    <!-- CARACTÉRISTIQUES -->')
+    fdiv = rest.find('<div', fs)
+    fend = _balanced_div_end(rest, fdiv)
+    fend = rest.find('\n', fend) + 1
+    while rest[fend:fend + 1] == '\n':
+        fend += 1
+    return rest[:fend] + block + rest[fend:]
+
+def load_template_ar():
+    with open(os.path.join(BASE, "template_villa_ar.txt"), "r", encoding="utf-8") as f:
+        return f.read()
+
 def load_template():
     path = os.path.join(BASE, "template_villa.txt")
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
 
-def render_villa(v, all_villas, settings, finitions=None):
-    tpl = load_template()
-    name = v['name']
-    gallery_fan_items = '\n'.join(fan_gal_item(img, cap, i) for i, (img, cap) in enumerate(v['gallery']))
-    gallery_lb = ',\n'.join("    {{src:'assets/{}', cap:'{}'}}".format(img, cap.replace("'", "\\'")) for img, cap in v['gallery'])
-    plan_fan_items = '\n'.join(fan_plan_item(img, cap, i) for i, (img, cap) in enumerate(v['plans']))
-    plan_lb = ',\n'.join("    {{src:'assets/{}', cap:'{}'}}".format(img, cap.replace("'", "\\'")) for img, cap in v['plans'])
-    feat_items = '\n'.join(feat_line(icon, label) for icon, label in v['feats'])
-    interior_cards = '\n'.join(gs_interior_card(img, title, bullets) for img, title, bullets in v['interior'])
+def _t(obj, key, lang):
+    """Texte d'un champ dans la langue voulue : `key_ar` en arabe (repli sur
+    le français s'il est vide — jamais de trou sur la page), `key` sinon."""
+    if lang == 'ar':
+        return obj.get(key + '_ar') or obj.get(key) or ''
+    return obj.get(key) or ''
+
+def _pair(item, i_fr, i_ar, lang):
+    """Élément de liste [valeur, texte FR, texte AR…] (légendes, libellés)."""
+    fr = item[i_fr] if len(item) > i_fr else ''
+    if lang == 'ar':
+        return (item[i_ar] if len(item) > i_ar and item[i_ar] else fr) or ''
+    return fr or ''
+
+def render_dispo_lang(dispo, name, lang):
+    if lang != 'ar':
+        return render_dispo(dispo, name)
+    rows, details = [], []
+    for t in dispo.get('typologies', []):
+        sc = 'pending' if not t.get('confirmed') else ''
+        tname = _t(t, 'name', 'ar')
+        label = t.get('status_label_ar') or ('مؤكد' if t.get('confirmed') else 'قيد التأكيد')
+        rows.append('        <tr><td>{n}</td><td class="status">{c}</td><td><span class="status-pill {sc}">{l}</span></td></tr>'.format(
+            n=esc(tname), c=esc(_t(t, 'count', 'ar')), sc=sc, l=esc(label)))
+        imgs = ''.join('<img src="assets/{}" alt="مخطط {} — {}">'.format(im, esc(tname), esc(name)) for im in t.get('detail_images', []))
+        details.append('    <details class="dispo-details"><summary>{n} — عرض التفاصيل</summary><div class="dd-body">{b}</div></details>'.format(
+            n=esc(tname), b=esc(_t(t, 'detail_text', 'ar')) + imgs))
+    return (
+        '    <h3>التوفر — فيلا {name}</h3>\n'
+        '    <div class="sub">{intro}</div>\n'
+        '    <table class="dispo-table">\n'
+        '      <thead><tr><th>النمط</th><th>عدد الشقق</th><th>الحالة</th></tr></thead>\n'
+        '      <tbody>\n{rows}\n      </tbody>\n'
+        '    </table>\n{details}\n'
+        '    <div class="dispo-pending" style="margin-top:16px;">{note}</div>'
+    ).format(name=esc(name), intro=esc(_t(dispo, 'intro', 'ar')), rows='\n'.join(rows), details='\n'.join(details), note=_t(dispo, 'note', 'ar'))
+
+AR_ASSETS_RE = re.compile(r"(src=\"|src:')assets/")
+
+def render_villa(v, all_villas, settings, finitions=None, lang='fr'):
+    """Fiche résidence complète, en français (homepage/<slug>.html) ou en
+    arabe (homepage/ar/<slug>.html) — les deux à partir des mêmes données du
+    dashboard (champs `_ar` pour l'arabe, repli sur le français si vides)."""
+    ar = lang == 'ar'
+    tpl = load_template_ar() if ar else load_template()
+    name = _t(v, 'name', lang)
+    loc_full = _t(v, 'loc_full', lang)
+    gal = [(g[0], _pair(g, 1, 2, lang)) for g in v.get('gallery', [])]
+    plans = [(g[0], _pair(g, 1, 2, lang)) for g in v.get('plans', [])]
+    gallery_fan_items = '\n'.join(fan_gal_item(img, cap, i) for i, (img, cap) in enumerate(gal))
+    gallery_lb = ',\n'.join("    {{src:'assets/{}', cap:'{}'}}".format(img, cap.replace("'", "\\'")) for img, cap in gal)
+    plan_fan_items = '\n'.join(fan_plan_item(img, cap, i) for i, (img, cap) in enumerate(plans))
+    plan_lb = ',\n'.join("    {{src:'assets/{}', cap:'{}'}}".format(img, cap.replace("'", "\\'")) for img, cap in plans)
+    feat_items = '\n'.join(feat_line(f[0], _pair(f, 1, 2, lang)) for f in v.get('feats', []))
+    def interior(c):
+        title = (c[3] if ar and len(c) > 3 and c[3] else c[1]) if len(c) > 1 else ''
+        bullets = (c[4] if ar and len(c) > 4 and c[4] else c[2]) if len(c) > 2 else []
+        return gs_interior_card(c[0], title, bullets)
+    interior_cards = '\n'.join(interior(c) for c in v.get('interior', []))
     others = [o for o in all_villas if o['slug'] != v['slug']]
-    switch_cards = '\n'.join(switch_card(o['slug'] + '.html', o['card_image'], o['name'], o['loc']) for o in others)
-    residence_options = '\n'.join('          <option{sel}>Villa {n}</option>'.format(n=o['name'], sel=' selected' if o['slug'] == v['slug'] else '') for o in all_villas)
-    typebien_options = '\n'.join('          <option>{}</option>'.format(t) for t in v.get('typebien_opts', []))
-    dispo_content = render_dispo(v['dispo'], name)
+    switch_cards = '\n'.join(switch_card(o['slug'] + '.html', o['card_image'], _t(o, 'name', lang), _t(o, 'loc', lang), lang) for o in others)
+    residence_options = '\n'.join('          <option{sel}>{p} {n}</option>'.format(p='فيلا' if ar else 'Villa', n=esc(_t(o, 'name', lang)), sel=' selected' if o['slug'] == v['slug'] else '') for o in all_villas)
+    opts = (v.get('typebien_opts_ar') if ar else None) or v.get('typebien_opts', [])
+    typebien_options = '\n'.join('          <option>{}</option>'.format(esc(t)) for t in opts)
+    dispo_content = render_dispo_lang(v['dispo'], name, lang)
 
     # Ville toujours cliquable → localisation exacte (voir villa_maps_link).
-    loc_maps = loc_link_html(v, esc(v['loc_full']))
-    loc_stat = loc_link_html(v, esc(v['loc_full']), pin=False)
+    loc_maps = loc_link_html(v, esc(loc_full))
+    loc_stat = loc_link_html(v, esc(loc_full), pin=False)
     maps_url = villa_maps_link(v)
     maps_block = (
         '    <!-- LOCALISATION -->\n'
         '    <div class="vs-block">\n'
         '      <div class="kicker"><span class="num">04</span></div>\n'
-        '      <h2 class="h3">Localisation</h2>\n'
-        '      <p class="lede">Villa {name} — {loc_full}. <a class="vs-loc-link" href="{u}" target="_blank" rel="noopener">Voir l\'itinéraire sur Google Maps</a></p>\n'
+        '      <h2 class="h3">{h}</h2>\n'
+        '      <p class="lede">{vl} {name} — {loc_full}. <a class="vs-loc-link" href="{u}" target="_blank" rel="noopener">{go}</a></p>\n'
         '      <div class="map-embed">\n'
-        '        <iframe src="{src}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Localisation Villa {name}"></iframe>\n'
+        '        <iframe src="{src}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="{h} {vl} {name}"></iframe>\n'
         '      </div>\n'
         '    </div>\n'
-    ).format(name=esc(v['name']), loc_full=esc(v['loc_full']), u=esc(maps_url), src=esc(villa_map_embed(v)))
+    ).format(name=esc(name), loc_full=esc(loc_full), u=esc(maps_url), src=esc(villa_map_embed(v)),
+             h='الموقع' if ar else 'Localisation', vl='فيلا' if ar else 'Villa',
+             go='عرض الاتجاهات على خرائط جوجل' if ar else "Voir l'itinéraire sur Google Maps")
 
-    share_text = 'Villa {} — {}. {}'.format(v['name'], v['loc_full'], v.get('description', ''))[:180]
-    share_url = 'https://newera-promotion.com/{}.html'.format(v['slug'])
-
-    pct = v.get('progress_pct')
-    if pct is None:
-        progress_style = '--pct:0'
-        progress_inner = '<span class="pending">à<br>confirmer</span>'
-    else:
-        progress_style = '--pct:{}'.format(pct)
-        progress_inner = '<span>{}%</span>'.format(pct)
+    desc = _t(v, 'description', lang)
+    share_text = '{} {} — {}. {}'.format('فيلا' if ar else 'Villa', name, loc_full, desc)[:180]
+    share_url = 'https://newera-promotion.com/{}{}.html'.format('ar/' if ar else '', v['slug'])
+    kicker = _t(v, 'kicker', lang) or ("فنّ العيش في كل تفاصيله" if ar else "L'art de vivre en toute exclusivité")
 
     html = tpl.format(
-        slug=v['slug'], name=name, loc=v['loc'], loc_full=v['loc_full'], loc_maps=loc_maps, loc_stat=loc_stat, count=v['count'], typologie=v['typologie'],
-        finitions_block=render_finitions_block(finitions, 'fr', '05', 'assets/'),
-        hero_img=v['hero_img'], description=v['description'],
+        slug=v['slug'], name=esc(name), loc=esc(_t(v, 'loc', lang)), loc_full=esc(loc_full), loc_maps=loc_maps, loc_stat=loc_stat,
+        count=v['count'], count_units=ar_units(v['count']), typologie=esc(_t(v, 'typologie', lang)), kicker=esc(kicker),
+        finitions_block=render_finitions_block(finitions, lang, '05', 'assets/'),
+        hero_img=v['hero_img'], description=esc(desc),
         feat_items=feat_items, gallery_fan_items=gallery_fan_items, gallery_lb=gallery_lb,
         plan_fan_items=plan_fan_items, plan_lb=plan_lb, interior_cards=interior_cards,
         switch_cards=switch_cards, residence_options=residence_options, typebien_options=typebien_options,
-        dispo_content=dispo_content, progress_style=progress_style, progress_inner=progress_inner,
+        dispo_content=dispo_content, progress_square=progress_square_html(v, lang),
         maps_block=maps_block, share_text=esc(share_text), share_url=esc(share_url),
     )
+    if ar:
+        # Fragments générés en assets/… : depuis /ar/, le bon chemin est ../assets/…
+        html = AR_ASSETS_RE.sub(lambda m: m.group(1) + '../assets/', html)
+    html = renumber_blocks(html)
     html = apply_contact(html, settings)
-    html = apply_float_cta(html, settings, 'fr')
+    html = apply_float_cta(html, settings, lang)
     html = apply_cta_toggles(html, settings)
-    html = apply_blog_nav(html, settings)
-    write_all(v['slug'] + '.html', html)
+    html = apply_social_footer(html, settings, lang)
+    if ar:
+        os.makedirs(os.path.join(HOMEPAGE, 'ar'), exist_ok=True)
+        with open(os.path.join(HOMEPAGE, 'ar', v['slug'] + '.html'), 'w', encoding='utf-8') as f:
+            f.write(html)
+    else:
+        html = apply_blog_nav(html, settings)
+        write_all(v['slug'] + '.html', html)
 
 # ============================================================================
 # GLOBAL CONTACT / BLOG-NAV SUBSTITUTION (applied to every generated/patched page)
@@ -711,6 +822,7 @@ def patch_homepage(home, villas, settings, videos=None, gallery=None, finitions=
     html = apply_contact(html, settings)
     html = apply_float_cta(html, settings, 'fr')
     html = apply_cta_toggles(html, settings)
+    html = apply_social_footer(html, settings)
     html = apply_blog_nav(html, settings)
     write_all('index.html', html)
 
@@ -782,6 +894,7 @@ def patch_simple_hero(filename, data, settings):
     html = apply_contact(html, settings)
     html = apply_float_cta(html, settings, 'fr')
     html = apply_cta_toggles(html, settings)
+    html = apply_social_footer(html, settings)
     html = apply_blog_nav(html, settings)
     write_all(filename, html)
 
@@ -826,6 +939,7 @@ def render_blog(posts, settings):
     html = apply_contact(html, settings)
     html = apply_float_cta(html, settings, 'fr')
     html = apply_cta_toggles(html, settings)
+    html = apply_social_footer(html, settings)
     html = apply_blog_nav(html, settings)
     write_all('blog.html', html)
 
@@ -847,46 +961,132 @@ def render_blog(posts, settings):
         html = apply_contact(html, settings)
         html = apply_float_cta(html, settings, 'fr')
         html = apply_cta_toggles(html, settings)
+        html = apply_social_footer(html, settings)
         html = apply_blog_nav(html, settings)
         write_all('blog-{}.html'.format(p['slug']), html)
 
+# ---------------------------------------------------------------- réseaux sociaux (pied de page)
+SOCIAL_NETWORKS = [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('linkedin', 'LinkedIn'),
+                   ('tiktok', 'TikTok'), ('youtube', 'YouTube'), ('x', 'X')]
+SOCIAL_START = '<!-- SOCIAL:START -->'
+SOCIAL_END = '<!-- SOCIAL:END -->'
+
+def social_footer_html(settings):
+    """Icônes réseaux sociaux du pied de page (Réglages → Réseaux sociaux).
+    Un champ vide masque l'icône : jamais de lien mort."""
+    links = []
+    for key, label in SOCIAL_NETWORKS:
+        url = (settings.get('social_' + key) or '').strip()
+        if not re.match(r'^https?://', url):
+            continue
+        svg = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" '
+               'stroke-linejoin="round" aria-hidden="true">{}</svg>').format(FEAT_ICONS.get(key, ''))
+        links.append('<a class="fsocial-link" href="{u}" target="_blank" rel="noopener" aria-label="{l}" title="{l}">{s}</a>'.format(
+            u=esc(url), l=label, s=svg))
+    inner = '<div class="fsocial">{}</div>'.format(''.join(links)) if links else ''
+    return SOCIAL_START + inner + SOCIAL_END
+
+def apply_social_footer(html, settings, lang='fr'):
+    block = social_footer_html(settings)
+    if SOCIAL_START in html and SOCIAL_END in html:
+        return re.sub(re.escape(SOCIAL_START) + '.*?' + re.escape(SOCIAL_END), lambda m: block, html, count=1, flags=re.S)
+    m = re.search(r'(<footer class="sitefooter">.*?<div class="fnav">.*?</div>)', html, flags=re.S)
+    if not m:
+        return html
+    return html[:m.end()] + '\n  ' + block + html[m.end():]
+
 # ============================================================================
-# PAGES ARABES (homepage/ar/) — écrites à la main, jamais régénérées en entier.
-# On y applique à chaque build, de façon ciblée et non destructive, tout ce
-# que le dashboard pilote et qui doit rester identique au site FR :
-# numéro d'appel/WhatsApp, bouton Call, interrupteurs CTA, lien de
-# localisation exacte des résidences, section Finitions, cartes vidéo.
+# PAGES ARABES — accueil / à propos / opportunités (patch ciblé depuis les
+# champs `_ar` du dashboard, même principe que les pages françaises).
 # ============================================================================
-def patch_ar_pages(villas, settings, finitions, videos):
+def ar_units(count):
+    """« 7 شقق » / « 14 شقة » : en arabe, le nom est au pluriel de 3 à 10."""
+    try:
+        n = int(count)
+    except (TypeError, ValueError):
+        return '{} شقة'.format(count)
+    return '{} {}'.format(n, 'شقق' if 3 <= n <= 10 else 'شقة')
+
+def res_equal_card_ar(v):
+    return (
+        '    <a class="res-equal-card" href="{slug}.html">\n'
+        '      <div class="thumb">\n'
+        '        <img src="../assets/{img}" alt="فيلا {name}">\n'
+        '        <div class="thumb-scrim"></div>\n'
+        '        <div class="res-logo"><img src="../assets/logo-wordmark-white-badge.png" alt="New Era"></div>\n'
+        '        <div class="res-overlay-info"><b>{name}</b><span>{loc} · {units}</span></div>\n'
+        '      </div>\n'
+        '    </a>'
+    ).format(slug=v['slug'], img=v['card_image'], name=esc(_t(v, 'name', 'ar')), loc=esc(_t(v, 'loc', 'ar')), units=ar_units(v['count']))
+
+def patch_homepage_ar(html, home, villas, videos, gallery, finitions):
+    t = lambda k: _t(home, k, 'ar')
+    title, accent = t('hero_title').strip(), t('hero_accent').strip()
+    h1 = '<h1 class="h1">{} <span class="hl-accent flow">{}</span></h1>'.format(esc(title), esc(accent)) if (title or accent) else '<h1 class="h1"></h1>'
+    html = re.sub(r'<h1 class="h1">.*?</h1>', lambda m: h1, html, count=1, flags=re.S)
+    html = re.sub(r'(<h1 class="h1">.*?</h1>\s*<p class="lede">).*?(</p>)', lambda m: m.group(1) + esc(t('hero_lede')) + m.group(2), html, count=1, flags=re.S)
+    html = re.sub(r'(<div class="kicker manifesto-kicker">).*?(</div>)', lambda m: m.group(1) + esc(t('manifesto_kicker')) + m.group(2), html, count=1)
+    html = re.sub(r'(<h2 class="manifesto-claim">).*?(</h2>)', lambda m: m.group(1) + esc(t('manifesto_claim')) + ' <span class="hl-accent">' + esc(t('manifesto_claim_accent')) + '</span>' + m.group(2), html, count=1, flags=re.S)
+    html = re.sub(r'(<p class="manifesto-sub">).*?(</p>)', lambda m: m.group(1) + esc(t('manifesto_sub')) + m.group(2), html, count=1)
+    cards = ['    <div class="ms-card" tabindex="0">\n      <b>{v}</b><span>{l}</span>\n      <div class="ms-detail">{d}</div>\n    </div>'.format(
+        v=esc(_t(s, 'value', 'ar')), l=esc(_t(s, 'label', 'ar')), d=esc(_t(s, 'detail', 'ar'))) for s in home.get('stats', [])]
+    html = replace_balanced_div(html, r'<div class="manifesto-stats">', '\n' + '\n'.join(cards) + '\n  ')
+    by_slug = {v['slug']: v for v in villas}
+    featured = [by_slug[s] for s in home.get('featured_villas', []) if s in by_slug]
+    html = replace_balanced_div(html, r'<div class="res-equal reveal">', '\n' + '\n'.join(res_equal_card_ar(v) for v in featured) + '\n  ')
+    if videos:
+        html = re.sub(r'(<section class="sec" id="videos">.*?<span class="num">).*?(</span>)', lambda m: m.group(1) + esc(_t(videos, 'section_kicker', 'ar')) + m.group(2), html, count=1, flags=re.S)
+        html = re.sub(r'(<section class="sec" id="videos">.*?<h2 class="h2"[^>]*>).*?(</h2>)', lambda m: m.group(1) + esc(_t(videos, 'section_title', 'ar')) + m.group(2), html, count=1, flags=re.S)
+        html = re.sub(r'(<section class="sec" id="videos">.*?<p class="lede">).*?(</p>)', lambda m: m.group(1) + esc(_t(videos, 'section_lede', 'ar')) + m.group(2), html, count=1, flags=re.S)
+        cards_html = '\n'.join(c for c in (video_card_html(it, 'ar') for it in videos.get('items', [])) if c)
+        html = replace_balanced_div(html, r'<div class="video-carousel__track" data-video-track>', '\n' + cards_html + '\n    ')
+    if gallery:
+        html = re.sub(r'(<section class="sec alt" id="catalogue"[^>]*>.*?<span class="num">).*?(</span>)', lambda m: m.group(1) + esc(_t(gallery, 'kicker', 'ar')) + m.group(2), html, count=1, flags=re.S)
+        html = re.sub(r'(<section class="sec alt" id="catalogue"[^>]*>.*?<h2 class="h2"[^>]*>).*?(</h2>)', lambda m: m.group(1) + esc(_t(gallery, 'title', 'ar')) + m.group(2), html, count=1, flags=re.S)
+        html = re.sub(r'(<section class="sec alt" id="catalogue"[^>]*>.*?<p class="lede">).*?(</p>)', lambda m: m.group(1) + esc(_t(gallery, 'lede', 'ar')) + m.group(2), html, count=1, flags=re.S)
+        items = []
+        for i, it in enumerate(gallery.get('items', [])):
+            if not it.get('asset'):
+                continue
+            cap = esc(it.get('caption_ar') or it.get('caption', ''))
+            items.append('    <div class="fan-item" data-group="catalogue" data-index="{i}"><img src="../assets/{img}" alt="{c}">{ch}</div>'.format(
+                i=i, img=it['asset'], c=cap, ch='<div class="cap">{}</div>'.format(cap) if cap else ''))
+        html = replace_balanced_div(html, r'<div class="fan-carousel reveal" id="catalogueCarousel">', '\n' + '\n'.join(items) + '\n  ')
+        html = set_section_hidden(html, '<section class="sec alt" id="catalogue">', not gallery.get('enabled', True))
+    html = replace_home_finitions(html, finitions, 'ar', '../assets/')
+    return html
+
+def patch_simple_hero_ar(html, data):
+    html = re.sub(r'(<h1 class="h1"[^>]*>).*?(</h1>)',
+                  lambda m: m.group(1) + esc(_t(data, 'hero_title', 'ar')) + '<span class="hl-accent" style="font-size:clamp(16px,2vw,22px);text-transform:none;letter-spacing:0;font-weight:600;">' + esc(_t(data, 'hero_accent', 'ar')) + '</span>' + m.group(2),
+                  html, count=1, flags=re.S)
+    html = re.sub(r'(<p class="lede">).*?(</p>)', lambda m: m.group(1) + esc(_t(data, 'hero_lede', 'ar')) + m.group(2), html, count=1, flags=re.S)
+    return html
+
+def patch_ar_pages(villas, settings, finitions, videos, home=None, apropos=None, opportunites=None, gallery=None):
+    """Pages arabes : les fiches résidence sont entièrement régénérées
+    (render_villa lang='ar'), l'accueil / À propos / Opportunités sont
+    patchés en place à partir des champs `_ar` du dashboard."""
     ar_dir = os.path.join(HOMEPAGE, 'ar')
     if not os.path.isdir(ar_dir):
         return 0
-    by_slug = {v['slug']: v for v in villas}
+    for v in villas:
+        render_villa(v, villas, settings, finitions, 'ar')
     count = 0
-    for fn in sorted(os.listdir(ar_dir)):
-        if not fn.endswith('.html'):
-            continue
+    for fn, data in (('index.html', home), ('a-propos.html', apropos), ('opportunites.html', opportunites)):
         path = os.path.join(ar_dir, fn)
+        if not os.path.exists(path):
+            continue
         with open(path, 'r', encoding='utf-8') as f:
             html = f.read()
+        if fn == 'index.html':
+            html = patch_homepage_ar(html, home or {}, villas, videos, gallery, finitions)
+        elif data:
+            html = patch_simple_hero_ar(html, data)
         html = apply_contact(html, settings)
         html = apply_float_cta(html, settings, 'ar')
         html = apply_cta_toggles(html, settings)
-        slug = fn[:-5]
-        if slug in by_slug:
-            v = by_slug[slug]
-            def wrap(m, pin):
-                inner = re.sub(r'<[^>]+>', '', m.group(2)).strip()
-                return m.group(1) + loc_link_html(v, esc(inner), pin=pin) + m.group(3)
-            html = re.sub(r'(<div class="vs-loc">)(.*?)(</div>)', lambda m: wrap(m, True), html, count=1, flags=re.S)
-            html = re.sub(r'(<div class="stat"><b>)(.*?)(</b><span>الموقع</span></div>)', lambda m: wrap(m, False), html, count=1, flags=re.S)
-            if finitions:
-                html = replace_finitions(html, finitions, 'ar', '../assets/')
-        if fn == 'index.html':
-            html = replace_home_finitions(html, finitions, 'ar', '../assets/')
-        if fn == 'index.html' and videos:
-            cards_html = '\n'.join(c for c in (video_card_html(it, 'ar') for it in videos.get('items', [])) if c)
-            html = replace_balanced_div(html, r'<div class="video-carousel__track" data-video-track>', '\n' + cards_html + '\n    ')
+        html = apply_social_footer(html, settings, 'ar')
         with open(path, 'w', encoding='utf-8') as f:
             f.write(html)
         count += 1
@@ -937,7 +1137,7 @@ def publish():
     patch_simple_hero('opportunites.html', opportunites, settings)
     render_liens(liens, settings)
     render_blog(blog, settings)
-    patch_ar_pages(villas, settings, finitions, videos)
+    patch_ar_pages(villas, settings, finitions, videos, home, apropos, opportunites, gallery)
 
     # keep main.js's own hardcoded contact number (used by the RDV modal) in sync too
     mjs_path = os.path.join(HOMEPAGE, 'assets', 'main.js')

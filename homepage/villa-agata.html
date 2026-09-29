@@ -52,7 +52,6 @@
     <img id="villaSplitImg" class="ken-burns" src="assets/agata-hero.jpg" alt="Villa Agata — façade néoclassique">
     <div class="vhero-overlay">
       <div class="thumb-scrim"></div>
-      <div class="res-progress-circle" style="--pct:0"><div class="res-progress-circle-inner"><span class="pending">à<br>confirmer</span></div></div>
       <div class="res-overlay-info"><b>Villa Agata</b><span>Hydra, Alger · 14 appartements</span></div>
       <div class="scroll-cue" aria-hidden="true"></div>
     </div>
@@ -70,11 +69,12 @@
       <div class="v-chips">
         <span class="v-chip">25 ans d'expérience</span>
         <span class="v-chip">Partenariat algéro-allemand</span>
+        <!-- AVANCEMENT:START --><span class="v-chip v-chip--progress is-pending" role="img" aria-label="Avancement : À confirmer" title="Avancement">À confirmer</span><!-- AVANCEMENT:END -->
       </div>
       <div class="vfacts vs-facts">
         <div class="stat"><b><a class="vs-loc-link" href="https://www.google.com/maps/search/?api=1&amp;query=Hydra%2C+Alger%2C+Alg%C3%A9rie" target="_blank" rel="noopener" data-maps-link>Hydra, Alger</a></b><span>Localisation</span></div>
         <div class="stat"><b>14 appartements</b><span>Lots</span></div>
-        <div class="stat"><b>F4 & F5</b><span>Typologie</span></div>
+        <div class="stat"><b>F4 &amp; F5</b><span>Typologie</span></div>
         <div class="stat"><b>Marbre, parquet naturel</b><span>Finitions</span></div>
       </div>
       <div class="vactions">
@@ -125,9 +125,17 @@
       </ul>
     </div>
 
-    <!-- LOCALISATION -->
+    <!-- DISPONIBILITÉ -->
     <div class="vs-block">
       <div class="kicker"><span class="num">04</span></div>
+      <h2 class="h3">Disponibilité</h2>
+      <p class="lede">Consultez le détail des appartements encore disponibles à Villa Agata, par typologie.</p>
+      <button class="btn btn-fill" id="dispoOpen">Voir les disponibilités</button>
+    </div>
+
+    <!-- LOCALISATION -->
+    <div class="vs-block">
+      <div class="kicker"><span class="num">05</span></div>
       <h2 class="h3">Localisation</h2>
       <p class="lede">Villa Agata — Hydra, Alger. <a class="vs-loc-link" href="https://www.google.com/maps/search/?api=1&amp;query=Hydra%2C+Alger%2C+Alg%C3%A9rie" target="_blank" rel="noopener">Voir l'itinéraire sur Google Maps</a></p>
       <div class="map-embed">
@@ -138,7 +146,7 @@
     <!-- MATÉRIAUX -->
 <!-- FINITIONS:START -->
     <div class="vs-block dark" id="finitions">
-      <div class="kicker on-dark"><span class="num">05</span></div>
+      <div class="kicker on-dark"><span class="num">06</span></div>
       <h2 class="h3">L'art de bâtir l'excellence</h2>
       <p class="lede">Pierre de taille, moulures élégantes et fer forgé d'exception façonnent l'identité de New Era.</p>
       <div class="gallery-swiper on-dark fin-swiper">
@@ -176,7 +184,7 @@
 
     <!-- PLAN 3D -->
     <div class="vs-block">
-      <div class="kicker"><span class="num">06</span></div>
+      <div class="kicker"><span class="num">07</span></div>
       <h2 class="h3">Plan 3D</h2>
       <p class="lede">Plans des typologies disponibles à Villa Agata — cliquez sur un plan pour l'agrandir.</p>
       <div class="fan-carousel plans" id="planFan">
@@ -186,14 +194,6 @@
         <div class="fan-item" data-group="plans" data-index="3"><img src="assets/agata-plan-loft.jpg" alt="Loft — 153 m²"><div class="cap">Loft — 153 m²</div></div>
         <div class="fan-hint"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l-5 3 5 3M16 9l5 3-5 3"/></svg>Glissez ou défilez</div>
       </div>
-    </div>
-
-    <!-- DISPONIBILITÉ -->
-    <div class="vs-block">
-      <div class="kicker"><span class="num">07</span></div>
-      <h2 class="h3">Disponibilité</h2>
-      <p class="lede">Consultez le détail des appartements encore disponibles à Villa Agata, par typologie.</p>
-      <button class="btn btn-fill" id="dispoOpen">Voir les disponibilités</button>
     </div>
 
     <!-- INTÉRIEUR -->
@@ -294,6 +294,7 @@
 <footer class="sitefooter">
   <div class="logo-badge"><img src="assets/logo-wordmark-white.png" alt="New Era"></div>
   <div class="fnav"><a href="index.html">Accueil</a><a href="villa-agata.html">Agata</a><a href="villa-veronica.html">Veronica</a><a href="villa-christina.html">Christina</a><a href="villa-catrina.html">Catrina</a><a href="a-propos.html">À propos</a><a href="opportunites.html">Opportunités</a><a href="index.html#contact">Contact</a></div>
+  <!-- SOCIAL:START --><!-- SOCIAL:END -->
   <div class="fcopy">© New Era Promotion Immobilière</div>
 </footer>
 

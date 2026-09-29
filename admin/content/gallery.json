@@ -2,5 +2,8 @@
   "kicker": "Catalogue",
   "title": "Catalogue & Galerie",
   "lede": "Un aperçu de nos réalisations, plans et documents.",
-  "items": []
+  "items": [],
+  "kicker_ar": "كتالوج",
+  "title_ar": "الكتالوج والمعرض",
+  "lede_ar": "لمحة عن إنجازاتنا ومخططاتنا ووثائقنا."
 }

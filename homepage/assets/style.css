@@ -1124,3 +1124,19 @@ a.float-btn.call{display:flex;align-items:center;justify-content:center;gap:8px;
 
 /* ---- Vidéos : flèches masquées quand tout tient à l'écran ---- */
 .video-carousel.no-scroll .video-carousel__arrow{display:none;}
+
+/* ---- Avancement : petit carré rouge statique à côté des badges de la fiche ---- */
+.v-chip.v-chip--progress,.villa-split-content .v-chip.v-chip--progress{background:var(--red);border-color:var(--red);color:#fff;min-width:33px;text-align:center;font-family:'El Messiri',serif;font-size:11px;letter-spacing:0;padding:7px 8px;line-height:1;display:inline-flex;align-items:center;justify-content:center;}
+.v-chip.v-chip--progress.is-pending{font-family:inherit;font-size:9.5px;letter-spacing:.4px;}
+/* Téléphone : la barre d'actions (toujours affichée sur les fiches) masquait
+   le nom de la villa sur la photo d'ouverture — on le remonte au-dessus. */
+@media (max-width:659px){
+  .vhero-overlay .res-overlay-info{padding-bottom:104px;}
+  .vhero-overlay .scroll-cue{display:none;}
+}
+
+/* ---- Réseaux sociaux du pied de page (Réglages → Réseaux sociaux) ---- */
+.sitefooter .fsocial{display:flex;justify-content:center;gap:12px;margin:4px 0 18px;flex-wrap:wrap;}
+.sitefooter .fsocial-link{width:38px;height:38px;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;color:var(--text-muted);transition:background .2s,color .2s,border-color .2s;}
+.sitefooter .fsocial-link svg{width:17px;height:17px;}
+.sitefooter .fsocial-link:hover{background:var(--red);border-color:var(--red);color:#fff;}

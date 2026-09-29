@@ -348,6 +348,34 @@
     else if(VILLA_TAB === "dispo") renderVillaDispo(body, v);
   }
 
+  // Liaison générique champ ↔ donnée (utilisée pour les champs arabes) :
+  // bf() rend un <input>/<textarea> marqué data-bid, wireBinds() branche
+  // l'enregistrement automatique après chaque rendu.
+  var BINDS = {}, BIND_SEQ = 0;
+  function bf(obj, key, section, opts){
+    opts = opts || {};
+    var id = "b" + (++BIND_SEQ);
+    BINDS[id] = {obj: obj, key: key, section: section, lines: !!opts.lines};
+    var val = obj[key];
+    if(opts.lines) val = (val || []).join("\n");
+    var dir = opts.ar ? ' dir="rtl"' : '';
+    var ph = opts.placeholder ? ' placeholder="' + esc(opts.placeholder) + '"' : '';
+    if(opts.multiline || opts.lines) return '<textarea data-bid="' + id + '"' + dir + ph + '>' + esc(val == null ? "" : val) + '</textarea>';
+    return '<input type="text" data-bid="' + id + '"' + dir + ph + ' value="' + esc(val == null ? "" : val) + '">';
+  }
+  function wireBinds(root){
+    (root || contentEl).querySelectorAll('[data-bid]').forEach(function(el){
+      var b = BINDS[el.getAttribute("data-bid")];
+      if(!b || el._wired) return;
+      el._wired = true;
+      el.addEventListener("input", function(){
+        b.obj[b.key] = b.lines ? el.value.split("\n").map(function(x){ return x.trim(); }).filter(Boolean) : el.value;
+        debounceSave(b.section);
+      });
+    });
+  }
+  function arTag(){ return ' <span class="ar-tag">AR</span>'; }
+
   function field(label, inputHtml, hint){
     return '<div class="field"><label>' + esc(label) + '</label>' + inputHtml + (hint ? '<div class="hint">' + esc(hint) + '</div>' : '') + '</div>';
   }
@@ -369,7 +397,7 @@
         '<div class="grid2">' +
           field("Nom de la résidence", '<input type="text" id="f_name" value="' + esc(v.name) + '">') +
           field("Statut", '<select id="f_pct_mode"><option value="pending"' + (v.progress_pct==null?' selected':'') + '>à confirmer</option><option value="pct"' + (v.progress_pct!=null?' selected':'') + '>Avancement en %</option></select>' +
-            '<input type="number" id="f_pct" min="0" max="100" step="1" placeholder="ex. 45" value="' + (v.progress_pct==null?'':v.progress_pct) + '" style="margin-top:6px;' + (v.progress_pct==null?'display:none':'') + '">', "Choisissez « à confirmer » ou saisissez un pourcentage d'avancement (0 à 100).") +
+            '<input type="number" id="f_pct" min="0" max="100" step="1" placeholder="ex. 45" value="' + (v.progress_pct==null?'':v.progress_pct) + '" style="margin-top:6px;' + (v.progress_pct==null?'display:none':'') + '">', "Choisissez « à confirmer » ou saisissez un pourcentage d'avancement (0 à 100). Affiché dans un carré rouge sur la fiche de la résidence uniquement (plus sur l'accueil).") +
           field("Localisation courte", '<input type="text" id="f_loc" value="' + esc(v.loc) + '">', "ex. « Hydra »") +
           field("Localisation complète", '<input type="text" id="f_locfull" value="' + esc(v.loc_full) + '">', "ex. « Hydra, Alger »") +
           field("Coordonnées GPS exactes (recommandé)", '<input type="text" id="f_gps" placeholder="ex. 36.7431, 3.0412" value="' + esc(v.gps || "") + '">', "Le plus précis : dans Google Maps, clic droit sur l'entrée de la résidence → cliquez les coordonnées pour les copier, puis collez-les ici. Utilisées pour le lien de la ville et la carte.") +
@@ -379,6 +407,21 @@
           field("Typologie", '<input type="text" id="f_typo" value="' + esc(v.typologie) + '">', "ex. « F3, F4, F5 »") +
         '</div>' +
         field("Description", '<textarea id="f_desc">' + esc(v.description) + '</textarea>') +
+        '<div class="grid2">' +
+          field("Accroche (au-dessus du nom)", bf(v, "kicker", "villas", {placeholder: "L'art de vivre en toute exclusivité"})) +
+          field("Types de bien du formulaire (un par ligne)", bf(v, "typebien_opts", "villas", {lines: true})) +
+        '</div>' +
+      '</div>' +
+      '<div class="panel panel-ar"><h3>Textes de la page arabe' + arTag() + '</h3><p class="desc">Affichés sur la fiche arabe (/ar/). Laissez un champ vide pour reprendre le texte français.</p>' +
+        '<div class="grid2">' +
+          field("Nom" + arTag(), bf(v, "name_ar", "villas", {ar: true})) +
+          field("Accroche" + arTag(), bf(v, "kicker_ar", "villas", {ar: true})) +
+          field("Localisation courte" + arTag(), bf(v, "loc_ar", "villas", {ar: true})) +
+          field("Localisation complète" + arTag(), bf(v, "loc_full_ar", "villas", {ar: true})) +
+          field("Typologie" + arTag(), bf(v, "typologie_ar", "villas", {ar: true})) +
+          field("Types de bien du formulaire (un par ligne)" + arTag(), bf(v, "typebien_opts_ar", "villas", {ar: true, lines: true})) +
+        '</div>' +
+        field("Description" + arTag(), bf(v, "description_ar", "villas", {ar: true, multiline: true})) +
       '</div>' +
       '<div class="panel">' +
         '<h3>Danger</h3>' +
@@ -439,6 +482,7 @@
       uploadImage(e.target.files[0], v.slug + "-hero").then(function(fname){ v.hero_img = fname; saveSection("villas").then(function(){ render(); }); });
     });
     document.getElementById("deleteVillaBtn").addEventListener("click", function(){ deleteVilla(v.slug); });
+    wireBinds(body);
   }
 
   function renderVillaImageList(body, v, key, desc){
@@ -450,6 +494,7 @@
         html += '<div class="img-item" data-i="' + i + '">' +
           '<div class="thumb" style="background-image:url(\'' + assetUrl(item[0]) + '\')"><button class="rm" data-i="' + i + '">✕</button></div>' +
           '<input type="text" value="' + esc(item[1]) + '" data-i="' + i + '" placeholder="Légende">' +
+          bf(item, 2, "villas", {ar: true, placeholder: "الوصف (عربي)"}) +
           '</div>';
       });
       html += '</div>';
@@ -463,7 +508,8 @@
           saveSection("villas"); draw();
         });
       });
-      body.querySelectorAll('.img-item input[type=text]').forEach(function(inp){
+      wireBinds(body);
+      body.querySelectorAll('.img-item input[type=text]:not([data-bid])').forEach(function(inp){
         inp.addEventListener("input", function(){
           items[Number(inp.getAttribute("data-i"))][1] = inp.value;
           debounceSave("villas");
@@ -493,9 +539,9 @@
 
   function renderVillaFeats(body, v){
     function draw(){
-      var html = '<div class="panel"><h3>Caractéristiques</h3><p class="desc">La liste affichée dans la section « Caractéristiques » de la fiche. Cliquez sur l\'icône pour la changer.</p><div class="list-editor">';
+      var html = '<div class="panel"><h3>Caractéristiques</h3><p class="desc">La liste affichée dans la section « Caractéristiques » de la fiche. Cliquez sur l\'icône pour la changer. Second champ : le libellé de la page arabe.</p><div class="list-editor">';
       v.feats.forEach(function(f, i){
-        html += '<div class="row"><div class="icon-picker-slot" data-icon-i="' + i + '"></div><input type="text" value="' + esc(f[1]) + '" data-i="' + i + '"><button data-i="' + i + '">✕</button></div>';
+        html += '<div class="row"><div class="icon-picker-slot" data-icon-i="' + i + '"></div><input type="text" value="' + esc(f[1]) + '" data-i="' + i + '">' + bf(f, 2, "villas", {ar: true, placeholder: "بالعربية"}) + '<button data-i="' + i + '">✕</button></div>';
       });
       html += '</div><button class="btn btn-sm add" id="addFeat">+ Ajouter une ligne</button></div>';
       body.innerHTML = html;
@@ -506,14 +552,15 @@
           onSelect: function(name){ v.feats[i][0] = name; saveSection("villas"); }
         });
       });
-      body.querySelectorAll(".row input").forEach(function(inp){
+      wireBinds(body);
+      body.querySelectorAll(".row input:not([data-bid])").forEach(function(inp){
         inp.addEventListener("input", function(){ v.feats[Number(inp.getAttribute("data-i"))][1] = inp.value; debounceSave("villas"); });
       });
       body.querySelectorAll(".row button").forEach(function(btn){
         btn.addEventListener("click", function(){ v.feats.splice(Number(btn.getAttribute("data-i")),1); saveSection("villas"); draw(); });
       });
       document.getElementById("addFeat").addEventListener("click", function(){
-        v.feats.push(["archi", ""]); saveSection("villas"); draw();
+        v.feats.push(["archi", "", ""]); saveSection("villas"); draw();
       });
     }
     draw();
@@ -530,6 +577,9 @@
             '<div>' +
               '<input type="text" value="' + esc(card[1]) + '" data-title="' + i + '" placeholder="Titre" style="margin-bottom:8px;">' +
               '<textarea data-bullets="' + i + '" placeholder="Un point par ligne" style="width:100%;min-height:80px;padding:8px;border:1px solid var(--line);border-radius:6px;">' + esc(card[2].join("\n")) + '</textarea>' +
+              '<div class="ar-sub">Page arabe' + arTag() + '</div>' +
+              bf(card, 3, "villas", {ar: true, placeholder: "العنوان"}) +
+              bf(card, 4, "villas", {ar: true, lines: true, placeholder: "نقطة في كل سطر"}) +
             '</div>' +
           '</div>' +
           '<button class="btn btn-sm btn-danger" data-rm="' + i + '">Supprimer cette carte</button>' +
@@ -538,6 +588,7 @@
       html += '<button class="btn btn-sm" id="addInterior">+ Ajouter une carte</button></div>';
       body.innerHTML = html;
 
+      wireBinds(body);
       body.querySelectorAll('[data-title]').forEach(function(inp){
         inp.addEventListener("input", function(){ v.interior[Number(inp.getAttribute("data-title"))][1] = inp.value; debounceSave("villas"); });
       });
@@ -558,7 +609,7 @@
         btn.addEventListener("click", function(){ v.interior.splice(Number(btn.getAttribute("data-rm")),1); saveSection("villas"); draw(); });
       });
       document.getElementById("addInterior").addEventListener("click", function(){
-        v.interior.push(["villa-agata.jpg", "", []]); saveSection("villas"); draw();
+        v.interior.push(["villa-agata.jpg", "", [], "", []]); saveSection("villas"); draw();
       });
     }
     draw();
@@ -568,7 +619,8 @@
     function draw(){
       var d = v.dispo;
       var html = '<div class="panel"><h3>Disponibilité</h3><p class="desc">Le tableau et les détails affichés dans la fenêtre « Voir les disponibilités ».</p>';
-      html += field("Texte d'introduction", '<input type="text" id="dispoIntro" value="' + esc(d.intro) + '">');
+      html += '<div class="grid2">' + field("Texte d'introduction", '<input type="text" id="dispoIntro" value="' + esc(d.intro) + '">') +
+        field("Texte d'introduction" + arTag(), bf(d, "intro_ar", "villas", {ar: true})) + '</div>';
       d.typologies.forEach(function(t, i){
         if(!t.detail_images) t.detail_images = [];
         var imgsHtml = '<div class="img-list" style="margin:8px 0;">';
@@ -585,15 +637,22 @@
           '<div class="toggle-row" style="padding:4px 0 12px;"><span class="lbl" style="font-size:13px;">Confirmé (sinon « à confirmer »)</span>' +
             '<label class="switch"><input type="checkbox" data-confirmed="'+i+'" ' + (t.confirmed?'checked':'') + '><span class="slider"></span></label></div>' +
           field("Détail (texte optionnel)", '<textarea data-text="'+i+'">' + esc(t.detail_text) + '</textarea>') +
+          '<div class="grid2">' +
+            field("Typologie" + arTag(), bf(t, "name_ar", "villas", {ar: true})) +
+            field("Nb. d\'appartements" + arTag(), bf(t, "count_ar", "villas", {ar: true})) +
+          '</div>' +
+          field("Détail" + arTag(), bf(t, "detail_text_ar", "villas", {ar: true, multiline: true})) +
           field("Images de cette typologie (plans, photos — affichées dans « voir détails »)", imgsHtml) +
           '<button class="btn btn-sm btn-danger" data-rm="' + i + '">Supprimer cette typologie</button>' +
         '</div>';
       });
       html += '<button class="btn btn-sm" id="addTypo">+ Ajouter une typologie</button>';
       html += field("Note en bas de tableau", '<textarea id="dispoNote">' + esc(d.note) + '</textarea>');
+      html += field("Note en bas de tableau" + arTag(), bf(d, "note_ar", "villas", {ar: true, multiline: true}));
       html += '</div>';
       body.innerHTML = html;
 
+      wireBinds(body);
       document.getElementById("dispoIntro").addEventListener("input", function(){ d.intro = this.value; debounceSave("villas"); });
       document.getElementById("dispoNote").addEventListener("input", function(){ d.note = this.value; debounceSave("villas"); });
       body.querySelectorAll('[data-name]').forEach(function(inp){ inp.addEventListener("input", function(){ d.typologies[Number(inp.getAttribute("data-name"))].name = inp.value; debounceSave("villas"); }); });
@@ -604,6 +663,7 @@
           var t = d.typologies[Number(cb.getAttribute("data-confirmed"))];
           t.confirmed = cb.checked;
           t.status_label = cb.checked ? "Confirmé" : "À confirmer";
+          t.status_label_ar = cb.checked ? "مؤكد" : "قيد التأكيد";
           saveSection("villas");
         });
       });
@@ -629,7 +689,7 @@
         });
       });
       document.getElementById("addTypo").addEventListener("click", function(){
-        d.typologies.push({name:"", count:"à confirmer", status_label:"À confirmer", confirmed:false, detail_text:"", detail_images:[]});
+        d.typologies.push({name:"", count:"à confirmer", status_label:"À confirmer", confirmed:false, detail_text:"", detail_images:[], name_ar:"", count_ar:"قيد التأكيد", status_label_ar:"قيد التأكيد", detail_text_ar:""});
         saveSection("villas"); draw();
       });
     }
@@ -706,7 +766,9 @@
     var html = '<div class="panel"><h3>Hero (bandeau principal)</h3><div class="grid2">' +
       field("Titre", '<input type="text" id="h_title" value="' + esc(h.hero_title) + '">') +
       field("Mot en accent (rouge)", '<input type="text" id="h_accent" value="' + esc(h.hero_accent) + '">') +
-      '</div>' + field("Sous-titre", '<textarea id="h_lede">' + esc(h.hero_lede) + '</textarea>') + '</div>';
+      '</div>' + field("Sous-titre", '<textarea id="h_lede">' + esc(h.hero_lede) + '</textarea>') +
+      '<div class="grid2">' + field("Titre" + arTag(), bf(h, "hero_title_ar", "home", {ar: true})) + field("Mot en accent" + arTag(), bf(h, "hero_accent_ar", "home", {ar: true})) + '</div>' +
+      field("Sous-titre" + arTag(), bf(h, "hero_lede_ar", "home", {ar: true, multiline: true})) + '</div>';
 
     html += '<div class="panel"><h3>Vidéo d\'accueil (arrière-plan du hero)</h3>' +
       '<p class="desc">Remplace la vidéo qui joue en fond sur la page d\'accueil. Compressée automatiquement si l\'outil ffmpeg est installé sur cet ordinateur ; sinon le fichier est mis en ligne tel quel — pensez à le compresser vous-même avant l\'envoi (ex. avec HandBrake) pour ne pas ralentir le site. La vidéo est mise à jour immédiatement, sans attendre le bouton « Publier ».</p>' +
@@ -719,14 +781,19 @@
       field("Kicker (petit texte au-dessus)", '<input type="text" id="h_kicker" value="' + esc(h.manifesto_kicker) + '">') +
       field("Titre", '<input type="text" id="h_claim" value="' + esc(h.manifesto_claim) + '">') +
       field("Mot en accent", '<input type="text" id="h_claimaccent" value="' + esc(h.manifesto_claim_accent) + '">') +
-      '</div>' + field("Sous-texte", '<textarea id="h_sub">' + esc(h.manifesto_sub) + '</textarea>') + '</div>';
+      '</div>' + field("Sous-texte", '<textarea id="h_sub">' + esc(h.manifesto_sub) + '</textarea>') +
+      '<div class="grid2">' + field("Kicker" + arTag(), bf(h, "manifesto_kicker_ar", "home", {ar: true})) + field("Titre" + arTag(), bf(h, "manifesto_claim_ar", "home", {ar: true})) +
+      field("Mot en accent" + arTag(), bf(h, "manifesto_claim_accent_ar", "home", {ar: true})) + '</div>' +
+      field("Sous-texte" + arTag(), bf(h, "manifesto_sub_ar", "home", {ar: true, multiline: true})) + '</div>';
 
     html += '<div class="panel"><h3>Statistiques (3 cartes)</h3>';
     h.stats.forEach(function(s, i){
       html += '<div class="dispo-item"><div class="row">' +
         field("Chiffre", '<input type="text" data-v="'+i+'" value="' + esc(s.value) + '">') +
         field("Libellé", '<input type="text" data-l="'+i+'" value="' + esc(s.label) + '">') +
-        '</div>' + field("Détail (au survol)", '<input type="text" data-d="'+i+'" value="' + esc(s.detail) + '">') + '</div>';
+        '</div>' + field("Détail (au survol)", '<input type="text" data-d="'+i+'" value="' + esc(s.detail) + '">') +
+        '<div class="row">' + field("Chiffre" + arTag(), bf(s, "value_ar", "home", {ar: true})) + field("Libellé" + arTag(), bf(s, "label_ar", "home", {ar: true})) + '</div>' +
+        field("Détail" + arTag(), bf(s, "detail_ar", "home", {ar: true})) + '</div>';
     });
     html += '</div>';
 
@@ -742,6 +809,7 @@
     function bind(id, key){ document.getElementById(id).addEventListener("input", function(){ h[key] = this.value; debounceSave("home"); }); }
     bind("h_title","hero_title"); bind("h_accent","hero_accent"); bind("h_lede","hero_lede");
     bind("h_kicker","manifesto_kicker"); bind("h_claim","manifesto_claim"); bind("h_claimaccent","manifesto_claim_accent"); bind("h_sub","manifesto_sub");
+    wireBinds();
 
     contentEl.querySelectorAll('[data-v]').forEach(function(inp){ inp.addEventListener("input", function(){ h.stats[Number(inp.getAttribute("data-v"))].value = inp.value; debounceSave("home"); }); });
     contentEl.querySelectorAll('[data-l]').forEach(function(inp){ inp.addEventListener("input", function(){ h.stats[Number(inp.getAttribute("data-l"))].label = inp.value; debounceSave("home"); }); });
@@ -775,8 +843,14 @@
       field("Titre", '<input type="text" id="s_title" value="' + esc(d.hero_title) + '">') +
       field("Sous-titre (accent)", '<input type="text" id="s_accent" value="' + esc(d.hero_accent) + '">') +
       field("Texte descriptif", '<textarea id="s_lede">' + esc(d.hero_lede) + '</textarea>') +
+      '</div>' +
+      '<div class="panel panel-ar"><h3>Page arabe' + arTag() + '</h3>' +
+      field("Titre" + arTag(), bf(d, "hero_title_ar", section, {ar: true})) +
+      field("Sous-titre (accent)" + arTag(), bf(d, "hero_accent_ar", section, {ar: true})) +
+      field("Texte descriptif" + arTag(), bf(d, "hero_lede_ar", section, {ar: true, multiline: true})) +
       '</div>';
     contentEl.innerHTML = html;
+    wireBinds();
     document.getElementById("s_title").addEventListener("input", function(){ d.hero_title = this.value; debounceSave(section); });
     document.getElementById("s_accent").addEventListener("input", function(){ d.hero_accent = this.value; debounceSave(section); });
     document.getElementById("s_lede").addEventListener("input", function(){ d.hero_lede = this.value; debounceSave(section); });
@@ -860,7 +934,9 @@
       var html = '<div class="panel"><h3>En-tête de la section</h3><div class="grid2">' +
         field("Kicker (petit texte)", '<input type="text" id="v_kicker" value="' + esc(v.section_kicker || "") + '">') +
         field("Titre", '<input type="text" id="v_title" value="' + esc(v.section_title || "") + '">') +
-        '</div>' + field("Sous-titre", '<textarea id="v_lede">' + esc(v.section_lede || "") + '</textarea>') + '</div>';
+        '</div>' + field("Sous-titre", '<textarea id="v_lede">' + esc(v.section_lede || "") + '</textarea>') +
+        '<div class="grid2">' + field("Kicker" + arTag(), bf(v, "section_kicker_ar", "videos", {ar: true})) + field("Titre" + arTag(), bf(v, "section_title_ar", "videos", {ar: true})) + '</div>' +
+        field("Sous-titre" + arTag(), bf(v, "section_lede_ar", "videos", {ar: true, multiline: true})) + '</div>';
 
       html += '<div class="panel"><h3>Vidéos</h3><p class="desc">Collez un lien YouTube (youtube.com/watch?v=..., youtu.be/... ou un lien « Partager »). La miniature et le lecteur se génèrent automatiquement — aucune vidéo n\'est affichée tant que le lien n\'est pas valide.</p>';
       v.items.forEach(function(item, i){
@@ -886,6 +962,7 @@
 
       contentEl.innerHTML = html;
 
+      wireBinds();
       document.getElementById("v_kicker").addEventListener("input", function(){ v.section_kicker = this.value; debounceSave("videos"); });
       document.getElementById("v_title").addEventListener("input", function(){ v.section_title = this.value; debounceSave("videos"); });
       document.getElementById("v_lede").addEventListener("input", function(){ v.section_lede = this.value; debounceSave("videos"); });
@@ -954,7 +1031,9 @@
       html += '<div class="panel"><h3>En-tête de la section</h3><div class="grid2">' +
         field("Kicker (petit texte)", '<input type="text" id="g_kicker" value="' + esc(g.kicker || "") + '">') +
         field("Titre", '<input type="text" id="g_title" value="' + esc(g.title || "") + '">') +
-        '</div>' + field("Sous-titre", '<textarea id="g_lede">' + esc(g.lede || "") + '</textarea>') + '</div>';
+        '</div>' + field("Sous-titre", '<textarea id="g_lede">' + esc(g.lede || "") + '</textarea>') +
+        '<div class="grid2">' + field("Kicker" + arTag(), bf(g, "kicker_ar", "gallery", {ar: true})) + field("Titre" + arTag(), bf(g, "title_ar", "gallery", {ar: true})) + '</div>' +
+        field("Sous-titre" + arTag(), bf(g, "lede_ar", "gallery", {ar: true, multiline: true})) + '</div>';
 
       html += '<div class="panel"><h3>Images du catalogue</h3><p class="desc">Photos, plans ou documents affichés dans le carrousel « Catalogue » de la page d\'accueil.</p>';
       g.items.forEach(function(item, i){
@@ -964,6 +1043,7 @@
               '<input type="file" accept="image/*" data-gimg="' + i + '" style="margin-top:6px;font-size:11px;"></div>' +
             '<div>' +
               field("Légende (optionnelle)", '<input type="text" data-gcap="' + i + '" value="' + esc(item.caption || "") + '">') +
+              field("Légende" + arTag(), bf(item, "caption_ar", "gallery", {ar: true})) +
             '</div>' +
           '</div>' +
           '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
@@ -977,6 +1057,7 @@
 
       contentEl.innerHTML = html;
 
+      wireBinds();
       document.getElementById("galleryToggle").addEventListener("change", function(){ g.enabled = this.checked; saveSection("gallery"); });
       document.getElementById("g_kicker").addEventListener("input", function(){ g.kicker = this.value; debounceSave("gallery"); });
       document.getElementById("g_title").addEventListener("input", function(){ g.title = this.value; debounceSave("gallery"); });
@@ -1120,6 +1201,11 @@
       field("Email", '<input type="text" id="c_email" value="' + esc(s.email) + '">') +
       '</div></div>';
 
+    html += '<div class="panel"><h3>Réseaux sociaux</h3><p class="desc">Icônes cliquables affichées dans le pied de page de toutes les pages (FR et AR). Collez l\'adresse complète du compte (https://…) ; un champ vide masque l\'icône.</p><div class="grid2">' +
+      [["facebook","Facebook"],["instagram","Instagram"],["linkedin","LinkedIn"],["tiktok","TikTok"],["youtube","YouTube"],["x","X (Twitter)"]].map(function(n){
+        return field(n[1], bf(s, "social_" + n[0], "settings", {placeholder: "https://…"}));
+      }).join('') + '</div></div>';
+
     html += '<div class="panel"><h3>Boutons d\'action (CTA)</h3><p class="desc">Activez ou désactivez indépendamment chaque bouton d\'appel à l\'action présent sur toutes les pages du site.</p>' +
       '<div class="toggle-row"><span class="lbl">Bulle flottante Appeler / WhatsApp<div class="d">La bulle ronde en bas de l\'écran qui ouvre une petite carte « Appeler maintenant / WhatsApp ».</div></span>' +
       '<label class="switch"><input type="checkbox" id="ctaFloatToggle" ' + (s.cta_float_enabled!==false?'checked':'') + '><span class="slider"></span></label></div>' +
@@ -1155,6 +1241,7 @@
     contentEl.innerHTML = html;
     function bind(id, key){ document.getElementById(id).addEventListener("input", function(){ s[key] = this.value; debounceSave("settings"); }); }
     bind("c_disp","phone_display"); bind("c_tel","phone_tel"); bind("c_wa","whatsapp_number"); bind("c_email","email");
+    wireBinds();
     function phoneStatus(){
       var el = document.getElementById("phoneStatus");
       var telOk = /^\+?\d{9,15}$/.test((s.phone_tel||"").replace(/\s/g,"")) && !/^\+?2130+$/.test((s.phone_tel||"").replace(/\s/g,""));

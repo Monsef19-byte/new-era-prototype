@@ -12,83 +12,102 @@
     "feats": [
       [
         "archi",
-        "Architecture néoclassique"
+        "Architecture néoclassique",
+        "عمارة نيوكلاسيكية"
       ],
       [
         "typo",
-        "Typologie F4 & F5"
+        "Typologie F4 & F5",
+        "نمط F4 وF5"
       ],
       [
         "marbre",
-        "Marbre italien & parquet naturel"
+        "Marbre italien & parquet naturel",
+        "رخام إيطالي وباركيه طبيعي"
       ],
       [
         "clim",
-        "Climatisation & chauffage centralisés"
+        "Climatisation & chauffage centralisés",
+        "تكييف وتدفئة مركزيان"
       ],
       [
         "parking",
-        "Parking en sous-sol"
+        "Parking en sous-sol",
+        "مواقف سيارات في الطابق السفلي"
       ],
       [
         "securite",
-        "Sécurité 24 h/24"
+        "Sécurité 24 h/24",
+        "أمن على مدار الساعة"
       ],
       [
         "ascenseur",
-        "Ascenseurs"
+        "Ascenseurs",
+        "مصاعد"
       ],
       [
         "isolation",
-        "Isolation thermique & acoustique"
+        "Isolation thermique & acoustique",
+        "عزل حراري وصوتي"
       ]
     ],
     "gallery": [
       [
         "agata-ext-1.jpg",
-        "Entrée"
+        "Entrée",
+        "مدخل"
       ],
       [
         "agata-ext-3.jpg",
-        "Extérieur"
+        "Extérieur",
+        "الخارج"
       ],
       [
         "agata-sejour.jpg",
-        "Séjour"
+        "Séjour",
+        "الصالون"
       ],
       [
         "agata-cuisine.jpg",
-        "Cuisine"
+        "Cuisine",
+        "المطبخ"
       ],
       [
         "agata-chambre.jpg",
-        "Chambre"
+        "Chambre",
+        "غرفة النوم"
       ],
       [
         "agata-chambre2.jpg",
-        "Chambre 2"
+        "Chambre 2",
+        "الغرفة الثانية"
       ],
       [
         "agata-sdb.jpg",
-        "Salle de bain"
+        "Salle de bain",
+        "الحمام"
       ]
     ],
     "plans": [
       [
         "agata-plan-f4-g.jpg",
-        "F4 — 107 m² G"
+        "F4 — 107 m² G",
+        "F4 — 107 م² (يسار)"
       ],
       [
         "agata-plan-f4-d.jpg",
-        "F4 — 107 m² D"
+        "F4 — 107 m² D",
+        "F4 — 107 م² (يمين)"
       ],
       [
         "agata-plan-duplex.jpg",
-        "Duplex — 185 m²"
+        "Duplex — 185 m²",
+        "دوبلكس — 185 م²"
       ],
       [
         "agata-plan-loft.jpg",
-        "Loft — 153 m²"
+        "Loft — 153 m²",
+        "لوفت — 153 م²"
       ]
     ],
     "interior": [
@@ -99,6 +118,12 @@
           "Cuisine entièrement équipée et aménagée",
           "Finitions haut de gamme (bois laqué, laiton, plan de travail marbré)",
           "Électroménager encastré de qualité"
+        ],
+        "المطبخ",
+        [
+          "مطبخ مجهز بالكامل ومهيأ",
+          "تشطيبات راقية (خشب مطلي، نحاس، سطح عمل رخامي)",
+          "أجهزة كهرومنزلية مدمجة عالية الجودة"
         ]
       ],
       [
@@ -108,6 +133,12 @@
           "Séjour spacieux, lumineux et traversant",
           "Décoration soignée et intemporelle",
           "Parquet bois chaleureux et belle hauteur sous plafond"
+        ],
+        "الصالون",
+        [
+          "صالون واسع ومضيء وعابر",
+          "ديكور أنيق وخالد",
+          "باركيه خشبي دافئ وارتفاع سقف جميل"
         ]
       ],
       [
@@ -117,6 +148,12 @@
           "Chambre confortable avec literie haut de gamme",
           "Décoration épurée, lumineuse et intemporelle",
           "Rangements intégrés et espace optimisé"
+        ],
+        "غرفة النوم",
+        [
+          "غرفة مريحة بفراش راقٍ",
+          "ديكور نقي، مضيء وخالد",
+          "خزائن مدمجة ومساحة محسّنة"
         ]
       ],
       [
@@ -125,6 +162,11 @@
         [
           "Deuxième chambre lumineuse, décoration soignée",
           "Grande fenêtre offrant un bel apport de lumière naturelle"
+        ],
+        "الغرفة الثانية",
+        [
+          "غرفة نوم ثانية مضيئة، ديكور أنيق",
+          "نافذة كبيرة توفر إضاءة طبيعية جميلة"
         ]
       ],
       [
@@ -134,6 +176,12 @@
           "Douche à l'italienne, double vasque avec plan en marbre",
           "Miroir rétroéclairé et finitions dorées",
           "Ambiance spa, chaleureuse et raffinée"
+        ],
+        "الحمام",
+        [
+          "دش إيطالي، مغسلتان بسطح رخامي",
+          "مرآة مضاءة من الخلف وتشطيبات ذهبية",
+          "أجواء سبا دافئة وراقية"
         ]
       ]
     ],
@@ -149,7 +197,11 @@
           "detail_images": [
             "agata-plan-f4-g.jpg",
             "agata-plan-f4-d.jpg"
-          ]
+          ],
+          "name_ar": "F4",
+          "count_ar": "قيد التأكيد",
+          "status_label_ar": "قيد التأكيد",
+          "detail_text_ar": "اتجاهان متاحان (يسار / يمين)، 107 م² لكل منهما."
         },
         {
           "name": "F5",
@@ -157,7 +209,11 @@
           "status_label": "À confirmer",
           "confirmed": false,
           "detail_text": "Plan détaillé disponible sur demande.",
-          "detail_images": []
+          "detail_images": [],
+          "name_ar": "F5",
+          "count_ar": "قيد التأكيد",
+          "status_label_ar": "قيد التأكيد",
+          "detail_text_ar": "المخطط التفصيلي متوفر عند الطلب."
         },
         {
           "name": "Duplex",
@@ -167,7 +223,11 @@
           "detail_text": "185 m² sur deux niveaux.",
           "detail_images": [
             "agata-plan-duplex.jpg"
-          ]
+          ],
+          "name_ar": "دوبلكس",
+          "count_ar": "قيد التأكيد",
+          "status_label_ar": "قيد التأكيد",
+          "detail_text_ar": "185 م² على طابقين."
         },
         {
           "name": "Loft",
@@ -177,10 +237,16 @@
           "detail_text": "153 m².",
           "detail_images": [
             "agata-plan-loft.jpg"
-          ]
+          ],
+          "name_ar": "لوفت",
+          "count_ar": "قيد التأكيد",
+          "status_label_ar": "قيد التأكيد",
+          "detail_text_ar": "153 م²."
         }
       ],
-      "note": "Pour connaître les disponibilités à jour, contactez notre équipe."
+      "note": "Pour connaître les disponibilités à jour, contactez notre équipe.",
+      "intro_ar": "4 أنماط — انقروا على «عرض التفاصيل» لمشاهدة مخطط كل نمط",
+      "note_ar": "لمعرفة التوفر المحدَّث، تواصلوا مع فريقنا."
     },
     "typebien_opts": [
       "F4",
@@ -189,7 +255,20 @@
       "Loft"
     ],
     "card_image": "villa-agata.jpg",
-    "google_maps": "https://www.google.com/maps/search/?api=1&query=Hydra%2C+Alger%2C+Alg%C3%A9rie"
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Hydra%2C+Alger%2C+Alg%C3%A9rie",
+    "name_ar": "أغاتا",
+    "kicker": "L'art de vivre en toute exclusivité",
+    "kicker_ar": "الرقي النيوكلاسيكي في قلب حيدرة",
+    "loc_full_ar": "حيدرة، الجزائر العاصمة",
+    "typologie_ar": "F4 وF5",
+    "description_ar": "تقع فيلا أغاتا في حيدرة، وهي مسكن راقٍ مستلهَم من العمارة النيوكلاسيكية. تتألف من 14 شقة فقط بتشطيبات فاخرة، وتوفر إطار حياة مرموقاً يجمع بين الأناقة والراحة العصرية والأمن، في أحد أكثر الأحياء المرغوبة بالجزائر العاصمة.",
+    "typebien_opts_ar": [
+      "F4",
+      "F5",
+      "دوبلكس",
+      "لوفت"
+    ],
+    "loc_ar": "حيدرة"
   },
   {
     "slug": "villa-veronica",
@@ -204,87 +283,107 @@
     "feats": [
       [
         "archi",
-        "Architecture néoclassique élégante"
+        "Architecture néoclassique élégante",
+        "عمارة نيوكلاسيكية أنيقة"
       ],
       [
         "typo",
-        "Typologies F3, F4, F5 & Penthouse"
+        "Typologies F3, F4, F5 & Penthouse",
+        "أنماط F3، F4، F5 وبنتهاوس"
       ],
       [
         "marbre",
-        "Marbre italien & parquet naturel"
+        "Marbre italien & parquet naturel",
+        "رخام إيطالي وباركيه طبيعي"
       ],
       [
         "clim",
-        "Climatisation & chauffage centralisés"
+        "Climatisation & chauffage centralisés",
+        "تكييف وتدفئة مركزيان"
       ],
       [
         "parking",
-        "Parking en sous-sol"
+        "Parking en sous-sol",
+        "مواقف سيارات في الطابق السفلي"
       ],
       [
         "securite",
-        "Sécurité 24 h/24 & contrôle d'accès"
+        "Sécurité 24 h/24 & contrôle d'accès",
+        "أمن على مدار الساعة والتحكم في الدخول"
       ],
       [
         "ascenseur",
-        "Ascenseurs"
+        "Ascenseurs",
+        "مصاعد"
       ],
       [
         "isolation",
-        "Isolation thermique & acoustique performante"
+        "Isolation thermique & acoustique performante",
+        "عزل حراري وصوتي عالي الأداء"
       ],
       [
         "domotique",
-        "Domotique personnalisable"
+        "Domotique personnalisable",
+        "نظام منزل ذكي قابل للتخصيص"
       ]
     ],
     "gallery": [
       [
         "villa-veronica.jpg",
-        "Façade"
+        "Façade",
+        "الواجهة"
       ],
       [
         "veronica-sec-1.jpg",
-        "Terrasse"
+        "Terrasse",
+        "الشرفة"
       ],
       [
         "veronica-sec-2.jpg",
-        "Extérieur"
+        "Extérieur",
+        "الخارج"
       ],
       [
         "veronica-int-sejour.jpg",
-        "Séjour"
+        "Séjour",
+        "الصالون"
       ],
       [
         "veronica-int-cuisine.jpg",
-        "Cuisine"
+        "Cuisine",
+        "المطبخ"
       ],
       [
         "veronica-int-chambre-parentale.jpg",
-        "Chambre parentale"
+        "Chambre parentale",
+        "الغرفة الرئيسية"
       ],
       [
         "veronica-int-sdb.jpg",
-        "Salle de bain"
+        "Salle de bain",
+        "الحمام"
       ]
     ],
     "plans": [
       [
         "veronica-plan-f4-130.jpg",
-        "F4 — 130 m²"
+        "F4 — 130 m²",
+        "F4 — 130 م²"
       ],
       [
         "veronica-plan-f5-190.jpg",
-        "F5 — 190 m²"
+        "F5 — 190 m²",
+        "F5 — 190 م²"
       ],
       [
         "veronica-plan-f5-157.jpg",
-        "F5 — 157 m²"
+        "F5 — 157 m²",
+        "F5 — 157 م²"
       ],
       [
         "veronica-plan-rdc.jpg",
-        "RDC — 116 m²"
+        "RDC — 116 m²",
+        "الطابق الأرضي — 116 م²"
       ]
     ],
     "interior": [
@@ -295,6 +394,12 @@
           "Cuisine entièrement équipée et aménagée",
           "Finitions haut de gamme (bois laqué, laiton, plan de travail marbré)",
           "Électroménager encastré de qualité"
+        ],
+        "المطبخ",
+        [
+          "مطبخ مجهز بالكامل ومهيأ",
+          "تشطيبات راقية (خشب مطلي، نحاس، سطح عمل رخامي)",
+          "أجهزة كهرومنزلية مدمجة عالية الجودة"
         ]
       ],
       [
@@ -304,6 +409,12 @@
           "Séjour spacieux, lumineux et traversant",
           "Décoration soignée et intemporelle",
           "Grandes baies vitrées, parquet bois chaleureux"
+        ],
+        "الصالون",
+        [
+          "صالون واسع ومضيء وعابر",
+          "ديكور أنيق وخالد",
+          "نوافذ كبيرة وباركيه خشبي دافئ"
         ]
       ],
       [
@@ -313,6 +424,12 @@
           "Suite parentale spacieuse avec coin salon intégré",
           "Literie premium et linge de qualité",
           "Décoration soignée dans des tons neutres et élégants"
+        ],
+        "الغرفة الرئيسية",
+        [
+          "جناح رئيسي واسع مع ركن جلوس مدمج",
+          "فراش فاخر وبياضات عالية الجودة",
+          "ديكور أنيق بألوان محايدة وراقية"
         ]
       ],
       [
@@ -322,6 +439,12 @@
           "Douche à l'italienne et double vasque en marbre",
           "Miroir rétroéclairé et finitions dorées",
           "Ambiance spa, chaleureuse et raffinée"
+        ],
+        "الحمام",
+        [
+          "دش إيطالي ومغسلتان بالرخام",
+          "مرآة مضاءة من الخلف وتشطيبات ذهبية",
+          "أجواء سبا دافئة وراقية"
         ]
       ]
     ],
@@ -334,7 +457,11 @@
           "status_label": "À confirmer",
           "confirmed": false,
           "detail_text": "Plan détaillé disponible sur demande.",
-          "detail_images": []
+          "detail_images": [],
+          "name_ar": "F3",
+          "count_ar": "قيد التأكيد",
+          "status_label_ar": "قيد التأكيد",
+          "detail_text_ar": "المخطط التفصيلي متوفر عند الطلب."
         },
         {
           "name": "F4",
@@ -344,7 +471,11 @@
           "detail_text": "130 m² — fiche technique avec surfaces détaillées par pièce.",
           "detail_images": [
             "veronica-fiche-f4.jpg"
-          ]
+          ],
+          "name_ar": "F4",
+          "count_ar": "قيد التأكيد",
+          "status_label_ar": "قيد التأكيد",
+          "detail_text_ar": "130 م² — بطاقة تقنية بمساحات تفصيلية لكل غرفة."
         },
         {
           "name": "F5",
@@ -355,7 +486,11 @@
           "detail_images": [
             "veronica-plan-f5-190.jpg",
             "veronica-plan-f5-157.jpg"
-          ]
+          ],
+          "name_ar": "F5",
+          "count_ar": "قيد التأكيد",
+          "status_label_ar": "قيد التأكيد",
+          "detail_text_ar": "نوعان متاحان: 190 م² و157 م²."
         },
         {
           "name": "Penthouse",
@@ -363,10 +498,16 @@
           "status_label": "À confirmer",
           "confirmed": false,
           "detail_text": "Plan détaillé disponible sur demande.",
-          "detail_images": []
+          "detail_images": [],
+          "name_ar": "بنتهاوس",
+          "count_ar": "قيد التأكيد",
+          "status_label_ar": "قيد التأكيد",
+          "detail_text_ar": "المخطط التفصيلي متوفر عند الطلب."
         }
       ],
-      "note": "Pour connaître les disponibilités à jour, contactez notre équipe."
+      "note": "Pour connaître les disponibilités à jour, contactez notre équipe.",
+      "intro_ar": "4 أنماط — انقروا على «عرض التفاصيل» للاطلاع على البطاقة التقنية لكل نمط",
+      "note_ar": "لمعرفة التوفر المحدَّث، تواصلوا مع فريقنا."
     },
     "typebien_opts": [
       "F3",
@@ -375,7 +516,20 @@
       "Penthouse"
     ],
     "card_image": "villa-veronica.jpg",
-    "google_maps": "https://www.google.com/maps/search/?api=1&query=Hydra%2C+Alger%2C+Alg%C3%A9rie"
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Hydra%2C+Alger%2C+Alg%C3%A9rie",
+    "name_ar": "فيرونيكا",
+    "kicker": "L'art de vivre en toute exclusivité",
+    "kicker_ar": "فنّ العيش بكل تميّز",
+    "loc_full_ar": "حيدرة، الجزائر العاصمة",
+    "typologie_ar": "F3، F4، F5 وبنتهاوس",
+    "description_ar": "تقع في قلب حيدرة، أحد أكثر الأحياء المرغوبة بالجزائر العاصمة، وهي مسكن حصري يجمع بين العمارة النيوكلاسيكية والخدمات الفاخرة وإطار الحياة المتميز. تتألف من 7 شقق فقط، وتمنح ساكنيها الخصوصية والراحة والأمن في بيئة استثنائية. كل تفصيل فيها مدروس لتلبية أعلى المتطلبات من حيث الجودة والأناقة والقيمة التراثية.",
+    "typebien_opts_ar": [
+      "F3",
+      "F4",
+      "F5",
+      "بنتهاوس"
+    ],
+    "loc_ar": "حيدرة"
   },
   {
     "slug": "villa-christina",
@@ -390,87 +544,107 @@
     "feats": [
       [
         "archi",
-        "Architecture néoclassique élégante"
+        "Architecture néoclassique élégante",
+        "عمارة نيوكلاسيكية أنيقة"
       ],
       [
         "blocs",
-        "Résidence composée de 2 blocs"
+        "Résidence composée de 2 blocs",
+        "مسكن مؤلف من كتلتين"
       ],
       [
         "typo",
-        "Typologies F2, F3, F4 & Penthouse"
+        "Typologies F2, F3, F4 & Penthouse",
+        "أنماط F2، F3، F4 وبنتهاوس"
       ],
       [
         "marbre",
-        "Marbre italien & parquet naturel"
+        "Marbre italien & parquet naturel",
+        "رخام إيطالي وباركيه طبيعي"
       ],
       [
         "clim",
-        "Climatisation & chauffage centralisés"
+        "Climatisation & chauffage centralisés",
+        "تكييف وتدفئة مركزيان"
       ],
       [
         "parking",
-        "Parking en sous-sol"
+        "Parking en sous-sol",
+        "مواقف سيارات في الطابق السفلي"
       ],
       [
         "ascenseur",
-        "Ascenseurs"
+        "Ascenseurs",
+        "مصاعد"
       ],
       [
         "securite",
-        "Sécurité 24 h/24"
+        "Sécurité 24 h/24",
+        "أمن على مدار الساعة"
       ],
       [
         "isolation",
-        "Isolation thermique & acoustique performante"
+        "Isolation thermique & acoustique performante",
+        "عزل حراري وصوتي عالي الأداء"
       ],
       [
         "domotique",
-        "Domotique personnalisable"
+        "Domotique personnalisable",
+        "نظام منزل ذكي قابل للتخصيص"
       ]
     ],
     "gallery": [
       [
         "villa-christina.jpg",
-        "Façade"
+        "Façade",
+        "الواجهة"
       ],
       [
         "christina-sec-1.jpg",
-        "Extérieur"
+        "Extérieur",
+        "الخارج"
       ],
       [
         "christina-sec-2.jpg",
-        "Entrée"
+        "Entrée",
+        "المدخل"
       ],
       [
         "christina-int-sejour.jpg",
-        "Séjour"
+        "Séjour",
+        "الصالون"
       ],
       [
         "christina-int-cuisine.jpg",
-        "Cuisine"
+        "Cuisine",
+        "المطبخ"
       ],
       [
         "christina-int-chambre.jpg",
-        "Chambre"
+        "Chambre",
+        "غرفة النوم"
       ],
       [
         "christina-int-terrasse.jpg",
-        "Terrasse"
+        "Terrasse",
+        "الشرفة"
       ]
     ],
     "plans": [
       [
         "christina-plan-1.jpg",
-        "Plan — Niveau 1"
+        "Plan — Niveau 1",
+        "مخطط — الطابق 1"
       ],
       [
         "christina-plan-2.jpg",
-        "Plan — Niveau 2"
+        "Plan — Niveau 2",
+        "مخطط — الطابق 2"
       ],
       [
         "christina-plan-3.jpg",
-        "Plan — Niveau 3"
+        "Plan — Niveau 3",
+        "مخطط — الطابق 3"
       ]
     ],
     "interior": [
@@ -481,6 +655,12 @@
           "Cuisine entièrement équipée et aménagée",
           "Finitions haut de gamme, plan de travail marbré",
           "Électroménager encastré de qualité"
+        ],
+        "المطبخ",
+        [
+          "مطبخ مجهز بالكامل ومهيأ",
+          "تشطيبات راقية وسطح عمل رخامي",
+          "أجهزة كهرومنزلية مدمجة عالية الجودة"
         ]
       ],
       [
@@ -490,6 +670,12 @@
           "Séjour spacieux et traversant",
           "Décoration soignée et intemporelle",
           "Parquet bois chaleureux"
+        ],
+        "الصالون وغرفة الطعام",
+        [
+          "صالون واسع وعابر",
+          "ديكور أنيق وخالد",
+          "باركيه خشبي دافئ"
         ]
       ],
       [
@@ -499,6 +685,12 @@
           "Chambre confortable avec literie haut de gamme",
           "Décoration épurée et lumineuse",
           "Rangements intégrés"
+        ],
+        "غرفة النوم",
+        [
+          "غرفة مريحة بفراش راقٍ",
+          "ديكور نقي ومضيء",
+          "خزائن مدمجة"
         ]
       ],
       [
@@ -508,6 +700,12 @@
           "Espace extérieur privé prolongeant le séjour",
           "Idéale pour les repas et moments de détente",
           "Sol en pierre naturelle"
+        ],
+        "الشرفة",
+        [
+          "فضاء خارجي خاص يمتد من الصالون",
+          "مثالية لتناول الوجبات ولحظات الاسترخاء",
+          "أرضية من الحجر الطبيعي"
         ]
       ],
       [
@@ -517,6 +715,12 @@
           "Douche à l'italienne, finitions haut de gamme",
           "Double vasque et miroir rétroéclairé",
           "Ambiance spa, chaleureuse et raffinée"
+        ],
+        "الحمام",
+        [
+          "دش إيطالي وتشطيبات راقية",
+          "مغسلتان ومرآة مضاءة من الخلف",
+          "أجواء سبا دافئة وراقية"
         ]
       ]
     ],
@@ -529,7 +733,11 @@
           "status_label": "À confirmer",
           "confirmed": false,
           "detail_text": "",
-          "detail_images": []
+          "detail_images": [],
+          "name_ar": "F2",
+          "count_ar": "قيد التأكيد",
+          "status_label_ar": "قيد التأكيد",
+          "detail_text_ar": ""
         },
         {
           "name": "F3",
@@ -537,7 +745,11 @@
           "status_label": "À confirmer",
           "confirmed": false,
           "detail_text": "",
-          "detail_images": []
+          "detail_images": [],
+          "name_ar": "F3",
+          "count_ar": "قيد التأكيد",
+          "status_label_ar": "قيد التأكيد",
+          "detail_text_ar": ""
         },
         {
           "name": "F4",
@@ -545,10 +757,16 @@
           "status_label": "À confirmer",
           "confirmed": false,
           "detail_text": "",
-          "detail_images": []
+          "detail_images": [],
+          "name_ar": "F4",
+          "count_ar": "قيد التأكيد",
+          "status_label_ar": "قيد التأكيد",
+          "detail_text_ar": ""
         }
       ],
-      "note": "Pour connaître les disponibilités à jour, contactez notre équipe."
+      "note": "Pour connaître les disponibilités à jour, contactez notre équipe.",
+      "intro_ar": "3 أنماط — انقروا على «عرض التفاصيل» للاطلاع على المخططات المتوفرة",
+      "note_ar": "لمعرفة التوفر المحدَّث، تواصلوا مع فريقنا."
     },
     "typebien_opts": [
       "F2",
@@ -556,7 +774,19 @@
       "F4"
     ],
     "card_image": "villa-christina.jpg",
-    "google_maps": "https://www.google.com/maps/search/?api=1&query=Hydra%2C+Alger%2C+Alg%C3%A9rie"
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Hydra%2C+Alger%2C+Alg%C3%A9rie",
+    "name_ar": "كريستينا",
+    "kicker": "L'art de vivre en toute exclusivité",
+    "kicker_ar": "التوازن المثالي بين الأناقة والراحة والتراث",
+    "loc_full_ar": "حيدرة، الجزائر العاصمة",
+    "typologie_ar": "F2، F3، F4 وبنتهاوس",
+    "description_ar": "فيلا كريستينا مسكن راقٍ يقع في قلب حيدرة، إحدى أرقى عناوين الجزائر العاصمة. تتألف من كتلتين سكنيتين و22 شقة فقط، وتوفر إطار حياة منسجماً يجمع بين الأناقة المعمارية والراحة العصرية والخدمات الفاخرة. مصمَّمة لتلبية متطلبات العائلات والمستثمرين على حد سواء، تقترح فيلا كريستينا فضاءات معيشية راقية في بيئة آمنة تُثمّن استثماركم.",
+    "typebien_opts_ar": [
+      "F2",
+      "F3",
+      "F4"
+    ],
+    "loc_ar": "حيدرة"
   },
   {
     "slug": "villa-catrina",
@@ -571,91 +801,112 @@
     "feats": [
       [
         "archi",
-        "Architecture néoclassique élégante"
+        "Architecture néoclassique élégante",
+        "عمارة نيوكلاسيكية أنيقة"
       ],
       [
         "blocs",
-        "Résidence composée de 2 blocs"
+        "Résidence composée de 2 blocs",
+        "مسكن مؤلف من كتلتين"
       ],
       [
         "typo",
-        "Typologies F3, F4, F5"
+        "Typologies F3, F4, F5",
+        "أنماط F3، F4، F5"
       ],
       [
         "galerie",
-        "Galerie commerciale"
+        "Galerie commerciale",
+        "رواق تجاري"
       ],
       [
         "marbre",
-        "Marbre italien & parquet naturel"
+        "Marbre italien & parquet naturel",
+        "رخام إيطالي وباركيه طبيعي"
       ],
       [
         "clim",
-        "Climatisation & chauffage centralisés"
+        "Climatisation & chauffage centralisés",
+        "تكييف وتدفئة مركزيان"
       ],
       [
         "parking",
-        "Parking en sous-sol"
+        "Parking en sous-sol",
+        "مواقف سيارات في الطابق السفلي"
       ],
       [
         "ascenseur",
-        "Ascenseurs"
+        "Ascenseurs",
+        "مصاعد"
       ],
       [
         "securite",
-        "Sécurité 24 h/24"
+        "Sécurité 24 h/24",
+        "أمن على مدار الساعة"
       ],
       [
         "isolation",
-        "Isolation thermique & acoustique performante"
+        "Isolation thermique & acoustique performante",
+        "عزل حراري وصوتي عالي الأداء"
       ],
       [
         "domotique",
-        "Domotique personnalisable"
+        "Domotique personnalisable",
+        "نظام منزل ذكي قابل للتخصيص"
       ]
     ],
     "gallery": [
       [
         "villa-catrina.jpg",
-        "Façade"
+        "Façade",
+        "الواجهة"
       ],
       [
         "catrina-sec-1.jpg",
-        "Extérieur"
+        "Extérieur",
+        "الخارج"
       ],
       [
         "catrina-sec-2.jpg",
-        "Entrée"
+        "Entrée",
+        "المدخل"
       ],
       [
         "catrina-int-sejour.jpg",
-        "Séjour"
+        "Séjour",
+        "الصالون"
       ],
       [
         "catrina-int-cuisine.jpg",
-        "Cuisine"
+        "Cuisine",
+        "المطبخ"
       ],
       [
         "catrina-int-chambre-parentale.jpg",
-        "Chambre parentale"
+        "Chambre parentale",
+        "الغرفة الرئيسية"
       ],
       [
         "catrina-int-terrasse.jpg",
-        "Terrasse"
+        "Terrasse",
+        "الشرفة"
       ]
     ],
     "plans": [
       [
         "catrina-fiche-f4-138.jpg",
-        "Simplex F4 — 138 m²"
+        "Simplex F4 — 138 m²",
+        "F4 سيمبلكس — 138 م²"
       ],
       [
         "catrina-plan-2.jpg",
-        "Plan — Niveau 2"
+        "Plan — Niveau 2",
+        "مخطط — الطابق 2"
       ],
       [
         "catrina-plan-3.jpg",
-        "Plan — Niveau 3"
+        "Plan — Niveau 3",
+        "مخطط — الطابق 3"
       ]
     ],
     "interior": [
@@ -666,6 +917,12 @@
           "Cuisine entièrement équipée et aménagée",
           "Finitions haut de gamme, plan de travail marbré",
           "Électroménager encastré de qualité"
+        ],
+        "المطبخ",
+        [
+          "مطبخ مجهز بالكامل ومهيأ",
+          "تشطيبات راقية وسطح عمل رخامي",
+          "أجهزة كهرومنزلية مدمجة عالية الجودة"
         ]
       ],
       [
@@ -675,6 +932,12 @@
           "Séjour spacieux, volumes généreux",
           "Décoration soignée et intemporelle",
           "Parquet bois chaleureux"
+        ],
+        "الصالون وغرفة الطعام",
+        [
+          "صالون واسع بأحجام سخية",
+          "ديكور أنيق وخالد",
+          "باركيه خشبي دافئ"
         ]
       ],
       [
@@ -684,6 +947,12 @@
           "Suite parentale spacieuse",
           "Literie premium et linge de qualité",
           "Décoration soignée, tons neutres et élégants"
+        ],
+        "الغرفة الرئيسية",
+        [
+          "جناح رئيسي واسع",
+          "فراش فاخر وبياضات عالية الجودة",
+          "ديكور أنيق بألوان محايدة وراقية"
         ]
       ],
       [
@@ -693,6 +962,12 @@
           "Espace extérieur privé prolongeant le séjour",
           "Idéale pour les repas et moments de détente",
           "Sol en pierre naturelle"
+        ],
+        "الشرفة",
+        [
+          "فضاء خارجي خاص يمتد من الصالون",
+          "مثالية لتناول الوجبات ولحظات الاسترخاء",
+          "أرضية من الحجر الطبيعي"
         ]
       ],
       [
@@ -702,6 +977,12 @@
           "Douche à l'italienne, finitions haut de gamme",
           "Double vasque, marbre Crema Marfil",
           "Ambiance spa, chaleureuse et raffinée"
+        ],
+        "الحمام",
+        [
+          "دش إيطالي وتشطيبات راقية",
+          "مغسلتان برخام كريما مارفيل",
+          "أجواء سبا دافئة وراقية"
         ]
       ]
     ],
@@ -714,7 +995,11 @@
           "status_label": "À confirmer",
           "confirmed": false,
           "detail_text": "Plan détaillé disponible sur demande.",
-          "detail_images": []
+          "detail_images": [],
+          "name_ar": "F3",
+          "count_ar": "قيد التأكيد",
+          "status_label_ar": "قيد التأكيد",
+          "detail_text_ar": "المخطط التفصيلي متوفر عند الطلب."
         },
         {
           "name": "F4",
@@ -724,7 +1009,11 @@
           "detail_text": "Simplex, 138 m² (125 m² habitable + 13 m² terrasse) — fiche technique avec surfaces détaillées par pièce.",
           "detail_images": [
             "catrina-fiche-f4-138.jpg"
-          ]
+          ],
+          "name_ar": "F4",
+          "count_ar": "قيد التأكيد",
+          "status_label_ar": "قيد التأكيد",
+          "detail_text_ar": "سيمبلكس، 138 م² (125 م² مساحة معيشة + 13 م² شرفة) — بطاقة تقنية بمساحات تفصيلية لكل غرفة."
         },
         {
           "name": "F5",
@@ -732,10 +1021,16 @@
           "status_label": "À confirmer",
           "confirmed": false,
           "detail_text": "Plan détaillé disponible sur demande.",
-          "detail_images": []
+          "detail_images": [],
+          "name_ar": "F5",
+          "count_ar": "قيد التأكيد",
+          "status_label_ar": "قيد التأكيد",
+          "detail_text_ar": "المخطط التفصيلي متوفر عند الطلب."
         }
       ],
-      "note": "Pour connaître les disponibilités à jour, contactez notre équipe."
+      "note": "Pour connaître les disponibilités à jour, contactez notre équipe.",
+      "intro_ar": "3 أنماط — انقروا على «عرض التفاصيل» للاطلاع على البطاقة التقنية لكل نمط",
+      "note_ar": "لمعرفة التوفر المحدَّث، تواصلوا مع فريقنا."
     },
     "typebien_opts": [
       "F3",
@@ -743,6 +1038,18 @@
       "F5"
     ],
     "card_image": "villa-catrina.jpg",
-    "google_maps": "https://www.google.com/maps/search/?api=1&query=Bir+Mourad+Ra%C3%AFs%2C+Alger%2C+Alg%C3%A9rie"
+    "google_maps": "https://www.google.com/maps/search/?api=1&query=Bir+Mourad+Ra%C3%AFs%2C+Alger%2C+Alg%C3%A9rie",
+    "name_ar": "كاترينا",
+    "kicker": "L'art de vivre en toute exclusivité",
+    "kicker_ar": "عنوان استثنائي ببئر مراد رايس",
+    "loc_full_ar": "بئر مراد رايس، الجزائر العاصمة",
+    "typologie_ar": "F3، F4، F5",
+    "description_ar": "تقع في موقع مثالي ببئر مراد رايس، في قلب حي العيون، وتجسّد فيلا كاترينا أناقة مسكن راقٍ مستلهَم من العمارة النيوكلاسيكية. تتألف من كتلتين سكنيتين ورواق تجاري، وتقترح شققاً فسيحة تُجمَّل بمواد نبيلة وتشطيبات راقية. عنوان متميز تتلاقى فيه الفخامة والراحة وجودة الحياة لتقديم تراث دائم في أحد أكثر المناطق طلباً بالجزائر العاصمة.",
+    "typebien_opts_ar": [
+      "F3",
+      "F4",
+      "F5"
+    ],
+    "loc_ar": "بئر مراد رايس"
   }
 ]

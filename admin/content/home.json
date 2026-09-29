@@ -10,17 +10,26 @@
     {
       "value": "25 ans",
       "label": "Expérience",
-      "detail": "Plus de 25 ans d'expérience algéro-allemande dans la promotion immobilière haut de gamme."
+      "detail": "Plus de 25 ans d'expérience algéro-allemande dans la promotion immobilière haut de gamme.",
+      "value_ar": "25 سنة",
+      "label_ar": "خبرة",
+      "detail_ar": "خبرة تفوق 25 سنة في إنجاز شقق فاخرة وفيلات ومجمعات عقارية جزائرية-ألمانية راقية."
     },
     {
       "value": "4",
       "label": "Résidences",
-      "detail": "4 résidences de prestige actuellement en développement à Alger."
+      "detail": "4 résidences de prestige actuellement en développement à Alger.",
+      "value_ar": "4",
+      "label_ar": "مساكن",
+      "detail_ar": "4 مساكن راقية قيد التطوير حالياً بالجزائر العاصمة."
     },
     {
       "value": "100 %",
       "label": "Finitions",
-      "detail": "100 % des finitions respectent les normes de qualité européennes."
+      "detail": "100 % des finitions respectent les normes de qualité européennes.",
+      "value_ar": "100%",
+      "label_ar": "التشطيبات",
+      "detail_ar": "100% من التشطيبات تلتزم بأرقى معايير الجودة الأوروبية."
     }
   ],
   "featured_villas": [
@@ -29,5 +38,12 @@
     "villa-christina",
     "villa-catrina"
   ],
-  "extra_sections": []
+  "extra_sections": [],
+  "hero_title_ar": "",
+  "hero_accent_ar": "",
+  "hero_lede_ar": "25 عاماً من الخبرة الجزائرية الألمانية في خدمة مساكن راقية بالجزائر العاصمة.",
+  "manifesto_kicker_ar": "نيو إيرا للترقية العقارية",
+  "manifesto_claim_ar": "نبني اليوم",
+  "manifesto_claim_accent_ar": "قيمة الغد",
+  "manifesto_sub_ar": "New Era لا تسلّم مجرد عمارات — بل تصمم إرثاً يدوم عبر الزمن."
 }

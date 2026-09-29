@@ -12,5 +12,11 @@
   "smtp_sender_name": "New Era — Site Web",
   "cta_float_enabled": true,
   "cta_minibar_enabled": true,
-  "cta_rdv_modal_enabled": true
+  "cta_rdv_modal_enabled": true,
+  "social_facebook": "",
+  "social_instagram": "",
+  "social_linkedin": "",
+  "social_tiktok": "",
+  "social_youtube": "",
+  "social_x": ""
 }

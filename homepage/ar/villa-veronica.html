@@ -47,12 +47,12 @@
   <button class="btn btn-fill">احجز موعداً</button>
 </div>
 
+<!-- VILLA SPLIT — a persistent photo pane pinned beside a scrolling dossier column -->
 <section class="villa-split" id="top">
   <div class="villa-split-media">
     <img id="villaSplitImg" class="ken-burns" src="../assets/villa-veronica.jpg" alt="فيلا فيرونيكا — واجهة نيوكلاسيكية">
     <div class="vhero-overlay">
       <div class="thumb-scrim"></div>
-      <div class="res-progress-circle" style="--pct:50"><div class="res-progress-circle-inner"><span>50%</span></div></div>
       <div class="res-overlay-info"><b>فيلا فيرونيكا</b><span>حيدرة، الجزائر العاصمة · 7 شقق</span></div>
       <div class="scroll-cue" aria-hidden="true"></div>
     </div>
@@ -70,6 +70,7 @@
       <div class="v-chips">
         <span class="v-chip">25 سنة من الخبرة</span>
         <span class="v-chip">شراكة جزائرية-ألمانية</span>
+        <!-- AVANCEMENT:START --><span class="v-chip v-chip--progress" role="img" aria-label="نسبة التقدّم : 50%" title="نسبة التقدّم">50%</span><!-- AVANCEMENT:END -->
       </div>
       <div class="vfacts vs-facts">
         <div class="stat"><b><a class="vs-loc-link" href="https://www.google.com/maps/search/?api=1&amp;query=Hydra%2C+Alger%2C+Alg%C3%A9rie" target="_blank" rel="noopener" data-maps-link>حيدرة، الجزائر العاصمة</a></b><span>الموقع</span></div>
@@ -79,10 +80,10 @@
       </div>
       <div class="vactions">
         <button class="btn btn-fill">احجز موعداً</button>
-        <a class="share-btn" href="https://wa.me/?text=%D9%81%D9%8A%D9%84%D8%A7%20فيرونيكا%20%E2%80%94%20New%20Era" target="_blank" rel="noopener">
+        <button class="share-btn" type="button" data-share-title="فيلا فيرونيكا" data-share-text="فيلا فيرونيكا — حيدرة، الجزائر العاصمة. تقع في قلب حيدرة، أحد أكثر الأحياء المرغوبة بالجزائر العاصمة، وهي مسكن حصري يجمع بين العمارة النيوكلاسيكية والخدمات الفاخرة وإطار الحياة الم" data-share-url="https://newera-promotion.com/ar/villa-veronica.html">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           مشاركة
-        </a>
+        </button>
       </div>
     </div>
 
@@ -114,23 +115,40 @@
       <div class="kicker"><span class="num">03</span></div>
       <h2 class="h3">المواصفات</h2>
       <ul class="vs-feat-list">
-        <li>عمارة نيوكلاسيكية أنيقة</li>
-        <li>مسكن حصري من 7 شقق</li>
-        <li>أنماط F3، F4، F5 وبنتهاوس</li>
-        <li>رخام إيطالي وباركيه طبيعي</li>
-        <li>تكييف وتدفئة مركزيان</li>
-        <li>مواقف سيارات في الطابق السفلي</li>
-        <li>مصاعد</li>
-        <li>أمن على مدار الساعة والتحكم في الدخول</li>
-        <li>عزل حراري وصوتي عالي الأداء</li>
-        <li>نظام منزل ذكي قابل للتخصيص</li>
+        <li><svg class="feat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h1M9 13h1M14 9h1M14 13h1"/></svg><span>عمارة نيوكلاسيكية أنيقة</span></li>
+        <li><svg class="feat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 10h18M9 10v10"/></svg><span>أنماط F3، F4، F5 وبنتهاوس</span></li>
+        <li><svg class="feat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></svg><span>رخام إيطالي وباركيه طبيعي</span></li>
+        <li><svg class="feat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M4.2 7l15.6 10M4.2 17L19.8 7"/></svg><span>تكييف وتدفئة مركزيان</span></li>
+        <li><svg class="feat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 16V8h4a3 3 0 0 1 0 6H9"/></svg><span>مواقف سيارات في الطابق السفلي</span></li>
+        <li><svg class="feat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg><span>أمن على مدار الساعة والتحكم في الدخول</span></li>
+        <li><svg class="feat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9l5-5 5 5M7 15l5 5 5-5"/></svg><span>مصاعد</span></li>
+        <li><svg class="feat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span>عزل حراري وصوتي عالي الأداء</span></li>
+        <li><svg class="feat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12l9-9 9 9M5 10v10h5v-6h4v6h5V10"/></svg><span>نظام منزل ذكي قابل للتخصيص</span></li>
       </ul>
+    </div>
+
+    <!-- DISPONIBILITÉ -->
+    <div class="vs-block">
+      <div class="kicker"><span class="num">04</span></div>
+      <h2 class="h3">التوفر</h2>
+      <p class="lede">اطّلعوا على تفاصيل الشقق المتوفرة في فيلا فيرونيكا، حسب النمط.</p>
+      <button class="btn btn-fill" id="dispoOpen">عرض التوفر</button>
+    </div>
+
+    <!-- LOCALISATION -->
+    <div class="vs-block">
+      <div class="kicker"><span class="num">05</span></div>
+      <h2 class="h3">الموقع</h2>
+      <p class="lede">فيلا فيرونيكا — حيدرة، الجزائر العاصمة. <a class="vs-loc-link" href="https://www.google.com/maps/search/?api=1&amp;query=Hydra%2C+Alger%2C+Alg%C3%A9rie" target="_blank" rel="noopener">عرض الاتجاهات على خرائط جوجل</a></p>
+      <div class="map-embed">
+        <iframe src="https://maps.google.com/maps?q=Hydra%2C%20Alger%2C%20Alg%C3%A9rie&amp;t=&amp;z=15&amp;ie=UTF8&amp;iwloc=&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="الموقع فيلا فيرونيكا"></iframe>
+      </div>
     </div>
 
     <!-- MATÉRIAUX -->
 <!-- FINITIONS:START -->
     <div class="vs-block dark" id="finitions">
-      <div class="kicker on-dark"><span class="num">04</span></div>
+      <div class="kicker on-dark"><span class="num">06</span></div>
       <h2 class="h3">فن بناء الاستثناء</h2>
       <p class="lede">حجر منحوت، زخارف أنيقة وحديد مطروق استثنائي تُشكّل هوية New Era.</p>
       <div class="gallery-swiper on-dark fin-swiper">
@@ -168,7 +186,7 @@
 
     <!-- PLAN 3D -->
     <div class="vs-block">
-      <div class="kicker"><span class="num">05</span></div>
+      <div class="kicker"><span class="num">07</span></div>
       <h2 class="h3">المخطط ثلاثي الأبعاد</h2>
       <p class="lede">مخططات الأنماط المتوفرة في فيلا فيرونيكا — انقروا على مخطط لتكبيره.</p>
       <div class="fan-carousel plans" id="planFan">
@@ -180,17 +198,9 @@
       </div>
     </div>
 
-    <!-- DISPONIBILITÉ -->
-    <div class="vs-block">
-      <div class="kicker"><span class="num">06</span></div>
-      <h2 class="h3">التوفر</h2>
-      <p class="lede">اطّلعوا على تفاصيل الشقق المتوفرة في فيلا فيرونيكا، حسب النمط.</p>
-      <button class="btn btn-fill" id="dispoOpen">عرض التوفر</button>
-    </div>
-
     <!-- INTÉRIEUR -->
     <div class="vs-block">
-      <div class="kicker"><span class="num">07</span></div>
+      <div class="kicker"><span class="num">08</span></div>
       <h2 class="h3">الداخل</h2>
       <p class="lede">لمحة عن فضاءات المعيشة في فيلا فيرونيكا.</p>
       <div class="gallery-swiper">
@@ -280,6 +290,7 @@
 <footer class="sitefooter">
   <div class="logo-badge"><img src="../assets/logo-wordmark-white.png" alt="New Era"></div>
   <div class="fnav"><a href="index.html">الرئيسية</a><a href="villa-agata.html">أغاتا</a><a href="villa-veronica.html">فيرونيكا</a><a href="villa-christina.html">كريستينا</a><a href="villa-catrina.html">كاترينا</a><a href="a-propos.html">من نحن</a><a href="opportunites.html">الفرص العقارية</a><a href="index.html#contact">اتصل بنا</a></div>
+  <!-- SOCIAL:START --><!-- SOCIAL:END -->
   <div class="fcopy">© New Era للترقية العقارية</div>
 </footer>
 
