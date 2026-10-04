@@ -125,6 +125,11 @@ input,textarea,select{font-family:inherit;}
 .list-editor .row{display:flex;gap:8px;align-items:center;margin-bottom:8px;}
 .list-editor .row input{flex:1;}
 .list-editor .row button{flex-shrink:0;width:30px;height:30px;border-radius:6px;border:1px solid var(--line);background:#fff;color:var(--red);font-size:15px;line-height:1;}
+/* Bouton d'icône dans une ligne de liste : taille normale (il héritait du
+   format 30×30 des boutons ✕, le nom de l'icône débordait au-dessus). */
+.list-editor .row .icon-picker-slot{flex:none;}
+.list-editor .row .icon-picker-slot .field{margin:0;}
+.list-editor .row .icon-picker-btn{width:auto;min-width:128px;height:36px;padding:0 10px;color:var(--text);font-size:12.5px;}
 .list-editor .add{margin-top:4px;}
 
 .dispo-item{border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:12px;}

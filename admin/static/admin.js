@@ -541,7 +541,7 @@
     function draw(){
       var html = '<div class="panel"><h3>Caractéristiques</h3><p class="desc">La liste affichée dans la section « Caractéristiques » de la fiche. Cliquez sur l\'icône pour la changer. Second champ : le libellé de la page arabe.</p><div class="list-editor">';
       v.feats.forEach(function(f, i){
-        html += '<div class="row"><div class="icon-picker-slot" data-icon-i="' + i + '"></div><input type="text" value="' + esc(f[1]) + '" data-i="' + i + '">' + bf(f, 2, "villas", {ar: true, placeholder: "بالعربية"}) + '<button data-i="' + i + '">✕</button></div>';
+        html += '<div class="row"><div class="icon-picker-slot" data-icon-i="' + i + '"></div><input type="text" value="' + esc(f[1]) + '" data-i="' + i + '" placeholder="Libellé (ex : Ascenseur)">' + bf(f, 2, "villas", {ar: true, placeholder: "بالعربية"}) + '<button type="button" class="row-del" data-i="' + i + '" title="Supprimer la ligne">✕</button></div>';
       });
       html += '</div><button class="btn btn-sm add" id="addFeat">+ Ajouter une ligne</button></div>';
       body.innerHTML = html;
@@ -556,7 +556,10 @@
       body.querySelectorAll(".row input:not([data-bid])").forEach(function(inp){
         inp.addEventListener("input", function(){ v.feats[Number(inp.getAttribute("data-i"))][1] = inp.value; debounceSave("villas"); });
       });
-      body.querySelectorAll(".row button").forEach(function(btn){
+      // Uniquement les boutons ✕ : le bouton d'icône est lui aussi dans la
+      // ligne, et le sélectionner ici supprimait la 1re ligne à chaque clic
+      // sur une icône (texte perdu, lignes qui disparaissent).
+      body.querySelectorAll(".row .row-del").forEach(function(btn){
         btn.addEventListener("click", function(){ v.feats.splice(Number(btn.getAttribute("data-i")),1); saveSection("villas"); draw(); });
       });
       document.getElementById("addFeat").addEventListener("click", function(){

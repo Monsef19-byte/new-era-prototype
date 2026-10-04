@@ -683,16 +683,15 @@ def apply_float_cta(html, settings, lang='fr'):
 BLOG_LINK_HTML = '<a href="blog.html">Blog</a>\n    '
 
 def apply_blog_nav(html, settings):
-    enabled = settings.get('enable_blog', False)
-    has_link = 'href="blog.html"' in html
-    if enabled and not has_link:
-        html = html.replace('<a href="opportunites.html">Opportunités</a>\n',
-                             '<a href="opportunites.html">Opportunités</a>\n    <a href="blog.html">Blog</a>\n', 1)
-        # second occurrence lives in the mobile menu block
-        html = html.replace('<a href="opportunites.html">Opportunités</a>\n',
-                             '<a href="opportunites.html">Opportunités</a>\n    <a href="blog.html">Blog</a>\n', 1)
-    if not enabled and has_link:
-        html = re.sub(r'\s*<a href="blog\.html">Blog</a>\n?', '\n', html)
+    """Lien « Blog » du menu (ordinateur + menu mobile), juste après
+    « Opportunités ». Idempotent : on retire d'abord tout lien Blog existant
+    puis on le remet une seule fois par menu si le blog est activé. (L'ancienne
+    version insérait deux fois dans le menu ordinateur et jamais dans le menu
+    mobile, car le 2e remplacement retombait sur le lien qu'il venait de créer.)"""
+    html = re.sub(r'\n?[ \t]*<a href="blog\.html">Blog</a>[ \t]*(?=\n)', '', html)
+    if settings.get('enable_blog', False):
+        html = re.sub(r'(<a href="opportunites\.html">Opportunités</a>)(\n)',
+                      r'\1\n    <a href="blog.html">Blog</a>\2', html)
     return html
 
 def set_section_hidden(html, section_open_tag, hidden):
