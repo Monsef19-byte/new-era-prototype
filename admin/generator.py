@@ -656,6 +656,11 @@ def apply_contact(html, settings):
         html = re.sub(r'tel:\+?\d{8,15}', 'tel:' + tel, html)
     if wa:
         html = re.sub(r'wa\.me/\d{8,15}', 'wa.me/' + wa, html)
+    # E-mail du bouton « Nous écrire » de la fenêtre de rendez-vous (main.js) :
+    # il gardait une ancienne adresse au lieu de celle des Réglages.
+    email = (settings.get('email') or '').strip()
+    if email and re.fullmatch(r'[^@\s"\'<>]+@[^@\s"\'<>]+\.[A-Za-z]{2,}', email):
+        html = re.sub(r'mailto:[^"\'<>\s?]+', 'mailto:' + email, html)
     return html
 
 PHONE_SVG = ('<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'

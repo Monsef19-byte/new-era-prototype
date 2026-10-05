@@ -570,8 +570,21 @@ if(vsMedia){
   var ctaFlags = window.NEWERA_CTA_FLAGS || {};
   if(ctaFlags.rdvModal === false) return;
   var CAL_ICON = '<svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
+  // Pages arabes (<html lang="ar">) : mêmes boutons, libellé « احجز موعداً »
+  // — ils n'ouvraient rien car seul le libellé français était reconnu.
+  var IS_AR = (document.documentElement.getAttribute('lang') || '').indexOf('ar') === 0;
+  var RDV_LABELS = ['Prendre rendez-vous', 'احجز موعداً', 'احجز موعدا'];
+  var T = IS_AR ? {
+    close: 'إغلاق', title: 'احجز موعداً',
+    lead: 'اختاروا الطريقة الأنسب لكم للتواصل مع نيو إيرا.',
+    call: 'اتصلوا بنا', mail: 'راسلونا عبر البريد الإلكتروني', form: 'املؤوا الاستمارة'
+  } : {
+    close: 'Fermer', title: 'Prendre rendez-vous',
+    lead: 'Choisissez la façon la plus simple pour vous d’entrer en contact avec New Era.',
+    call: 'Nous appeler', mail: 'Nous écrire un email', form: 'Remplir le formulaire'
+  };
   var textTriggers = Array.prototype.slice.call(document.querySelectorAll('button, a')).filter(function(el){
-    return el.textContent.trim() === 'Prendre rendez-vous';
+    return RDV_LABELS.indexOf(el.textContent.trim()) !== -1;
   });
   var attrTriggers = Array.prototype.slice.call(document.querySelectorAll('[data-rdv-trigger]'));
   var triggers = textTriggers.concat(attrTriggers);
@@ -590,13 +603,13 @@ if(vsMedia){
   var formHref = hasRdvForm ? '#rdv' : 'villa-agata.html#rdv';
   modal.innerHTML =
     '<div class="rdv-modal-box">' +
-      '<button class="rdv-modal-close" id="rdvModalClose" aria-label="Fermer">✕</button>' +
-      '<h3>Prendre rendez-vous</h3>' +
-      '<p>Choisissez la façon la plus simple pour vous d’entrer en contact avec New Era.</p>' +
+      '<button class="rdv-modal-close" id="rdvModalClose" aria-label="' + T.close + '">✕</button>' +
+      '<h3>' + T.title + '</h3>' +
+      '<p>' + T.lead + '</p>' +
       '<div class="rdv-modal-actions">' +
-        '<a href="tel:+213798222135"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Nous appeler</a>' +
-        '<a href="mailto:contact@newera-immobilier.dz"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>Nous écrire un email</a>' +
-        '<a href="' + formHref + '" id="rdvModalForm"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Remplir le formulaire</a>' +
+        '<a href="tel:+213798222135"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>' + T.call + '</a>' +
+        '<a href="mailto:contact@newera-immobilier.dz"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>' + T.mail + '</a>' +
+        '<a href="' + formHref + '" id="rdvModalForm"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>' + T.form + '</a>' +
       '</div>' +
     '</div>';
   document.body.appendChild(modal);

@@ -21,6 +21,12 @@ html[dir="rtl"] .mobile-menu-links a{
 
 /* logo mirrors to the opposite corner */
 html[dir="rtl"] .logo-fixed{left:auto;right:calc(var(--gutter) - 14px);}
+/* Le logo passe à droite : l'espace réservé dans l'en-tête doit le suivre,
+   sinon « الرئيسية » et « مساكننا » passent sous le logo. */
+@media (min-width:901px){
+  html[dir="rtl"] .site-header,
+  html[dir="rtl"] .site-header.solid{padding-left:var(--gutter);padding-right:calc(clamp(120px,9.5vw,168px) + var(--gutter) + 20px);}
+}
 
 /* header: flex row axis already flips with direction:rtl; only fix the
    auto-margin push and hover underline, which are physical properties */

@@ -289,6 +289,7 @@ class handler(BaseHTTPRequestHandler):
             "code": code,
             "page": clean(payload.get("page"), 200),
             "fields": fields,
+            "status": "new",
         }
 
         # 1) STORE FIRST — the lead must never be lost even if email fails below.

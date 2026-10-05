@@ -3,6 +3,10 @@
 leads.py — admin-only. Lists stored leads (Vercel Blob, prefix "leads/")
 and returns basic statistics for the dashboard "Leads" page. Session-authed
 like every other admin endpoint (ne_session cookie).
+
+POST {id, status: "new"|"handled"} marque une demande comme traitée (ou
+nouvelle). Une demande sans statut (reçue avant cette fonction) compte comme
+« new » : c'est ce compteur qu'affiche la pastille du menu du dashboard.
 """
 import os
 import re
@@ -14,6 +18,7 @@ import urllib.request
 import urllib.parse
 import urllib.error
 from http.server import BaseHTTPRequestHandler
+from concurrent.futures import ThreadPoolExecutor
 
 BLOB_TOKEN = os.environ.get("BLOB_READ_WRITE_TOKEN", "")
 # Espace de noms Blob : la production lit et écrit à la racine (content/…,
@@ -84,6 +89,24 @@ def blob_get_bytes_url(url):
         return None
 
 
+def blob_put_json(pathname, obj):
+    data = json.dumps(obj, ensure_ascii=False, indent=2).encode("utf-8")
+    url = "https://blob.vercel-storage.com/" + urllib.parse.quote(BLOB_NS + pathname)
+    req = urllib.request.Request(url, data=data, method="PUT", headers=_blob_headers({
+        "x-content-type": "application/json; charset=utf-8",
+        "x-add-random-suffix": "0",
+        "x-allow-overwrite": "1",
+        "x-cache-control-max-age": "60",
+    }))
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
+
+def fresh(url):
+    """URL publique du blob sans le cache CDN (statut modifié juste avant)."""
+    return (url or "") + ("&" if "?" in (url or "") else "?") + "t=" + str(int(time.time() * 1000))
+
+
 def send_json(handler, obj, status=200):
     body = json.dumps(obj, ensure_ascii=False).encode("utf-8")
     handler.send_response(status)
@@ -99,17 +122,25 @@ class handler(BaseHTTPRequestHandler):
             return send_json(self, {"error": "unauthorized"}, 401)
 
         blobs = [b for b in blob_list("leads/") if b.get("pathname", "").endswith(".json")]
-        leads = []
-        for b in blobs:
-            raw = blob_get_bytes_url(b.get("url"))
+        # Lectures en parallèle : le dashboard interroge cette route chaque
+        # minute pour la pastille « Demandes reçues » ; en série, quelques
+        # centaines de demandes dépasseraient le délai d'une fonction Vercel.
+        def _read(b):
+            raw = blob_get_bytes_url(fresh(b.get("url")))
             if not raw:
-                continue
+                return None
             try:
-                leads.append(json.loads(raw.decode("utf-8")))
+                return json.loads(raw.decode("utf-8"))
             except Exception:
-                continue
+                return None
+        with ThreadPoolExecutor(max_workers=16) as pool:
+            leads = [l for l in pool.map(_read, blobs) if isinstance(l, dict)]
 
         leads.sort(key=lambda l: l.get("ts", 0), reverse=True)
+        for l in leads:
+            if l.get("status") not in ("new", "handled"):
+                l["status"] = "new"
+        new_count = sum(1 for l in leads if l["status"] == "new")
 
         stats_by_code = {}
         for l in leads:
@@ -122,6 +153,38 @@ class handler(BaseHTTPRequestHandler):
         send_json(self, {
             "leads": leads[:500],
             "total": len(leads),
+            "new": new_count,
             "last_30_days": last_30_days,
             "by_code": stats_by_code,
         })
+
+    def do_POST(self):
+        if not is_authed(self.headers):
+            return send_json(self, {"error": "unauthorized"}, 401)
+        try:
+            length = int(self.headers.get("Content-Length", 0))
+            body = json.loads((self.rfile.read(length) if length else b"{}").decode("utf-8") or "{}")
+        except Exception:
+            return send_json(self, {"error": "invalid json"}, 400)
+        lead_id = str(body.get("id") or "")
+        status = body.get("status")
+        if not re.fullmatch(r"[A-Za-z0-9_-]{4,80}", lead_id) or status not in ("new", "handled"):
+            return send_json(self, {"error": "Corps invalide : 'id' et 'status' ('new'|'handled') requis."}, 400)
+        pathname = "leads/" + lead_id + ".json"
+        match = [b for b in blob_list(pathname) if b.get("pathname") == pathname]
+        if not match:
+            return send_json(self, {"error": "Demande introuvable."}, 404)
+        raw = blob_get_bytes_url(fresh(match[0].get("url")))
+        if not raw:
+            return send_json(self, {"error": "Lecture impossible."}, 502)
+        try:
+            lead = json.loads(raw.decode("utf-8"))
+        except Exception:
+            return send_json(self, {"error": "Demande illisible."}, 502)
+        lead["status"] = status
+        lead["status_at"] = int(time.time())
+        try:
+            blob_put_json(pathname, lead)
+        except Exception as e:
+            return send_json(self, {"error": "Enregistrement impossible : " + str(e)}, 500)
+        send_json(self, {"ok": True, "id": lead_id, "status": status})

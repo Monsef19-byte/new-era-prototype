@@ -1302,18 +1302,16 @@
   };
   function renderLeads(){
     contentEl.innerHTML = '<div class="empty">Chargement des demandes…</div>';
-    fetch("/api/leads").then(function(r){
-      if(r.status === 401){ window.location.href = "/login"; throw new Error("unauthorized"); }
-      return r.json();
-    }).then(function(data){
-      LEADS_CACHE = data;
-      paintLeads(data);
+    checkLeads(false).then(function(data){
+      if(VIEW === "leads") paintLeads(data);
     }).catch(function(){
       contentEl.innerHTML = '<div class="empty">Impossible de charger les demandes.</div>';
     });
   }
   function paintLeads(data){
+    var nNew = (data.leads || []).filter(function(l){ return l.status !== "handled"; }).length;
     var statsHtml = '<div class="panel"><h3>Statistiques</h3><div class="grid2">' +
+      field("Non traitées", '<div style="font-size:22px;font-weight:700;color:var(--red);">' + nNew + '</div>') +
       field("Total des demandes", '<div style="font-size:22px;font-weight:700;">' + data.total + '</div>') +
       field("30 derniers jours", '<div style="font-size:22px;font-weight:700;">' + data.last_30_days + '</div>') +
       '</div><div class="hint" style="margin-top:10px;">' +
@@ -1325,21 +1323,123 @@
 
     var rows = (data.leads || []).map(function(l){
       var f = l.fields || {};
-      return '<tr><td>' + esc(l.received_at || '') + '</td>' +
+      var isNew = l.status !== "handled";
+      return '<tr class="' + (isNew ? 'lead-new' : 'lead-done') + '"><td>' + esc(l.received_at || '') + '</td>' +
         '<td>' + esc(l.type_label || '') + ' — ' + esc(l.subtype_label || '') + '</td>' +
         '<td>' + esc(f['Nom & Prénom'] || '') + '</td>' +
         '<td>' + esc(f['Téléphone'] || '') + '</td>' +
         '<td>' + esc(f['Email'] || '') + '</td>' +
-        '<td><code>' + esc(l.code || '') + '</code></td></tr>';
+        '<td><code>' + esc(l.code || '') + '</code></td>' +
+        '<td><span class="lead-status ' + (isNew ? 'is-new' : 'is-done') + '">' + (isNew ? 'Nouvelle' : 'Traitée') + '</span></td>' +
+        '<td><button type="button" class="btn btn-sm lead-toggle" data-id="' + esc(l.id || '') + '" data-next="' + (isNew ? 'handled' : 'new') + '">' + (isNew ? 'Marquer traitée' : 'Marquer nouvelle') + '</button></td></tr>';
     }).join('');
 
     var tableHtml = '<div class="panel"><h3>Toutes les demandes (' + (data.leads || []).length + ' affichées)</h3>' +
-      (rows ? '<table class="leads-table"><thead><tr><th>Reçu le</th><th>Type</th><th>Nom</th><th>Téléphone</th><th>Email</th><th>Code CRM</th></tr></thead><tbody>' + rows + '</tbody></table>'
+      (nNew ? '<p class="desc">Les demandes non traitées sont signalées par la pastille rouge du menu. Marquez-les « traitées » une fois la personne recontactée. <button type="button" class="btn btn-sm" id="leadsAllDone">Tout marquer comme traité (' + nNew + ')</button></p>' : '') +
+      (rows ? '<table class="leads-table"><thead><tr><th>Reçu le</th><th>Type</th><th>Nom</th><th>Téléphone</th><th>Email</th><th>Code CRM</th><th>Statut</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>'
             : '<div class="empty">Aucune demande reçue pour le moment.</div>') +
       '</div>';
 
     contentEl.innerHTML = statsHtml + tableHtml;
+    contentEl.querySelectorAll(".lead-toggle").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        btn.disabled = true;
+        setLeadStatus([btn.getAttribute("data-id")], btn.getAttribute("data-next")).then(function(){ paintLeads(LEADS_CACHE); })
+          .catch(function(e){ btn.disabled = false; toast("Échec : " + e.message, true); });
+      });
+    });
+    var allBtn = document.getElementById("leadsAllDone");
+    if(allBtn) allBtn.addEventListener("click", function(){
+      allBtn.disabled = true; allBtn.textContent = "Enregistrement…";
+      var ids = (LEADS_CACHE.leads || []).filter(function(l){ return l.status !== "handled"; }).map(function(l){ return l.id; });
+      setLeadStatus(ids, "handled").then(function(){ paintLeads(LEADS_CACHE); toast("Toutes les demandes sont marquées comme traitées."); })
+        .catch(function(e){ paintLeads(LEADS_CACHE); toast("Échec : " + e.message, true); });
+    });
   }
+
+  // ---------------------------------------------- notifications des demandes
+  // Pastille rouge sur « Demandes reçues » (nombre de demandes non traitées),
+  // compteur dans le titre de l'onglet, et alerte à l'écran quand une
+  // nouvelle demande arrive pendant que le dashboard est ouvert (vérification
+  // chaque minute, et dès que l'on revient sur l'onglet).
+  var LEADS_KNOWN = null;
+  var BASE_TITLE = document.title;
+  function setLeadsBadge(n){
+    var b = document.getElementById("leadsBadge");
+    if(b){ b.textContent = n > 99 ? "99+" : String(n); b.hidden = !n; b.title = n + " demande(s) non traitée(s)"; }
+    document.title = (n ? "(" + n + ") " : "") + BASE_TITLE;
+  }
+  function countNew(data){ return ((data && data.leads) || []).filter(function(l){ return l.status !== "handled"; }).length; }
+  function leadLabel(l){
+    var f = l.fields || {};
+    return (f["Nom & Prénom"] || "Sans nom") + (l.subtype_label ? " — " + l.subtype_label : (l.type_label ? " — " + l.type_label : ""));
+  }
+  function showLeadAlert(fresh){
+    var box = document.getElementById("leadAlert");
+    if(!box){
+      box = document.createElement("div");
+      box.id = "leadAlert"; box.className = "lead-alert"; box.setAttribute("role", "status");
+      document.body.appendChild(box);
+    }
+    var title = fresh.length > 1 ? fresh.length + " nouvelles demandes reçues" : "Nouvelle demande reçue";
+    box.innerHTML = '<div class="lead-alert-ico">🔔</div><div class="lead-alert-txt"><b>' + esc(title) + '</b><span>' +
+      fresh.slice(0, 3).map(function(l){ return esc(leadLabel(l)); }).join("<br>") + (fresh.length > 3 ? "<br>…" : "") +
+      '</span></div><button type="button" class="btn btn-sm" data-go>Voir</button><button type="button" class="lead-alert-x" aria-label="Fermer" data-x>✕</button>';
+    box.classList.add("show");
+    box.querySelector("[data-x]").onclick = function(){ box.classList.remove("show"); };
+    box.querySelector("[data-go]").onclick = function(){
+      box.classList.remove("show");
+      var nav = document.querySelector('#sidebarNav button[data-view="leads"]');
+      if(nav) nav.click();
+    };
+  }
+  function checkLeads(fromPoll){
+    return fetch("/api/leads", {cache: "no-store"}).then(function(r){
+      if(r.status === 401){ window.location.href = "/login"; throw new Error("unauthorized"); }
+      if(!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    }).then(function(data){
+      var leads = data.leads || [];
+      var fresh = [];
+      if(LEADS_KNOWN){
+        fresh = leads.filter(function(l){ return !LEADS_KNOWN[l.id] && l.status !== "handled"; });
+      } else {
+        // 1er chargement : demandes arrivées depuis la dernière visite
+        var last = 0;
+        try { last = Number(localStorage.getItem("ne_leads_seen_ts")) || 0; } catch(e){}
+        if(last) fresh = leads.filter(function(l){ return (l.ts || 0) > last && l.status !== "handled"; });
+      }
+      LEADS_KNOWN = {};
+      var maxTs = 0;
+      leads.forEach(function(l){ LEADS_KNOWN[l.id] = 1; if((l.ts || 0) > maxTs) maxTs = l.ts; });
+      try { if(maxTs) localStorage.setItem("ne_leads_seen_ts", String(maxTs)); } catch(e){}
+      LEADS_CACHE = data;
+      setLeadsBadge(countNew(data));
+      if(fresh.length){
+        showLeadAlert(fresh);
+        if(fromPoll && VIEW === "leads") paintLeads(data);
+      }
+      return data;
+    });
+  }
+  function setLeadStatus(ids, status){
+    var chain = Promise.resolve();
+    ids.forEach(function(id){
+      chain = chain.then(function(){
+        return fetch("/api/leads", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({id: id, status: status})})
+          .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error(j.error || ("HTTP " + r.status)); return j; }); })
+          .then(function(){
+            (LEADS_CACHE.leads || []).forEach(function(l){ if(l.id === id) l.status = status; });
+            setLeadsBadge(countNew(LEADS_CACHE));
+          });
+      });
+    });
+    return chain;
+  }
+  function pollLeads(){ if(document.visibilityState === "visible") checkLeads(true).catch(function(){}); }
+  setInterval(pollLeads, 60000);
+  document.addEventListener("visibilitychange", pollLeads);
+  checkLeads(false).catch(function(){});
 
   loadContent();
 })();

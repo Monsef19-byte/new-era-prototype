@@ -171,3 +171,21 @@ input,textarea,select{font-family:inherit;}
 .img-item [data-bid]{margin-top:4px;font-size:12px;}
 .list-editor .row [data-bid]{flex:1;}
 .dispo-item textarea[data-bid]{min-height:70px;margin-top:6px;}
+
+/* Demandes reçues : pastille du menu, alerte, statut */
+.nav-badge{display:inline-block;min-width:20px;height:20px;padding:0 6px;margin-left:6px;border-radius:10px;background:var(--red);color:#fff;font-size:11.5px;font-weight:700;line-height:20px;text-align:center;vertical-align:middle;}
+.nav-badge[hidden]{display:none;}
+.lead-alert{position:fixed;top:18px;right:18px;z-index:1000;display:flex;align-items:center;gap:12px;max-width:380px;padding:14px 16px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--red);border-radius:10px;box-shadow:0 14px 40px rgba(0,0,0,.18);transform:translateY(-12px);opacity:0;pointer-events:none;transition:.25s;}
+.lead-alert.show{transform:none;opacity:1;pointer-events:auto;}
+.lead-alert-ico{font-size:20px;}
+.lead-alert-txt{flex:1;font-size:13px;line-height:1.4;}
+.lead-alert-txt b{display:block;margin-bottom:2px;}
+.lead-alert-txt span{color:var(--muted,#666);}
+.lead-alert-x{border:0;background:none;font-size:15px;cursor:pointer;color:#888;}
+.lead-status{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11.5px;font-weight:600;}
+.lead-status.is-new{background:#fde8e8;color:var(--red);}
+.lead-status.is-done{background:#eee;color:#666;}
+.leads-table tr.lead-done td{color:#888;}
+#leadsAllDone{margin-left:8px;}
+#sidebarNav button.active .nav-badge{background:#fff;color:var(--red);}
+.leads-table .lead-toggle{white-space:nowrap;}
