@@ -144,7 +144,7 @@ def set_password(pw):
     h = hashlib.sha256((salt + pw).encode("utf-8")).hexdigest()
     save_json(AUTH_FILE, {"salt": salt, "hash": h})
 
-SAFE_SECTIONS = {"villas", "home", "apropos", "opportunites", "settings", "blog", "liens", "videos", "gallery", "finitions"}
+SAFE_SECTIONS = {"villas", "home", "apropos", "opportunites", "settings", "blog", "liens", "videos", "gallery", "finitions", "countdown"}
 
 def slugify(s):
     s = (s or "").lower().strip()
@@ -263,6 +263,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
                     "section_lede": "Visites virtuelles et actualités de nos résidences.", "items": []
                 }),
                 "finitions": load_json(os.path.join(CONTENT, "finitions.json"), {"title": "", "lede": "", "items": []}),
+                "countdown": load_json(os.path.join(CONTENT, "countdown.json"), {}),
                 "gallery": load_json(os.path.join(CONTENT, "gallery.json"), {
                     "kicker": "Catalogue", "title": "Catalogue & Galerie",
                     "lede": "Un aperçu de nos réalisations, plans et documents.", "items": []

@@ -746,6 +746,123 @@ def apply_cta_toggles(html, settings):
     flags_script = '<script>window.NEWERA_CTA_FLAGS=' + json.dumps(flags) + ';</script>\n'
     if '</body>' in html:
         html = html.replace('</body>', flags_script + '</body>', 1)
+    # Toutes les pages passent par ici : on y greffe le compte à rebours.
+    return apply_countdown(html)
+
+# ============================================================================
+# COMPTE À REBOURS d'événement (onglet « Compte à rebours » du dashboard,
+# content/countdown.json). Trois emplacements activables : fenêtre à
+# l'ouverture du site (une fois par jour), encadré devant la vidéo de
+# l'accueil, petite fenêtre au défilement. Le décompte tourne dans le
+# navigateur (assets/main.js) ; l'échéance (masquer ou « C'est
+# aujourd'hui ! ») y est aussi gérée, sans attendre une nouvelle publication.
+# Injecté entre deux marqueurs : réappliqué à chaque publication sans
+# jamais s'empiler (pages patchées en place).
+# ============================================================================
+CD = {}
+CD_START = '<!-- COUNTDOWN:START -->'
+CD_END = '<!-- COUNTDOWN:END -->'
+CD_HERO_START = '<!-- COUNTDOWN-HERO:START -->'
+CD_HERO_END = '<!-- COUNTDOWN-HERO:END -->'
+CD_DEFAULTS = {
+    'enabled': False, 'date': '', 'time': '10:00', 'poster': '',
+    'show_popup': True, 'show_hero': True, 'show_mini': True,
+    'eyebrow': 'Événement', 'eyebrow_ar': 'حدث', 'title': '', 'title_ar': '',
+    'button_enabled': True, 'button_label': 'Prendre rendez-vous', 'button_label_ar': 'احجز موعداً',
+    'button_link': '#contact', 'end_behavior': 'hide',
+    'today': "C'est aujourd'hui !", 'today_ar': 'إنه اليوم!',
+}
+CD_TXT = {
+    'fr': {'units': ['Jours', 'Heures', 'Min', 'Sec'], 'live': 'Ouverture dans', 'close': 'Fermer'},
+    'ar': {'units': ['أيام', 'ساعات', 'دقائق', 'ثواني'], 'live': 'يبدأ خلال', 'close': 'إغلاق'},
+}
+
+def countdown_config(raw):
+    import datetime
+    cd = dict(CD_DEFAULTS)
+    cd.update(raw or {})
+    cd['iso'] = None
+    cd['active'] = False
+    if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', cd.get('date') or ''):
+        return cd
+    t = cd.get('time') if re.fullmatch(r'\d{2}:\d{2}', cd.get('time') or '') else '00:00'
+    cd['iso'] = '{}T{}:00+01:00'.format(cd['date'], t)
+    if not (cd.get('enabled') and cd.get('poster') and (cd.get('title') or cd.get('title_ar'))):
+        return cd
+    tz = datetime.timezone(datetime.timedelta(hours=1))          # heure d'Algérie, sans heure d'été
+    target = datetime.datetime.fromisoformat(cd['iso'])
+    end = datetime.datetime.fromisoformat(cd['date'] + 'T00:00:00+01:00') + datetime.timedelta(days=1)
+    limit = end if cd.get('end_behavior') == 'today' else target
+    cd['active'] = datetime.datetime.now(tz) < limit
+    return cd
+
+def _cd_t(key, lang):
+    if lang == 'ar':
+        return CD.get(key + '_ar') or CD.get(key) or ''
+    return CD.get(key) or CD.get(key + '_ar') or ''
+
+def _cd_units(lang):
+    lab = CD_TXT[lang]['units']
+    cells = '<i aria-hidden="true">:</i>'.join(
+        '<div class="u"><b data-cd-u="{}">00</b><span>{}</span></div>'.format(k, esc(lab[n])) for n, k in enumerate('dhms'))
+    return ('<div class="ne-live" data-cd-live>{live}</div><div class="ne-g" data-cd-units>{cells}</div>'
+            '<div class="ne-today" hidden>{today}</div>').format(live=esc(CD_TXT[lang]['live']), cells=cells, today=esc(_cd_t('today', lang)))
+
+def _cd_button(lang, cls=''):
+    if not CD.get('button_enabled'):
+        return ''
+    link = (CD.get('button_link') or '#contact').strip() or '#contact'
+    extra = ''
+    if link.startswith('#'):
+        href = 'index.html' + link
+        if link == '#contact':
+            extra = ' data-rdv-trigger'
+    else:
+        href = link
+        if re.match(r'https?://', link, re.I):
+            extra = ' target="_blank" rel="noopener"'
+    return '<a href="{}" class="btn btn-fill{}"{}>{}</a>'.format(esc(href), (' ' + cls) if cls else '', extra, esc(_cd_t('button_label', lang)))
+
+def _cd_body(lang):
+    return ('<div class="kicker">{k}</div><div class="ne-t">{t}</div>{units}{btn}').format(
+        k=esc(_cd_t('eyebrow', lang)), t=esc(_cd_t('title', lang)), units=_cd_units(lang), btn=_cd_button(lang))
+
+def apply_countdown(html):
+    """Retire puis réinjecte les blocs du compte à rebours (idempotent).
+    Langue et chemin des images déduits de la page : les pages de /ar/
+    pointent vers ../assets/."""
+    html = re.sub(re.escape(CD_START) + r'.*?' + re.escape(CD_END) + r'\n?', '', html, flags=re.S)
+    html = re.sub(re.escape(CD_HERO_START) + r'.*?' + re.escape(CD_HERO_END) + r'\n?', '', html, flags=re.S)
+    if not CD.get('active'):
+        return html
+    lang = 'ar' if re.search(r'<html[^>]*\blang="ar"', html) else 'fr'
+    prefix = '../assets/' if lang == 'ar' else 'assets/'
+    poster = esc(prefix + CD['poster'])
+    close = esc(CD_TXT[lang]['close'])
+    body = _cd_body(lang)
+    blocks = []
+    if CD.get('show_popup') or CD.get('show_mini') or CD.get('show_hero'):
+        blocks.append('<div class="ne-pop" id="cdPop" role="dialog" aria-modal="true" hidden><div class="card">'
+                      '<button type="button" class="x" data-cd-close aria-label="{c}">✕</button>'
+                      '<img src="{p}" alt=""><div class="b">{b}</div></div></div>'.format(c=close, p=poster, b=body))
+    if CD.get('show_mini'):
+        blocks.append('<div class="ne-mini" id="cdMini" hidden>'
+                      '<button type="button" class="x" data-cd-mini-close aria-label="{c}">✕</button>'
+                      '<img src="{p}" alt="" data-cd-open><div class="b">{b}</div></div>'.format(c=close, p=poster, b=body))
+    cfg = {'target': CD['iso'], 'end': 'today' if CD.get('end_behavior') == 'today' else 'hide', 'popup': bool(CD.get('show_popup'))}
+    blocks.append('<script>window.NEWERA_CD=' + json.dumps(cfg) + ';</script>')
+    block = CD_START + '\n' + '\n'.join(blocks) + '\n' + CD_END + '\n'
+    if '<script src="assets/main.js"></script>' in html or '<script src="../assets/main.js"></script>' in html:
+        html = re.sub(r'(<script src="(?:\.\./)?assets/main\.js"></script>)', lambda m: block + m.group(1), html, count=1)
+    elif '</body>' in html:
+        html = html.replace('</body>', block + '</body>', 1)
+    if CD.get('show_hero'):
+        m = re.search(r'<section class="hero" id="top"[^>]*>', html)
+        if m and 'id="heroVideo"' in html:
+            card = (CD_HERO_START + '\n<div class="ne-herocd" id="cdHero">'
+                    '<button type="button" class="x" data-cd-hero-close aria-label="{c}">✕</button>'
+                    '<img src="{p}" alt="" data-cd-open><div class="b">{b}</div></div>\n' + CD_HERO_END + '\n').format(c=close, p=poster, b=body)
+            html = html[:m.end()] + '\n' + card + html[m.end():]
     return html
 
 def replace_balanced_div(html, open_tag_pattern, new_inner_html):
@@ -1134,9 +1251,11 @@ def write_icons_data():
 # ENTRY POINT
 # ============================================================================
 def publish():
+    global CD
     write_icons_data()
     if VERCEL_BUILD:
         sync_blob_assets()
+    CD = countdown_config(load('countdown.json') or {})
     settings = load('settings.json')
     villas = load('villas.json')
     home = load('home.json')

@@ -1,0 +1,20 @@
+{
+  "enabled": false,
+  "date": "",
+  "time": "10:00",
+  "poster": "",
+  "show_popup": true,
+  "show_hero": true,
+  "show_mini": true,
+  "eyebrow": "Événement",
+  "eyebrow_ar": "حدث",
+  "title": "",
+  "title_ar": "",
+  "button_enabled": true,
+  "button_label": "Prendre rendez-vous",
+  "button_label_ar": "احجز موعداً",
+  "button_link": "#contact",
+  "end_behavior": "hide",
+  "today": "C'est aujourd'hui !",
+  "today_ar": "إنه اليوم!"
+}

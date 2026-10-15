@@ -2,7 +2,7 @@
 (function(){
   "use strict";
 
-  var STATE = { villas: [], home: {}, apropos: {}, opportunites: {}, settings: {}, blog: [], liens: {}, videos: {}, gallery: {}, finitions: {} };
+  var STATE = { villas: [], home: {}, apropos: {}, opportunites: {}, settings: {}, blog: [], liens: {}, videos: {}, gallery: {}, finitions: {}, countdown: {} };
 
   var LIENS_ICON_OPTIONS = [
     ["site", "Site web (globe)"],
@@ -244,6 +244,7 @@
       finitions: ["Finitions", "Le carrousel « Finitions » des fiches résidence (FR et AR) — chaque finition : photo, titre et description affichée au survol / au toucher."],
       liens: ["Page Liens (QR code)", "Tout ce qui apparaît sur newera-promotion.com/liens — logo, textes et cartes de liens."],
       leads: ["Demandes reçues", "Tous les formulaires envoyés depuis le site, stockés ici avant l'envoi de l'email de notification."],
+      countdown: ["Compte à rebours", "Annonce un événement (portes ouvertes, lancement…) avec un compte à rebours, à trois endroits du site au choix."],
       settings: ["Réglages & contact", "Numéros de téléphone, WhatsApp, réglages email et mot de passe du panneau."]
     };
     var t = titles[VIEW] || ["", ""];
@@ -262,6 +263,7 @@
     else if(VIEW === "liens"){ renderLiens(); }
     else if(VIEW === "leads"){ renderLeads(); }
     else if(VIEW === "settings"){ renderSettings(); }
+    else if(VIEW === "countdown"){ renderCountdown(); }
   }
 
   // ============================================================== RÉSIDENCES — LISTE
@@ -377,7 +379,9 @@
   function arTag(){ return ' <span class="ar-tag">AR</span>'; }
 
   function field(label, inputHtml, hint){
-    return '<div class="field"><label>' + esc(label) + '</label>' + inputHtml + (hint ? '<div class="hint">' + esc(hint) + '</div>' : '') + '</div>';
+    // L'étiquette est échappée, sauf la pastille « AR » (arTag) qui doit
+    // s'afficher comme pastille et non comme du code.
+    return '<div class="field"><label>' + esc(label).replace(esc(arTag()), arTag()) + '</label>' + inputHtml + (hint ? '<div class="hint">' + esc(hint) + '</div>' : '') + '</div>';
   }
 
   function renderVillaGeneral(body, v){
@@ -837,6 +841,90 @@
         render();
       }).catch(function(){ statusEl.textContent = "Échec de l'envoi."; });
     });
+  }
+
+  // ============================================================== COMPTE À REBOURS
+  // Rendu : admin/generator.py (apply_countdown) — fenêtre d'accueil, encadré
+  // devant la vidéo, petite fenêtre au défilement.
+  var CD_DEFAULTS = {
+    enabled: false, date: "", time: "10:00", poster: "",
+    show_popup: true, show_hero: true, show_mini: true,
+    eyebrow: "Événement", eyebrow_ar: "حدث", title: "", title_ar: "",
+    button_enabled: true, button_label: "Prendre rendez-vous", button_label_ar: "احجز موعداً", button_link: "#contact",
+    end_behavior: "hide", today: "C'est aujourd'hui !", today_ar: "إنه اليوم!"
+  };
+  function countdownStatusHtml(c){
+    var missing = [];
+    if(!c.date) missing.push("la date");
+    if(!c.title && !c.title_ar) missing.push("le titre");
+    if(!c.poster) missing.push("le poster");
+    if(!c.show_popup && !c.show_hero && !c.show_mini) missing.push("au moins un emplacement");
+    if(!c.enabled) return '<span class="cd-badge off">Désactivé</span> Rien n\'apparaît sur le site.';
+    if(missing.length) return '<span class="cd-badge off">Incomplet</span> Il manque ' + esc(missing.join(", ")) + ' : le compte à rebours ne s\'affichera pas tant que ce n\'est pas rempli.';
+    var t = Date.parse(c.date + "T" + (c.time || "00:00") + ":00+01:00");
+    var when = isNaN(t) ? "" : (t > Date.now() ? " Échéance dans " + Math.ceil((t - Date.now()) / 86400000) + " jour(s)." : " Échéance passée.");
+    return '<span class="cd-badge on">Actif</span>' + esc(when) + ' Pensez à « Publier les modifications ».';
+  }
+  function renderCountdown(){
+    var c = STATE.countdown = STATE.countdown || {};
+    Object.keys(CD_DEFAULTS).forEach(function(k){ if(c[k] === undefined) c[k] = CD_DEFAULTS[k]; });
+    function tog(key, label, hint){
+      return '<div class="toggle-row"><span class="lbl">' + esc(label) + (hint ? '<span class="hint" style="display:block;font-weight:400;">' + esc(hint) + '</span>' : '') + '</span>' +
+        '<label class="switch"><input type="checkbox" data-cd-key="' + key + '" ' + (c[key] ? 'checked' : '') + '><span class="slider"></span></label></div>';
+    }
+    var html =
+      '<div class="panel"><h3>Activation</h3>' +
+        tog("enabled", "Afficher le compte à rebours sur le site", "Désactivé, tout disparaît du site sans rien perdre : les réglages restent en place.") +
+        '<p class="desc" id="cdStatus" style="margin-top:10px;"></p>' +
+      '</div>' +
+      '<div class="panel"><h3>Emplacements</h3><p class="desc">Chacun s\'active indépendamment.</p>' +
+        tog("show_popup", "Fenêtre à l'ouverture du site", "Une seule fois par jour et par visiteur. Se ferme d'un clic.") +
+        tog("show_hero", "Encadré devant la vidéo d'accueil", "Posé sur la vidéo, à côté du titre. Sur téléphone : poster entier et compte à rebours pleine largeur.") +
+        tog("show_mini", "Petite fenêtre au défilement", "Dans un coin, sur toutes les pages, dès que le visiteur descend dans la page. Un clic sur le poster ouvre la grande fenêtre.") +
+      '</div>' +
+      '<div class="panel"><h3>Date et heure de l\'événement</h3><p class="desc">Heure d\'Algérie. Le décompte se met à jour tout seul chez le visiteur.</p><div class="grid2">' +
+        field("Date", '<input type="date" id="cd_date" value="' + esc(c.date) + '">') +
+        field("Heure", '<input type="time" id="cd_time" value="' + esc(c.time) + '">') +
+      '</div></div>' +
+      '<div class="panel"><h3>Poster</h3><p class="desc">Format portrait 1080 × 1350, utilisé dans les trois emplacements.</p>' +
+        '<div class="img-list"><div class="img-item"><div class="thumb" style="width:120px;height:150px;' + (c.poster ? 'background-image:url(\'' + assetUrl(c.poster) + '\')' : '') + '"></div>' +
+        '<input type="file" accept="image/*" id="cdPoster" style="margin-top:6px;font-size:11px;">' +
+        (c.poster ? '<button type="button" class="btn btn-sm btn-danger" id="cdPosterRm" style="margin-top:6px;">Retirer</button>' : '') + '</div></div>' +
+      '</div>' +
+      '<div class="panel"><h3>Textes</h3><div class="grid2">' +
+        field("Petite étiquette (ex : Événement)", bf(c, "eyebrow", "countdown")) +
+        field("Petite étiquette" + arTag(), bf(c, "eyebrow_ar", "countdown", {ar: true})) +
+        field("Titre (ex : Journée Portes Ouvertes · 1er nov.)", bf(c, "title", "countdown")) +
+        field("Titre" + arTag(), bf(c, "title_ar", "countdown", {ar: true})) +
+      '</div></div>' +
+      '<div class="panel"><h3>Bouton</h3>' + tog("button_enabled", "Afficher un bouton", "Sous le compte à rebours, dans les trois emplacements.") +
+        '<div class="grid2">' +
+        field("Texte du bouton", bf(c, "button_label", "countdown")) +
+        field("Texte du bouton" + arTag(), bf(c, "button_label_ar", "countdown", {ar: true})) +
+        '</div>' + field("Lien", bf(c, "button_link", "countdown"), "#contact = ouvre la fenêtre « Prendre rendez-vous ». Ou une adresse https://…") +
+      '</div>' +
+      '<div class="panel"><h3>À la fin du compte à rebours</h3>' +
+        field("Comportement à l'échéance", '<select id="cd_end"><option value="hide"' + (c.end_behavior !== "today" ? ' selected' : '') + '>Tout masquer automatiquement</option><option value="today"' + (c.end_behavior === "today" ? ' selected' : '') + '>Afficher « C\'est aujourd\'hui ! » jusqu\'à minuit, puis masquer</option></select>') +
+        '<div class="grid2">' + field("Texte « C'est aujourd'hui ! »", bf(c, "today", "countdown")) + field("Texte" + arTag(), bf(c, "today_ar", "countdown", {ar: true})) + '</div>' +
+      '</div>';
+    contentEl.innerHTML = html;
+    wireBinds();
+    var status = document.getElementById("cdStatus");
+    function refresh(){ status.innerHTML = countdownStatusHtml(c); }
+    refresh();
+    contentEl.querySelectorAll("[data-bid]").forEach(function(el){ el.addEventListener("input", refresh); });
+    contentEl.querySelectorAll("[data-cd-key]").forEach(function(cb){
+      cb.addEventListener("change", function(){ c[cb.getAttribute("data-cd-key")] = cb.checked; saveSection("countdown"); refresh(); });
+    });
+    document.getElementById("cd_date").addEventListener("input", function(){ c.date = this.value; debounceSave("countdown"); refresh(); });
+    document.getElementById("cd_time").addEventListener("input", function(){ c.time = this.value; debounceSave("countdown"); refresh(); });
+    document.getElementById("cd_end").addEventListener("change", function(){ c.end_behavior = this.value; saveSection("countdown"); });
+    document.getElementById("cdPoster").addEventListener("change", function(e){
+      if(!e.target.files[0]) return;
+      uploadImage(e.target.files[0], "countdown").then(function(fname){ c.poster = fname; saveSection("countdown").then(function(){ render(); }); });
+    });
+    var rm = document.getElementById("cdPosterRm");
+    if(rm) rm.addEventListener("click", function(){ c.poster = ""; saveSection("countdown").then(function(){ render(); }); });
   }
 
   // ============================================================== A PROPOS / OPPORTUNITES

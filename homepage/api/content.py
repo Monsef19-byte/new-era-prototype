@@ -207,6 +207,7 @@ class handler(BaseHTTPRequestHandler):
                 "section_lede": "Visites virtuelles et actualités de nos résidences.", "items": []
             }),
             "finitions": load_content("finitions.json", {"title": "", "lede": "", "items": []}),
+            "countdown": load_content("countdown.json", {}),
             "gallery": load_content("gallery.json", {
                 "kicker": "Catalogue", "title": "Catalogue & Galerie",
                 "lede": "Un aperçu de nos réalisations, plans et documents.", "items": []
