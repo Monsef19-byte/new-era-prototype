@@ -1146,6 +1146,9 @@ a.float-btn.call{display:flex;align-items:center;justify-content:center;gap:8px;
    comportement dans assets/main.js). Cases claires à filet rouge,
    secondes en rouge plein, chiffres El Messiri, angles droits.
    ========================================================================== */
+/* Étiquette et « Ouverture dans » toujours sur deux lignes, même sans titre */
+.ne-pop .kicker,.ne-herocd .kicker,.ne-mini .kicker{display:flex;}
+.ne-pop .ne-live,.ne-herocd .ne-live,.ne-mini .ne-live{display:flex;width:max-content;}
 .ne-pop[hidden],.ne-mini[hidden],.ne-g[hidden],.ne-today[hidden],.ne-live[hidden]{display:none !important;}
 .ne-t{font-family:'El Messiri',serif;font-weight:700;color:var(--text);line-height:1.15;}
 .ne-live{display:inline-flex;align-items:center;gap:9px;font:700 10.5px/1 var(--sans);letter-spacing:2.4px;text-transform:uppercase;color:var(--red);margin-bottom:10px;}
@@ -1185,6 +1188,7 @@ html[dir="rtl"] .ne-herocd .x{right:auto;left:10px;}
   .ne-herocd .ne-t{grid-column:2;grid-row:1;align-self:end;font-size:19px;margin:0 26px 8px 0;}
   html[dir="rtl"] .ne-herocd .ne-t{margin:0 0 8px 26px;}
   .ne-herocd .ne-live{grid-column:2;grid-row:2;align-self:start;margin:0;font-size:9.5px;letter-spacing:1.8px;}
+  .ne-herocd .b:not(:has(.ne-t)) .ne-live{grid-row:1/3;align-self:center;}
   .ne-herocd .ne-g,.ne-herocd .ne-today{grid-column:1/-1;grid-row:3;margin:12px 0 10px;gap:5px;}
   .ne-herocd .ne-g b{font-size:26px;}
   .ne-herocd .ne-g span{font-size:8.5px;letter-spacing:1.4px;}

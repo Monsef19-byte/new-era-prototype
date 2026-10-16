@@ -856,7 +856,6 @@
   function countdownStatusHtml(c){
     var missing = [];
     if(!c.date) missing.push("la date");
-    if(!c.title && !c.title_ar) missing.push("le titre");
     if(!c.poster) missing.push("le poster");
     if(!c.show_popup && !c.show_hero && !c.show_mini) missing.push("au moins un emplacement");
     if(!c.enabled) return '<span class="cd-badge off">Désactivé</span> Rien n\'apparaît sur le site.';
@@ -894,7 +893,7 @@
       '<div class="panel"><h3>Textes</h3><div class="grid2">' +
         field("Petite étiquette (ex : Événement)", bf(c, "eyebrow", "countdown")) +
         field("Petite étiquette" + arTag(), bf(c, "eyebrow_ar", "countdown", {ar: true})) +
-        field("Titre (ex : Journée Portes Ouvertes · 1er nov.)", bf(c, "title", "countdown")) +
+        field("Titre — facultatif (ex : Journée Portes Ouvertes · 1er nov.)", bf(c, "title", "countdown")) +
         field("Titre" + arTag(), bf(c, "title_ar", "countdown", {ar: true})) +
       '</div></div>' +
       '<div class="panel"><h3>Bouton</h3>' + tog("button_enabled", "Afficher un bouton", "Sous le compte à rebours, dans les trois emplacements.") +

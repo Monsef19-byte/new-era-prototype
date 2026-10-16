@@ -787,7 +787,10 @@ def countdown_config(raw):
         return cd
     t = cd.get('time') if re.fullmatch(r'\d{2}:\d{2}', cd.get('time') or '') else '00:00'
     cd['iso'] = '{}T{}:00+01:00'.format(cd['date'], t)
-    if not (cd.get('enabled') and cd.get('poster') and (cd.get('title') or cd.get('title_ar'))):
+    # Le titre est facultatif : le poster porte souvent déjà le nom de
+    # l'événement (même règle que sur Hamadat). Seuls l'activation, une date
+    # et un poster sont indispensables.
+    if not (cd.get('enabled') and cd.get('poster')):
         return cd
     tz = datetime.timezone(datetime.timedelta(hours=1))          # heure d'Algérie, sans heure d'été
     target = datetime.datetime.fromisoformat(cd['iso'])
@@ -824,8 +827,12 @@ def _cd_button(lang, cls=''):
     return '<a href="{}" class="btn btn-fill{}"{}>{}</a>'.format(esc(href), (' ' + cls) if cls else '', extra, esc(_cd_t('button_label', lang)))
 
 def _cd_body(lang):
-    return ('<div class="kicker">{k}</div><div class="ne-t">{t}</div>{units}{btn}').format(
-        k=esc(_cd_t('eyebrow', lang)), t=esc(_cd_t('title', lang)), units=_cd_units(lang), btn=_cd_button(lang))
+    title = _cd_t('title', lang)
+    kicker = _cd_t('eyebrow', lang)
+    return ('{k}{t}{units}{btn}').format(
+        k='<div class="kicker">{}</div>'.format(esc(kicker)) if kicker else '',
+        t='<div class="ne-t">{}</div>'.format(esc(title)) if title else '',
+        units=_cd_units(lang), btn=_cd_button(lang))
 
 def apply_countdown(html):
     """Retire puis réinjecte les blocs du compte à rebours (idempotent).
