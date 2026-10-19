@@ -782,7 +782,9 @@ a.res-card:hover .res-info b{color:var(--red);}
 .form-msg.success{color:#7dd48b;}
 .form-msg.error{color:#ff8a80;}
 .form-msg:empty{display:none;}
-.hp-field{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+/* Champ piège anti-robots : masqué sur place plutôt que repoussé à left:-9999px —
+   en arabe (dir=rtl) ce décalage créait 10 000 px de défilement horizontal. */
+.hp-field{position:absolute;top:0;left:0;width:1px;height:1px;padding:0;border:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);opacity:0;pointer-events:none;}
 
 /* ---------- DISPONIBILITÉ ---------- */
 .dispo-band{background:var(--paper-alt);padding:64px var(--gutter);text-align:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
