@@ -835,12 +835,12 @@ def _cd_body(lang):
         t='<div class="ne-t">{}</div>'.format(esc(title)) if title else '',
         units=_cd_units(lang), btn=_cd_button(lang))
 
-# Icône de l'onglet du navigateur : le monogramme « NE » du site (fichiers
-# déjà présents dans assets/), noir sur fond clair, blanc en mode sombre.
-# Sans cette balise, le navigateur affichait l'icône par défaut de Vercel.
-FAVICON_HTML = ('<link rel="icon" type="image/png" href="/assets/logo-mono-black.png" media="(prefers-color-scheme: light)">\n'
-                '<link rel="icon" type="image/png" href="/assets/logo-mono-white.png" media="(prefers-color-scheme: dark)">\n'
-                '<link rel="apple-touch-icon" href="/assets/logo-mono-black.png">\n')
+# Icône de l'onglet du navigateur : carré rouge New Era avec le monogramme
+# « NE » blanc, sans déformation (assets/favicon-32/180/512.png).
+# Sans ces balises, le navigateur affichait l'icône par défaut de Vercel.
+FAVICON_HTML = ('<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">\n'
+                '<link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512.png">\n'
+                '<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon-180.png">\n')
 
 def apply_favicon(html):
     """Idempotent : retire les balises d'icône existantes puis remet les nôtres."""
