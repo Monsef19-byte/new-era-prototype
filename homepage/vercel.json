@@ -5,11 +5,18 @@
   "outputDirectory": ".",
   "functions": {
     "api/*.py": {
-      "includeFiles": "api/_common.py"
+      "includeFiles": "api/_common.py",
+      "excludeFiles": "{assets/**,ar/**,liens/**,admin/**,*.html,*.js,*.css,*.jpg,*.jpeg,*.png,*.webp,*.mp4,*.mov,*.pdf,*.sh,*.command}"
     }
   },
   "rewrites": [
-    { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/login", "destination": "/admin/login.html" }
+    {
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/admin/login.html"
+    }
   ]
 }
