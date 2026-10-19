@@ -746,8 +746,9 @@ def apply_cta_toggles(html, settings):
     flags_script = '<script>window.NEWERA_CTA_FLAGS=' + json.dumps(flags) + ';</script>\n'
     if '</body>' in html:
         html = html.replace('</body>', flags_script + '</body>', 1)
-    # Toutes les pages passent par ici : on y greffe le compte à rebours.
-    return apply_countdown(html)
+    # Toutes les pages passent par ici : on y greffe le compte à rebours
+    # et l'icône d'onglet.
+    return apply_favicon(apply_countdown(html))
 
 # ============================================================================
 # COMPTE À REBOURS d'événement (onglet « Compte à rebours » du dashboard,
@@ -833,6 +834,20 @@ def _cd_body(lang):
         k='<div class="kicker">{}</div>'.format(esc(kicker)) if kicker else '',
         t='<div class="ne-t">{}</div>'.format(esc(title)) if title else '',
         units=_cd_units(lang), btn=_cd_button(lang))
+
+# Icône de l'onglet du navigateur : le monogramme « NE » du site (fichiers
+# déjà présents dans assets/), noir sur fond clair, blanc en mode sombre.
+# Sans cette balise, le navigateur affichait l'icône par défaut de Vercel.
+FAVICON_HTML = ('<link rel="icon" type="image/png" href="/assets/logo-mono-black.png" media="(prefers-color-scheme: light)">\n'
+                '<link rel="icon" type="image/png" href="/assets/logo-mono-white.png" media="(prefers-color-scheme: dark)">\n'
+                '<link rel="apple-touch-icon" href="/assets/logo-mono-black.png">\n')
+
+def apply_favicon(html):
+    """Idempotent : retire les balises d'icône existantes puis remet les nôtres."""
+    html = re.sub(r'[ \t]*<link rel="(?:icon|shortcut icon|apple-touch-icon)"[^>]*>\n?', '', html)
+    if '</head>' in html:
+        html = html.replace('</head>', FAVICON_HTML + '</head>', 1)
+    return html
 
 def apply_countdown(html):
     """Retire puis réinjecte les blocs du compte à rebours (idempotent).
@@ -1022,6 +1037,7 @@ def render_liens(liens, settings):
     html = html.replace('%%TAGLINE%%', esc(liens.get('tagline', '')))
     html = html.replace('%%SUBTITLE%%', esc(liens.get('subtitle', '')))
     html = html.replace('%%CARDS_HTML%%', cards_html)
+    html = apply_favicon(html)
     for d in OUT_DIRS:
         out_dir = os.path.join(d, "liens")
         os.makedirs(out_dir, exist_ok=True)
