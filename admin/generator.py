@@ -634,6 +634,7 @@ def render_villa(v, all_villas, settings, finitions=None, lang='fr'):
     html = apply_cta_toggles(html, settings)
     html = apply_social_footer(html, settings, lang)
     if ar:
+        html = apply_blog_nav(html, settings)
         os.makedirs(os.path.join(HOMEPAGE, 'ar'), exist_ok=True)
         with open(os.path.join(HOMEPAGE, 'ar', v['slug'] + '.html'), 'w', encoding='utf-8') as f:
             f.write(html)
@@ -693,10 +694,13 @@ def apply_blog_nav(html, settings):
     puis on le remet une seule fois par menu si le blog est activé. (L'ancienne
     version insérait deux fois dans le menu ordinateur et jamais dans le menu
     mobile, car le 2e remplacement retombait sur le lien qu'il venait de créer.)"""
-    html = re.sub(r'\n?[ \t]*<a href="blog\.html">Blog</a>[ \t]*(?=\n)', '', html)
+    html = re.sub(r'\n?[ \t]*<a href="blog\.html">(?:Blog|المدونة)</a>[ \t]*(?=\n)', '', html)
     if settings.get('enable_blog', False):
         html = re.sub(r'(<a href="opportunites\.html">Opportunités</a>)(\n)',
                       r'\1\n    <a href="blog.html">Blog</a>\2', html)
+        # Pages arabes : lien « المدونة » après « الفرص العقارية ».
+        html = re.sub(r'(<a href="opportunites\.html">الفرص العقارية</a>)(\n)',
+                      r'\1\n    <a href="blog.html">المدونة</a>\2', html)
     return html
 
 def set_section_hidden(html, section_open_tag, hidden):
@@ -1086,6 +1090,7 @@ def render_blog(posts, settings):
                 for fn in os.listdir(d):
                     if fn.startswith('blog-') and fn.endswith('.html'):
                         os.remove(os.path.join(d, fn))
+        remove_blog_ar()
         return
     load_blog_templates()
     cards = []
@@ -1116,13 +1121,101 @@ def render_blog(posts, settings):
 
     for p in posts:
         body_html = ''.join('<p class="lede">{}</p>'.format(esc(para)) for para in p.get('body', '').split('\n') if para.strip())
-        html = BLOG_POST_TEMPLATE.format(title=esc(p['title']), date=esc(p.get('date', '')), image=p.get('image', 'villa-agata.jpg'), body=body_html)
+        html = BLOG_POST_TEMPLATE.format(title=esc(p['title']), date=esc(p.get('date', '')), image=p.get('image', 'villa-agata.jpg'), body=body_html, slug=p['slug'])
         html = apply_contact(html, settings)
         html = apply_float_cta(html, settings, 'fr')
         html = apply_cta_toggles(html, settings)
         html = apply_social_footer(html, settings)
         html = apply_blog_nav(html, settings)
         write_all('blog-{}.html'.format(p['slug']), html)
+
+    render_blog_ar(posts, settings)
+
+# ---------------------------------------------------------------- blog arabe (/ar/blog.html, /ar/blog-<slug>.html)
+# Même articles, champs title_ar / body_ar (repli sur le français si vides).
+# Gabarit : la page arabe « Opportunités » (en-tête, menu, pied de page,
+# boutons d'appel) dont on remplace le contenu central — même charte que
+# le reste du site arabe, sans gabarit séparé à maintenir.
+AR_BLOG_CSS = """
+.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);margin-top:8px;}
+@media (max-width:900px){ .blog-grid{grid-template-columns:1fr;} }
+.blog-post-img{width:100%;max-width:1100px;margin:0 auto;padding:0 var(--gutter);}
+.blog-post-img img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;}
+.blog-post-body{max-width:760px;margin:0 auto;padding:50px var(--gutter) 90px;}
+.blog-post-body p{margin-top:18px;}
+.blog-post-date{font-size:12px;color:var(--text-muted);margin-top:8px;}
+"""
+
+def remove_blog_ar():
+    ar_dir = os.path.join(HOMEPAGE, 'ar')
+    if os.path.isdir(ar_dir):
+        for fn in os.listdir(ar_dir):
+            if fn == 'blog.html' or (fn.startswith('blog-') and fn.endswith('.html')):
+                os.remove(os.path.join(ar_dir, fn))
+
+def _ar_blog_page(title, fr_href, middle, settings):
+    shell_path = os.path.join(HOMEPAGE, 'ar', 'opportunites.html')
+    if not os.path.exists(shell_path):
+        return None
+    with open(shell_path, 'r', encoding='utf-8') as f:
+        shell = f.read()
+    i = shell.find('<div class="page-hero')
+    j = shell.find('<footer class="sitefooter">')
+    if i == -1 or j == -1:
+        return None
+    html = shell[:i] + middle + '\n' + shell[j:]
+    html = re.sub(r'<title>.*?</title>', '<title>' + esc(title) + '</title>', html, count=1, flags=re.S)
+    html = html.replace('href="../opportunites.html"', 'href="../' + fr_href + '"')
+    html = html.replace('</style>', AR_BLOG_CSS + '</style>', 1)
+    html = html.replace('<a href="#rdv">', '<a href="index.html#contact">')
+    html = apply_contact(html, settings)
+    html = apply_float_cta(html, settings, 'ar')
+    html = apply_cta_toggles(html, settings)
+    html = apply_social_footer(html, settings, 'ar')
+    html = apply_blog_nav(html, settings)
+    return html
+
+def render_blog_ar(posts, settings):
+    ar_dir = os.path.join(HOMEPAGE, 'ar')
+    if not os.path.isdir(ar_dir):
+        return
+    def t(p, key):
+        return (p.get(key + '_ar') or '').strip() or p.get(key, '')
+    cards = []
+    for p in posts:
+        cards.append(
+            '<a class="switch-card tilt" href="blog-{slug}.html"><div class="thumb"><img src="../assets/{img}" alt="{title}"></div>'
+            '<div class="switch-cap"><b>{title}</b><span>{date}</span></div></a>'.format(
+                slug=p['slug'], img=p.get('image', 'villa-agata.jpg'), title=esc(t(p, 'title')), date=esc(p.get('date', ''))))
+    middle = ('<div class="page-hero reveal">\n'
+              '  <div class="kicker"><span class="num">المستجدات</span></div>\n'
+              '  <h1 class="h1" style="font-size:clamp(34px,5.4vw,68px);margin:18px 0 22px;">المدونة<span class="hl-accent" style="font-size:clamp(16px,2vw,22px);text-transform:none;letter-spacing:0;font-weight:600;">New Era</span></h1>\n'
+              '  <p class="lede">مستجدات، تقدّم الأشغال وكواليس إقاماتنا.</p>\n'
+              '</div>\n\n<section class="sec">\n  <div class="blog-grid">\n' + '\n'.join(cards) + '\n  </div>\n</section>\n')
+    html = _ar_blog_page('المدونة — نيو إيرا للترقية العقارية', 'blog.html', middle, settings)
+    if html is None:
+        return
+    with open(os.path.join(ar_dir, 'blog.html'), 'w', encoding='utf-8') as f:
+        f.write(html)
+
+    keep = set('blog-{}.html'.format(p['slug']) for p in posts)
+    for fn in os.listdir(ar_dir):
+        if fn.startswith('blog-') and fn.endswith('.html') and fn not in keep:
+            os.remove(os.path.join(ar_dir, fn))
+    for p in posts:
+        body = t(p, 'body')
+        body_html = ''.join('<p class="lede">{}</p>'.format(esc(para)) for para in body.split('\n') if para.strip())
+        middle = ('<div class="page-hero reveal">\n'
+                  '  <div class="kicker"><span class="num"><a href="blog.html" style="color:inherit;">→ المدونة</a></span></div>\n'
+                  '  <h1 class="h1" style="font-size:clamp(30px,4.4vw,52px);margin:18px 0 6px;">' + esc(t(p, 'title')) + '</h1>\n'
+                  '  <div class="blog-post-date">' + esc(p.get('date', '')) + '</div>\n'
+                  '</div>\n\n<div class="blog-post-img"><img src="../assets/' + esc(p.get('image', 'villa-agata.jpg')) + '" alt="' + esc(t(p, 'title')) + '"></div>\n\n'
+                  '<div class="blog-post-body">\n' + body_html + '\n</div>\n')
+        fn = 'blog-{}.html'.format(p['slug'])
+        html = _ar_blog_page(t(p, 'title') + ' — مدونة نيو إيرا', fn, middle, settings)
+        if html is not None:
+            with open(os.path.join(ar_dir, fn), 'w', encoding='utf-8') as f:
+                f.write(html)
 
 # ---------------------------------------------------------------- réseaux sociaux (pied de page)
 SOCIAL_NETWORKS = [('facebook', 'Facebook'), ('instagram', 'Instagram'), ('linkedin', 'LinkedIn'),
@@ -1240,12 +1333,17 @@ def patch_ar_pages(villas, settings, finitions, videos, home=None, apropos=None,
             html = f.read()
         if fn == 'index.html':
             html = patch_homepage_ar(html, home or {}, villas, videos, gallery, finitions)
+            # L'accueil arabe renvoyait vers les pages FRANÇAISES (menu, pied de
+            # page, cartes) : « من نحن » ouvrait /a-propos.html au lieu de
+            # /ar/a-propos.html. Seul le bouton « FR » doit sortir de /ar/.
+            html = re.sub(r'href="\.\./((?:a-propos|opportunites|blog|villa-[a-z0-9-]+)\.html)', r'href="\1', html)
         elif data:
             html = patch_simple_hero_ar(html, data)
         html = apply_contact(html, settings)
         html = apply_float_cta(html, settings, 'ar')
         html = apply_cta_toggles(html, settings)
         html = apply_social_footer(html, settings, 'ar')
+        html = apply_blog_nav(html, settings)
         with open(path, 'w', encoding='utf-8') as f:
             f.write(html)
         count += 1

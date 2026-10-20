@@ -990,8 +990,14 @@
       field("Date", '<input type="text" id="p_date" value="' + esc(p.date) + '" placeholder="AAAA-MM-JJ">') +
       '<div class="field"><label>Image de couverture</label><div class="img-item"><div class="thumb" style="width:200px;height:130px;background-image:url(\'' + assetUrl(p.image) + '\')"></div><input type="file" accept="image/*" id="p_img" style="margin-top:6px;"></div></div>' +
       field("Contenu", '<textarea id="p_body" style="min-height:180px;">' + esc(p.body) + '</textarea>', "Un paragraphe par ligne.") +
+      '<div class="panel-ar" style="margin-top:18px;">' +
+      field("Titre" + arTag(), bf(p, "title_ar", "blog", {ar: true}), "Titre de l'article sur le blog arabe. Vide : le titre français est repris.") +
+      field("Contenu" + arTag(), bf(p, "body_ar", "blog", {ar: true, multiline: true}), "Un paragraphe par ligne. Vide : le texte français est repris.") +
+      '</div>' +
       '<button class="btn btn-primary btn-sm" id="closeEditor">Terminé</button>' +
       '</div>';
+    wireBinds(wrap);
+    wrap.querySelectorAll('textarea[data-bid]').forEach(function(el){ el.style.minHeight = "180px"; });
     document.getElementById("p_title").addEventListener("input", function(){ p.title = this.value; p.slug = slugify(this.value); debounceSave("blog"); });
     document.getElementById("p_date").addEventListener("input", function(){ p.date = this.value; debounceSave("blog"); });
     document.getElementById("p_body").addEventListener("input", function(){ p.body = this.value; debounceSave("blog"); });
