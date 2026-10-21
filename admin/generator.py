@@ -12,6 +12,7 @@ import os
 import re
 import json
 import shutil
+import time
 import urllib.request
 import urllib.parse
 
@@ -74,7 +75,9 @@ def _blob_get_json(pathname):
     for b in _blob_list(pathname):
         if b.get("pathname") == pathname:
             try:
-                with urllib.request.urlopen(b["url"], timeout=20) as resp:
+                # Sans le cache CDN : juste après un enregistrement, l'URL peut encore servir l'ancienne version (jusqu'à 60 s).
+                url = b["url"] + ("&" if "?" in b["url"] else "?") + "nocache=" + str(time.time_ns())
+                with urllib.request.urlopen(url, timeout=20) as resp:
                     return json.loads(resp.read().decode("utf-8"))
             except Exception:
                 return None

@@ -160,7 +160,7 @@
   }
   function debounceSave(section){
     clearTimeout(SAVE_TIMERS[section]);
-    SAVE_TIMERS[section] = setTimeout(function(){ saveSection(section); }, 500);
+    SAVE_TIMERS[section] = setTimeout(function(){ SAVE_TIMERS[section] = null; saveSection(section); }, 500);
   }
   function saveSection(section){
     return fetch("/api/save?section=" + encodeURIComponent(section), {
@@ -211,7 +211,13 @@
   document.getElementById("publishBtn").addEventListener("click", function(){
     var btn = document.getElementById("publishBtn");
     btn.disabled = true; btn.textContent = "Publication…";
-    fetch("/api/publish", {method:"POST"}).then(function(r){ return r.json(); }).then(function(res){
+    // Enregistre d'abord les modifications encore en attente (frappe des 500 dernières ms).
+    var pending = Object.keys(SAVE_TIMERS).filter(function(k){ return SAVE_TIMERS[k]; }).map(function(k){
+      clearTimeout(SAVE_TIMERS[k]); SAVE_TIMERS[k] = null; return saveSection(k);
+    });
+    Promise.all(pending).then(function(){
+      return fetch("/api/publish", {method:"POST"});
+    }).then(function(r){ return r.json(); }).then(function(res){
       btn.disabled = false; btn.textContent = "Publier les modifications";
       if(res.ok){ markClean(); toast("Site publié ✓ — " + res.villas + " résidences, blog " + (res.blog_enabled ? "activé" : "désactivé") + "."); }
       else { toast("Erreur de publication : " + (res.error||""), true); }

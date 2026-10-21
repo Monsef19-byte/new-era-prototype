@@ -79,6 +79,8 @@ def blob_get_bytes(pathname):
     url = blob_find_url(pathname)
     if not url:
         return None
+    # Lecture sans le cache CDN : un blob réécrit peut rester servi dans son ancienne version jusqu'à 60 s.
+    url += ("&" if "?" in url else "?") + "nocache=" + str(time.time_ns())
     try:
         with urllib.request.urlopen(url, timeout=20) as resp:
             return resp.read()
