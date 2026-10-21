@@ -810,6 +810,37 @@
     });
     html += '</div>';
 
+    // Blocs « Notre vision » et « Standards » — rendu : generator.py
+    // (patch_home_vision_standards), sur l'accueil français et arabe.
+    var vis = h.vision = h.vision || {};
+    var std = h.standards = h.standards || {};
+    std.items = std.items || [];
+    html += '<div class="panel"><h3>Bloc « Notre vision »</h3><p class="desc">La photo et le texte affichés sous les finitions.</p>' +
+      '<div class="img-list"><div class="img-item"><div class="thumb" style="width:200px;height:130px;' + (vis.image ? 'background-image:url(\'' + assetUrl(vis.image) + '\')' : '') + '"></div>' +
+      '<input type="file" accept="image/*" id="uploadVision" style="margin-top:6px;font-size:11px;"></div></div>' +
+      '<div class="grid2">' +
+        field("Petite étiquette (ex : Notre vision)", bf(vis, "kicker", "home")) + field("Petite étiquette" + arTag(), bf(vis, "kicker_ar", "home", {ar: true})) +
+        field("Titre", bf(vis, "title", "home")) + field("Titre" + arTag(), bf(vis, "title_ar", "home", {ar: true})) +
+        field("Texte", bf(vis, "text", "home", {multiline: true})) + field("Texte" + arTag(), bf(vis, "text_ar", "home", {ar: true, multiline: true})) +
+      '</div></div>';
+
+    html += '<div class="panel"><h3>Bloc « Standards »</h3><p class="desc">Les cartes « Dans chaque résidence ». Le détail s\'affiche au survol (ou au toucher sur mobile). Cliquez sur l\'icône pour la changer.</p>' +
+      '<div class="grid2">' +
+        field("Petite étiquette (ex : Standards)", bf(std, "kicker", "home")) + field("Petite étiquette" + arTag(), bf(std, "kicker_ar", "home", {ar: true})) +
+        field("Titre", bf(std, "title", "home")) + field("Titre" + arTag(), bf(std, "title_ar", "home", {ar: true})) +
+      '</div>';
+    std.items.forEach(function(it, i){
+      html += '<div class="dispo-item"><div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;"><div class="icon-picker-slot" data-std-icon="' + i + '" style="margin-right:auto;"></div>' +
+        '<button type="button" class="btn btn-sm" data-std-up="' + i + '"' + (i === 0 ? ' disabled' : '') + ' title="Monter">↑</button>' +
+        '<button type="button" class="btn btn-sm" data-std-down="' + i + '"' + (i === std.items.length - 1 ? ' disabled' : '') + ' title="Descendre">↓</button>' +
+        '<button type="button" class="btn btn-sm btn-danger" data-std-del="' + i + '">Supprimer</button></div>' +
+        '<div class="grid2">' +
+          field("Titre de la carte", bf(it, "title", "home")) + field("Titre" + arTag(), bf(it, "title_ar", "home", {ar: true})) +
+          field("Détail (au survol)", bf(it, "detail", "home", {multiline: true})) + field("Détail" + arTag(), bf(it, "detail_ar", "home", {ar: true, multiline: true})) +
+        '</div></div>';
+    });
+    html += '<button type="button" class="btn btn-sm add" id="addStd">+ Ajouter une carte</button></div>';
+
     html += '<div class="panel"><h3>Résidences mises en avant</h3><p class="desc">Cochez les résidences à afficher sur la page d\'accueil.</p>';
     STATE.villas.forEach(function(v){
       var checked = (h.featured_villas||[]).indexOf(v.slug) !== -1;
@@ -827,6 +858,34 @@
     contentEl.querySelectorAll('[data-v]').forEach(function(inp){ inp.addEventListener("input", function(){ h.stats[Number(inp.getAttribute("data-v"))].value = inp.value; debounceSave("home"); }); });
     contentEl.querySelectorAll('[data-l]').forEach(function(inp){ inp.addEventListener("input", function(){ h.stats[Number(inp.getAttribute("data-l"))].label = inp.value; debounceSave("home"); }); });
     contentEl.querySelectorAll('[data-d]').forEach(function(inp){ inp.addEventListener("input", function(){ h.stats[Number(inp.getAttribute("data-d"))].detail = inp.value; debounceSave("home"); }); });
+
+    document.getElementById("uploadVision").addEventListener("change", function(e){
+      if(!e.target.files[0]) return;
+      uploadImage(e.target.files[0], "vision").then(function(fname){ vis.image = fname; saveSection("home").then(function(){ render(); }); });
+    });
+    contentEl.querySelectorAll("[data-std-icon]").forEach(function(slot){
+      var it = std.items[Number(slot.getAttribute("data-std-icon"))];
+      iconPickerField(slot, { value: it.icon, onSelect: function(name){ it.icon = name; saveSection("home"); } });
+    });
+    function onStd(attr, fn){
+      contentEl.querySelectorAll("[" + attr + "]").forEach(function(b){
+        b.addEventListener("click", function(){
+          if(fn(Number(b.getAttribute(attr))) === false) return;
+          saveSection("home").then(function(){ render(); });
+        });
+      });
+    }
+    function moveStd(from, to){ std.items.splice(to, 0, std.items.splice(from, 1)[0]); }
+    onStd("data-std-up", function(i){ moveStd(i, i - 1); });
+    onStd("data-std-down", function(i){ moveStd(i, i + 1); });
+    onStd("data-std-del", function(i){
+      if(!confirm("Supprimer cette carte ?")) return false;
+      std.items.splice(i, 1);
+    });
+    document.getElementById("addStd").addEventListener("click", function(){
+      std.items.push({icon: "check-circle", title: "", detail: "", title_ar: "", detail_ar: ""});
+      saveSection("home").then(function(){ render(); });
+    });
 
     contentEl.querySelectorAll('[data-feat]').forEach(function(cb){
       cb.addEventListener("change", function(){

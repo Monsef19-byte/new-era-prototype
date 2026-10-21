@@ -45,5 +45,64 @@
   "manifesto_kicker_ar": "نيو إيرا للترقية العقارية",
   "manifesto_claim_ar": "نبني اليوم",
   "manifesto_claim_accent_ar": "قيمة الغد",
-  "manifesto_sub_ar": "New Era لا تسلّم مجرد عمارات — بل تصمم إرثاً يدوم عبر الزمن."
+  "manifesto_sub_ar": "New Era لا تسلّم مجرد عمارات — بل تصمم إرثاً يدوم عبر الزمن.",
+  "vision": {
+    "image": "villa-christina.jpg",
+    "kicker": "Notre vision",
+    "title": "Un patrimoine à transmettre",
+    "text": "Nous croyons qu'une résidence est bien plus qu'un simple lieu de vie. Elle représente un investissement durable, un patrimoine à transmettre et un environnement conçu pour le bien-être de ses occupants.",
+    "kicker_ar": "رؤيتنا",
+    "title_ar": "إرث يُورَث",
+    "text_ar": "نؤمن بأن المسكن أكثر من مجرد مكان للإقامة. فهو استثمار دائم وتراث يُورَث وبيئة مصمَّمة لراحة ساكنيها. لذلك نولي عناية خاصة لاختيار المواقع وجودة البناء وتميّز التشطيبات."
+  },
+  "standards": {
+    "kicker": "Standards",
+    "title": "Dans chaque résidence",
+    "kicker_ar": "معاييرنا",
+    "title_ar": "في كل مسكن",
+    "items": [
+      {
+        "icon": "colonnade",
+        "title": "Architecture néoclassique",
+        "detail": "Pierre de taille et moulures élégantes, façades symétriques inspirées du classicisme européen.",
+        "title_ar": "عمارة نيوكلاسيكية",
+        "detail_ar": "حجر منحوت وزخارف أنيقة، وواجهات متناظرة مستلهَمة من الكلاسيكية الأوروبية."
+      },
+      {
+        "icon": "marbre-parquet",
+        "title": "Marbre italien & parquet naturel",
+        "detail": "Sols et finitions en marbre italien sélectionné et parquet en bois naturel dans toutes les pièces de vie.",
+        "title_ar": "رخام إيطالي وباركيه طبيعي",
+        "detail_ar": "أرضيات وتشطيبات من رخام إيطالي مختار وباركيه خشبي طبيعي في جميع فضاءات المعيشة."
+      },
+      {
+        "icon": "clim-centrale",
+        "title": "Climatisation centralisée",
+        "detail": "Chauffage et climatisation centralisés inclus, confort thermique toute l'année sans installation à charge du résident.",
+        "title_ar": "تكييف وتدفئة مركزيان",
+        "detail_ar": "تدفئة وتكييف مركزيان متضمَّنان، لراحة حرارية على مدار السنة دون أي تركيب على عاتق الساكن."
+      },
+      {
+        "icon": "parking-sous-sol",
+        "title": "Parking en sous-sol",
+        "detail": "Parking privé en sous-sol, sous surveillance 24 h/24 et 7 j/7.",
+        "title_ar": "مواقف سيارات في الطابق السفلي",
+        "detail_ar": "موقف سيارات خاص وآمن في الطابق السفلي، مع أمن على مدار الساعة طوال أيام الأسبوع."
+      },
+      {
+        "icon": "isolation-renforcee",
+        "title": "Isolation renforcée",
+        "detail": "Isolation thermique et acoustique renforcée pour un confort et une tranquillité optimaux.",
+        "title_ar": "عزل حراري وصوتي معزز",
+        "detail_ar": "عزل حراري وصوتي معزز لراحة وهدوء مثاليين في جميع فصول السنة."
+      },
+      {
+        "icon": "domotique-reglages",
+        "title": "Domotique",
+        "detail": "Domotique personnalisable pour piloter éclairage, volets et sécurité depuis votre smartphone.",
+        "title_ar": "نظام منزل ذكي",
+        "detail_ar": "نظام منزل ذكي قابل للتخصيص للتحكم بالإضاءة والستائر والأمن من هاتفكم الذكي."
+      }
+    ]
+  }
 }

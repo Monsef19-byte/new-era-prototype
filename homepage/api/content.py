@@ -129,17 +129,25 @@ def _seed_path(name):
 
 
 def load_content(name, default=None):
+    seed = _seed_path(name)
+    seed_data = None
+    if os.path.exists(seed):
+        with open(seed, "r", encoding="utf-8") as f:
+            seed_data = json.load(f)
     raw = blob_get_bytes("content/" + name)
     if raw is not None:
         try:
-            return json.loads(raw.decode("utf-8"))
+            data = json.loads(raw.decode("utf-8"))
+            # Une section ajoutée au dashboard après le dernier enregistrement
+            # (ex. « vision » / « standards » de l'accueil) manque dans la
+            # copie Blob : on la reprend des valeurs par défaut du dépôt.
+            if isinstance(data, dict) and isinstance(seed_data, dict):
+                for k, v in seed_data.items():
+                    data.setdefault(k, v)
+            return data
         except Exception:
             pass
-    seed = _seed_path(name)
-    if os.path.exists(seed):
-        with open(seed, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return default
+    return seed_data if seed_data is not None else default
 
 
 def save_content(name, data):

@@ -92,6 +92,14 @@ ICONS = {
     "video": {"tags": "video youtube film video", "d": '<polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2"></rect>'},
     "link": {"tags": "lien url link", "d": '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>'},
 
+    # ---- « Standards » de la page d'accueil (tracés d'origine du site, trait fin) ----
+    "colonnade": {"tags": "architecture neoclassique colonnes standards", "d": '<path d="M2 10l10-6 10 6"/><path d="M4 10v11M8 10v11M12 10v11M16 10v11M20 10v11"/><path d="M3 21h18"/>'},
+    "marbre-parquet": {"tags": "marbre parquet sol revetement standards", "d": '<path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/>'},
+    "clim-centrale": {"tags": "climatisation chauffage centralise air standards", "d": '<path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h8a2 2 0 1 1-2 2"/>'},
+    "parking-sous-sol": {"tags": "parking sous-sol garage voiture standards", "d": '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/>'},
+    "isolation-renforcee": {"tags": "isolation thermique acoustique protection standards", "d": '<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/>'},
+    "domotique-reglages": {"tags": "domotique smart home reglages standards", "d": '<line x1="4" y1="6" x2="20" y2="6"/><circle cx="9" cy="6" r="2"/><line x1="4" y1="12" x2="20" y2="12"/><circle cx="15" cy="12" r="2"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="7" cy="18" r="2"/>'},
+
     # ---- Réseaux sociaux ----
     "facebook": {"tags": "facebook reseau social", "d": '<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>'},
     "instagram": {"tags": "instagram reseau social", "d": '<rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4.2"></circle><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"></circle>'},

@@ -123,6 +123,12 @@ def load(name):
     if VERCEL_BUILD:
         remote = _blob_get_json("content/" + name)
         if remote is not None:
+            # Une section ajoutée au dashboard après le dernier enregistrement
+            # en ligne (ex. « vision » / « standards » de l'accueil) manque
+            # dans la copie Blob : on la reprend de la copie locale.
+            if isinstance(remote, dict) and isinstance(local, dict):
+                for k, v in local.items():
+                    remote.setdefault(k, v)
             return remote
     return local
 
@@ -920,6 +926,51 @@ def replace_balanced_div(html, open_tag_pattern, new_inner_html):
     return html[:start] + new_inner_html + html[close_start:]
 
 # ============================================================================
+# ACCUEIL — blocs « Notre vision » et « Standards » (content/home.json :
+# vision{image,kicker,title,text} et standards{kicker,title,items[]}, avec
+# leurs variantes _ar). Sans ces clés, le HTML existant est laissé tel quel.
+# ============================================================================
+SPEC_CARD_SVG = ('<svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" '
+                 'stroke-linecap="round" stroke-linejoin="round">{}</svg>')
+
+def patch_home_vision_standards(html, home, lang, asset_prefix):
+    vision = home.get('vision')
+    if vision:
+        img = (vision.get('image') or '').strip()
+        def sub_vision(m):
+            return (m.group(1) + (esc(asset_prefix + img) if img else m.group(2)) + m.group(3) +
+                    esc(_t(vision, 'kicker', lang)) + m.group(4) +
+                    esc(_t(vision, 'title', lang)) + m.group(5) +
+                    esc(_t(vision, 'text', lang)) + m.group(6))
+        html = re.sub(
+            r'(<div class="editorial reveal">\s*<div class="editorial-photo reveal-img"><img src=")([^"]*)'
+            r'("[^>]*></div>\s*<div class="editorial-text">\s*<div class="kicker"><span class="num">).*?'
+            r'(</span></div>\s*<h3 class="h3">).*?(</h3>\s*<p class="body-sm">).*?(</p>)',
+            sub_vision, html, count=1, flags=re.S)
+
+    std = home.get('standards')
+    i = html.find('<div class="spec-cards reveal">')
+    if std and i != -1:
+        j = html.rfind('<section class="sec">', 0, i)
+        if j != -1:
+            head = html[j:i]
+            head = re.sub(r'(<span class="num">).*?(</span>)',
+                          lambda m: m.group(1) + esc(_t(std, 'kicker', lang)) + m.group(2), head, count=1, flags=re.S)
+            head = re.sub(r'(<h2 class="h2"[^>]*>).*?(</h2>)',
+                          lambda m: m.group(1) + esc(_t(std, 'title', lang)) + m.group(2), head, count=1, flags=re.S)
+            html = html[:j] + head + html[i:]
+        cards = []
+        for it in std.get('items', []):
+            title, detail = _t(it, 'title', lang), _t(it, 'detail', lang)
+            if not (title or detail):
+                continue
+            svg = SPEC_CARD_SVG.format(FEAT_ICONS.get(it.get('icon'), FEAT_ICON_DEFAULT))
+            cards.append('    <div class="spec-card" tabindex="0"><div class="spec-icon">{svg}</div><b>{t}</b>\n'
+                         '      <div class="spec-detail">{d}</div>\n    </div>'.format(svg=svg, t=esc(title), d=esc(detail)))
+        html = replace_balanced_div(html, r'<div class="spec-cards reveal">', '\n' + '\n'.join(cards) + '\n  ')
+    return html
+
+# ============================================================================
 # HOMEPAGE / A PROPOS / OPPORTUNITES — targeted patch (keeps all hand-authored
 # content that isn't modeled in JSON untouched; only swaps the fields the
 # dashboard actually exposes)
@@ -984,6 +1035,7 @@ def patch_homepage(home, villas, settings, videos=None, gallery=None, finitions=
         html = set_section_hidden(html, '<section class="sec alt" id="catalogue">', not gallery.get('enabled', True))
 
     html = replace_home_finitions(html, finitions, 'fr', 'assets/')
+    html = patch_home_vision_standards(html, home, 'fr', 'assets/')
     html = apply_contact(html, settings)
     html = apply_float_cta(html, settings, 'fr')
     html = apply_cta_toggles(html, settings)
@@ -1309,6 +1361,7 @@ def patch_homepage_ar(html, home, villas, videos, gallery, finitions):
         html = replace_balanced_div(html, r'<div class="fan-carousel reveal" id="catalogueCarousel">', '\n' + '\n'.join(items) + '\n  ')
         html = set_section_hidden(html, '<section class="sec alt" id="catalogue">', not gallery.get('enabled', True))
     html = replace_home_finitions(html, finitions, 'ar', '../assets/')
+    html = patch_home_vision_standards(html, home, 'ar', '../assets/')
     return html
 
 def patch_simple_hero_ar(html, data):
